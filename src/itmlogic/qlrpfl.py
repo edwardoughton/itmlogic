@@ -7,19 +7,21 @@ def qlrpfl(prop):
     % Initialization routine for point-to-point mode
 
     """
-    # prop['dist'] = prop['pfl1'] * prop['pfl2']
+    prop['dist'] = prop['pfl'][1] * prop['pfl'][2]
 
-    # np = prop['pfl1']
+    np = prop['pfl'][1]
 
-    # prop['the'], prop['dl'] = (
-    #     hzns(prop['pfl'], prop['dist'], prop['hg'], prop['gme']
-    #     )
-
-    # for j=1:2
-    # xl(j)=min(15.*prop.hg(j),0.1*prop.dl(j));
-    # end
-    # xl(2)  = prop.dist-xl(2);
-    # prop.dh= dlthx(prop.pfl,xl(1),xl(2));
+    prop['the'], prop['dl'] = (
+        hzns(prop['pfl'], prop['dist'], prop['hg'], prop['gme'])
+        )
+    
+    # for j in range(1,3):
+    #     print(j)
+    #     xl(j) = min(15 * prop['hg{}'.format(j)], 0.1 * prop['dl'])
+        
+    #     xl(2)  = prop.dist-xl(2);
+        
+    #     prop.dh= dlthx(prop.pfl,xl(1),xl(2));
 
     # if (prop.dl(1)+prop.dl(2)>=1.5*prop.dist)
     # [za, zb]= zlsq1(prop.pfl,xl(1),xl(2));
@@ -64,7 +66,4 @@ def qlrpfl(prop):
 
     # [prop]=lrprop(0.,prop );
 
-    return 'yes'
-
-if __name__ == '__main__':
-    qlrpfl(prop)
+    return prop
