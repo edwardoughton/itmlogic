@@ -1,0 +1,62 @@
+# Temporary and binary files
+*~
+*.py[cod]
+*.so
+*.cfg
+!setup.cfg
+*.orig
+*.log
+*.pot
+__pycache__/*
+.cache/*
+.*.swp
+
+# Virtualenv (if used)
+venv
+
+# Project files
+.ropeproject
+.project
+.pydevproject
+.settings
+.idea
+.vscode
+
+# Package files
+*.egg
+*.eggs/
+.installed.cfg
+*.egg-info
+
+# Unittest and coverage
+htmlcov/*
+htmlcov
+.coverage
+.tox
+junit.xml
+coverage.xml
+.pytest_cache/
+
+# Build and docs folder/files
+build/*
+dist/*
+sdist/*
+docs/api/*
+docs/_build/*
+cover/*
+MANIFEST
+node_modules
+src/smif/app/dist
+
+.DS_Store
+
+# smif outputs
+src/smif/sample_project/results/*
+
+# data file
+data/*
+
+# Other files
+*.ipynb
+src/smif/app/.nyc_output
+.mypy_cache
