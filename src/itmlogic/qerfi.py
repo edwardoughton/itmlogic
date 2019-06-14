@@ -44,6 +44,6 @@ def qerfi(q):
             
         #TODO: qerfi1(x < 0) = -qerfi1(x < 0) #what does this do?
         print(qerfi1)    
-    return 0
+    return qerfi1
 
 qerfi([50])

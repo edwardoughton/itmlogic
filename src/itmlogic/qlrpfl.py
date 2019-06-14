@@ -1,6 +1,6 @@
 
 from itmlogic.hzns import hzns
-
+from itmlogic.dlthx import dlthx
 
 def qlrpfl(prop):
     """
@@ -14,15 +14,15 @@ def qlrpfl(prop):
     prop['the'], prop['dl'] = (
         hzns(prop['pfl'], prop['dist'], prop['hg'], prop['gme'])
         )
-    
-    # for j in range(1,3):
-    #     print(j)
-    #     xl(j) = min(15 * prop['hg{}'.format(j)], 0.1 * prop['dl'])
-        
-    #     xl(2)  = prop.dist-xl(2);
-        
-    #     prop.dh= dlthx(prop.pfl,xl(1),xl(2));
+    # print(prop)
+    xl = {}
+    for j in range(0,2):
+        xl[j] = min(15 * prop['hg'][j], 0.1 * prop['dl'][j])
 
+    xl[1]  = prop['dist'] - xl[1]
+    
+    prop['dh'] = dlthx(prop['pfl'], xl[0], xl[1])
+    print(xl)
     # if (prop.dl(1)+prop.dl(2)>=1.5*prop.dist)
     # [za, zb]= zlsq1(prop.pfl,xl(1),xl(2));
     # prop.he(1)=prop.hg(1)+max(prop.pfl(3)-za,0);

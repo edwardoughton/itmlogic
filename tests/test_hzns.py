@@ -1,14 +1,14 @@
 import pytest
-from itmlogic.qerfi import qerfi
+from itmlogic.hzns import hzns
 
-def test_qerfi():
+# def test_hzns():
 
-    qc = [50]
+#     qc = [50]
 
-    actual_answer = qerfi(qc)
+#     actual_answer = qerfi(qc)
 
-    expected_answer = 1.314300890342679e-09
+#     expected_answer = 1.314300890342679e-09
 
-    assert actual_answer == expected_answer
+#     assert actual_answer == expected_answer
 
     

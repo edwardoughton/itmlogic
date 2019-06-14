@@ -120,7 +120,7 @@ def run_itmlogic():
             prop['mdvarx'] = 11
 
             prop = qlrpfl(prop)
-            print(prop)
+            # print(prop)
 
             #Here HE = effective antenna heights, DL = horizon distances, THE = horizon elevation angles
             #MDVAR = mode of variability calculation: 0=single message mode,
