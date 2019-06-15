@@ -66,19 +66,23 @@ def adiff(d, prop):
             (ds + prop['dl'][0])) + aknfe(q * prop['dl'][1] /
             (ds + prop['dl'][1]))
 
-        a=ds/th;
-        wa=(a*prop.wn)^third;
+        a = ds / th
+        wa = (a * prop['wn']) ** third
 
-        pk=prop.qk/wa;
+        pk = prop['qk'] / wa
 
-        q=(1.607-pk)*151.0*wa*th+prop.xht;
+        q = (1.607 - pk) * 151.0 * wa * th + prop['xht']
 
-        ar=0.05751*q-4.343*log(q)-prop.aht;
+        ar = 0.05751 * q - 4.343 * np.log(q) - prop['aht']
 
-        q=(prop.wd1+prop.xd1/d)*min(((1.-0.8*exp(-d/50e3))*prop.dh*prop.wn),6283.2);
-        wd=25.1/(25.1+sqrt(q));
+        q = (
+            (prop['wd1'] + prop['xd1'] / d) * 
+            min(((1 - 0.8 * exp(-d / 50e3)) * 
+            prop['dh'] * prop['wn']), 6283.2
+            )
+        
+        wd = 25.1 / (25.1 + math.sqrt(q))
 
-        adiff1=ar*wd+(1.-wd)*adiff1+prop.afo;
-        end
+        adiff1 = ar * wd + (1 - wd) * adiff1 + prop['afo']
 
-    returns adiff1, prop
+    return adiff1, prop
