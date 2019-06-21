@@ -1,9 +1,33 @@
 import math
+import numpy as np
+
+from itmlogic.curv import curv
 
 def avar(zzt, zzl, zzc, prop):
+    """
+    ???
 
+    Parameters
+    ----------
+    zzt : ???
+        ???
+    zzl : ???
+        ???
+    zzc : ???
+        ???
+    prop : ???
+        ???
+
+    Returns
+    -------
+    avar1 : ???
+        ???
+    prop : dict
+        ???
+
+    """
     third = 1 / 3
-
+    
     bv1 = [   -9.67,   -0.62,    1.26,   -9.21,   -0.62,   -0.39,    3.15]
     bv2 = [    12.7,    9.19,    15.5,    9.05,    9.19,    2.86,   857.9]
     xv1 = [ 144.9e3, 228.9e3, 262.6e3,  84.1e3, 228.9e3, 141.7e3, 2222.e3]
@@ -32,144 +56,162 @@ def avar(zzt, zzl, zzc, prop):
     rl = 24
 
     if prop['lvar'] > 0:
+        if prop['lvar'] > 4:
+            if prop['klim'] <= 0 or prop['klim'] > 7:
+                prop['klim'] = 5
+                prop['kwx'] = max(prop['kwx'], 2)
 
-    if prop['lvar'] > 4:
-        if prop['klim'] <= 0 or prop['klim'] > 7:
-            prop['klim'] = 5
-            prop['kwx'] = max(prop['kwx'], 2)
+            prop['cv1'] = bv1[prop['klim'] - 1]
+            prop['cv2'] = bv2[prop['klim'] - 1]
+            prop['yv1'] = xv1[prop['klim'] - 1]
+            prop['yv2'] = xv2[prop['klim'] - 1]
+            prop['yv3'] = xv3[prop['klim'] - 1]
+            prop['csm1'] = bsm1[prop['klim']- 1]
+            prop['csm2'] = bsm2[prop['klim']- 1]
+            prop['ysm1'] = xsm1[prop['klim']- 1]
+            prop['ysm2'] = xsm2[prop['klim']- 1]
+            prop['ysm3'] = xsm3[prop['klim']- 1]
+            prop['csp1'] = bsp1[prop['klim']- 1]
+            prop['csp2'] = bsp2[prop['klim']- 1]
+            prop['ysp1'] = xsp1[prop['klim']- 1]
+            prop['ysp2'] = xsp2[prop['klim']- 1]
+            prop['ysp3'] = xsp3[prop['klim']- 1]
+            prop['csd1'] = bsd1[prop['klim']- 1]
+            prop['zd'] = bzd1[prop['klim'] - 1]
+            prop['cfm1'] = bfm1[prop['klim'] - 1]
+            prop['cfm2'] = bfm2[prop['klim'] - 1]
+            prop['cfm3'] = bfm3[prop['klim'] - 1]
+            prop['cfp1'] = bfp1[prop['klim'] - 1]
+            prop['cfp2'] = bfp2[prop['klim'] - 1]
+            prop['cfp3'] = bfp3[prop['klim'] - 1]
+  
+        if prop['lvar'] > 3:
 
-        prop['cv1'] = bv1(prop['klim'])
-        prop['cv2'] = bv2(prop['klim'])
-        prop['yv1'] = xv1(prop['klim'])
-        prop['yv2'] = xv2(prop['klim'])
-        prop['yv3'] = xv3(prop['klim'])
-        prop['csm1'] = bsm1(prop['klim'])
-        prop['csm2'] = bsm2(prop['klim'])
-        prop['ysm1'] = xsm1(prop['klim'])
-        prop['ysm2'] = xsm2(prop['klim'])
-        prop['ysm3'] = xsm3(prop['klim'])
-        prop['csp1'] = bsp1(prop['klim'])
-        prop['csp2'] = bsp2(prop['klim'])
-        prop['ysp1'] = xsp1(prop['klim'])
-        prop['ysp2'] = xsp2(prop['klim'])
-        prop['ysp3'] = xsp3(prop['klim'])
-        prop['csd1'] = bsd1(prop['klim'])
-        prop['zd'] = bzd1(prop['klim'])
-        prop['cfm1'] = bfm1(prop['klim'])
-        prop['cfm2'] = bfm2(prop['klim'])
-        prop['cfm3'] = bfm3(prop['klim'])
-        prop['cfp1'] = bfp1(prop['klim'])
-        prop['cfp2'] = bfp2(prop['klim'])
-        prop['cfp3'] = bfp3(prop['klim'])
+            prop['kdv'] = prop['mdvar']
+            prop['ws'] = (prop['kdv'] >= 20) 
+            
+            if prop['ws']:
+                prop['kdv'] = prop['kdv'] - 20
+            
+            prop['wl'] = prop['kdv'] >= 10
+            
+            if prop['wl']:
+                prop['kdv'] = prop['kdv'] - 10
+            
+            if prop['kdv'] < 0 or prop['kdv'] > 3:
+                prop['kdv'] = 0
+                prop['kwx'] = max(prop['kwx'], 2)
 
-    if prop['lvar'] > 3:
-        # prop['kdv'] = prop['mdvar']
-        # prop['ws'] = prop['kdv'] > = 20 #TODO: this doesn't look right
-        # if prop['ws']:
-        #     prop['kdv'] = prop['kdv'] - 20
-        # prop['wl'] = prop['kdv'] >= 10
-        # if (prop.wl) prop.kdv=prop.kdv-10 end
-        # if( (prop.kdv<0) || (prop.kdv>3))
-        # prop.kdv=0
-        # prop.kwx=max(prop.kwx,2)
-        # end
+        if prop['lvar'] > 2:
 
-    if prop['lvar'] > 2:
+            q = np.log(0.133 * prop['wn'])
 
-        q = (
-            np.log(0.133 * prop['wn'])
-            prop['gm'] = prop['cfm1'] + prop['cfm2'] / 
-            ((prop['cfm3'] * q)**2 + 1)
-            )
+            prop['gm'] = (
+                prop['cfm1'] + prop['cfm2'] / 
+                ((prop['cfm3'] * q)**2 + 1)
+                )
 
-        prop['gp'] = (
-            prop['cfp1'] + prop['cfp2'] / 
-            ((prop['cfp3'] * q)**2 + 1)
-            )
+            prop['gp'] = (
+                prop['cfp1'] + prop['cfp2'] / 
+                ((prop['cfp3'] * q)**2 + 1)
+                )
 
-    if prop['lvar'] > 1:
+        if prop['lvar'] > 1:
+            
+            prop['dexa'] = (
+                math.sqrt(18e6 * prop['he'][0]) +
+                math.sqrt(18e6 * prop['he'][1]) +
+                (575.7e12 / prop['wn']) ** third
+                )
+
+        if prop['dist'] < prop['dexa']:
+            de = 130e3 * prop['dist'] / prop['dexa']
         
-        prop['dexa'] = (
-            math.sqrt(18e6 * prop['he'][0]) +
-            math.sqrt(18e6 * prop['he'][1]) +
-            (575.7e12 / prop['wn']) ** third
+        else:
+            de = 130e3 + prop['dist'] - prop['dexa']
+        
+        prop['vmd'] = curv(
+            prop['cv1'], prop['cv2'], prop['yv1'], 
+            prop['yv2'], prop['yv3'], de
+            )
+            
+        prop['sgtm'] = curv(
+            prop['csm1'], prop['csm2'], prop['ysm1'],
+            prop['ysm2'], prop['ysm3'], de) * prop['gm']
+
+        prop['sgtp'] = curv(
+            prop['csp1'], prop['csp2'], prop['ysp1'],
+            prop['ysp2'], prop['ysp3'], de) * prop['gp']
+
+        prop['sgtd'] = prop['sgtp'] * prop['csd1']
+
+        prop['tgtd'] = (prop['sgtp'] - prop['sgtd']) * prop['zd']
+
+        if prop['wl']:
+            prop['sgl'] = 0
+        else:
+            q = (
+                (1 - 0.8 * math.exp(-prop['dist'] / 50e3)) *
+                prop['dh'] * prop['wn']
+                )
+            prop['sgl'] = 10 * q / (q + 13)
+
+        if prop['ws']:
+            prop['vs0'] = 0
+        else:
+            prop['vs0'] = (5 + 3 * math.exp(-de / 100e3))**2
+
+        prop['lvar'] = 0
+
+    zt = zzt
+    zl = zzl
+    zc = zzc
+
+    if prop['kdv'] == 0:
+        zt = zc
+        zl = zc
+    elif prop['kdv'] == 1:
+        zl = zc
+    elif prop['kdv'] == 2:
+        zl = zt
+
+    if abs(zt) > 3.10 or abs(zl) > 3.10 or abs(zc) > 3.10:
+        prop['kwx'] = max(prop['kwx'], 1)
+
+    if zt < 0:
+        sgt = prop['sgtm']
+    elif zt <= prop['zd']:
+        sgt = prop['sgtp']
+    else:
+        sgt = prop['sgtd'] + prop['tgtd'] / zt
+
+    vs = (
+        prop['vs0'] + (sgt * zt)**2 / (rt + zc**2) + 
+        (prop['sgl'] * zl)**2 / (rl + zc**2)
         )
 
-    if prop['dist'] < prop['dexa']:
-        de = 130e3 * prop['dist'] / prop['dexa']
-    
+    if prop['kdv'] == 0:
+        yr = 0
+        sgc = math.sqrt(sgt**2 + prop['sgl']**2 + vs)
+    elif prop['kdv'] == 1:
+        yr = sgt * zt
+        sgc = math.sqrt(prop['sgl']**2 + vs)
+    elif prop['kdv'] == 2:
+        yr = math.sqrt(sgt**2 + prop['sgl']**2) * zt
+        sgc = math.sqrt(vs)
     else:
-        de = 130e3 + prop['dist'] - prop['dexa']
+        yr = sgt * zt + prop['sgl'] * zl
+        sgc = math.sqrt(vs)
     
-    # prop['vmd'] = curv(prop.cv1,prop.cv2,prop.yv1,prop.yv2,prop.yv3,de)
-    # prop.sgtm=curv(prop.csm1,prop.csm2,prop.ysm1,prop.ysm2,prop.ysm3,de)*prop.gm
-    # prop.sgtp=curv(prop.csp1,prop.csp2,prop.ysp1,prop.ysp2,prop.ysp3,de)*prop.gp
+    # print('AVAR YR, KDV, SGT, ZT ' + str(yr) + ' ' + 
+    #     str(['kdv']) + ' ' + str(sgt) + ' ' +  str(zt))
 
-    # prop.sgtd=prop.sgtp*prop.csd1
+    avar1 = prop['aref'] - prop['vmd'] - yr - sgc * zc
 
-    # prop.tgtd=(prop.sgtp-prop.sgtd)*prop.zd
-    # if (prop.wl)
-    #     prop.sgl=0.
-    # else
-    #     q=(1.-0.8*exp(-prop.dist/50e3))*prop.dh*prop.wn
-    #     prop.sgl=10.*q/(q+13.)
-    # end
+    # print('AVAR: ' + str(prop['aref']) + ' ' + str(prop['vmd']) + 
+    #     ' ' + str(yr) + ' ' + str(sgc) + ' ' + str(zc))
 
-    # if(prop.ws)
-    #     prop.vs0=0.
-    # else
-    #     prop.vs0=(5.+3.*exp(-de/100e3))^2
-    # end
-
-
-    # prop.lvar=0
-    # end
-    # zt=zzt
-    # zl=zzl
-    # zc=zzc
-
-    # if(prop.kdv==0)
-    # zt=zc
-    # zl=zc
-    # elseif(prop.kdv==1)
-    # zl=zc
-    # elseif(prop.kdv==2)
-    # zl=zt
-    # end
-
-    # if ( (abs(zt)>3.10) || (abs(zl)>3.10) || (abs(zc)>3.10)) prop.kwx=max(prop.kwx,1) end
-
-    # if(zt<0.)
-    # sgt=prop.sgtm
-    # elseif(zt<=prop.zd)
-    # sgt=prop.sgtp
-    # else
-    # sgt=prop.sgtd+prop.tgtd/zt
-    # end
-
-    # vs=prop.vs0+(sgt*zt)^2/(rt+zc^2)+(prop.sgl*zl)^2/(rl+zc^2)
-
-    # if(prop.kdv==0)
-    # yr=0.
-    # sgc=sqrt(sgt^2+prop.sgl^2+vs)
-    # elseif(prop.kdv==1)
-    # yr=sgt*zt
-    # sgc=sqrt(prop.sgl^2+vs)
-    # elseif(prop.kdv==2)
-    # yr=sqrt(sgt^2+prop.sgl^2)*zt
-    # sgc=sqrt(vs)
-    # else
-    # yr=sgt*zt+prop.sgl*zl
-    # sgc=sqrt(vs)
-    # end
-    # % display(['AVAR YR, KDV, SGT, ZT ' num2str(yr) ' ' num2str(kdv) ' ' num2str(sgt) ' ' num2str(zt)])
-
-    # avar1=prop.aref-prop.vmd-yr-sgc*zc
-    # % display(['AVAR: ' num2str(aref) ' ' num2str(vmd) ' ' num2str(yr) ' ' num2str(sgc) ' ' num2str(zc)])
-
-    # if(avar1<0.)
-    # avar1=avar1*(29.-avar1)/(29.-10.*avar1)
-    # end
-
+    if avar1 < 0:
+        avar1 = avar1 * (29 - avar1) / (29 - 10 * avar1)
 
     return avar1, prop

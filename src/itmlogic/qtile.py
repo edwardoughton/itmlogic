@@ -1,14 +1,12 @@
 import numpy as np
 
-def qtile(nn, a, ir):
+def qtile(a, ir):
     """
     This routine returns the ith entry of vector after sorting in 
     descending order.
 
     Parameters
     ----------
-    nn : ???
-        ???
     a : list
         Input data distribution
     ir : int
@@ -20,7 +18,7 @@ def qtile(nn, a, ir):
         ???
 
     """
-    as_sorted = sorted(a)
-    qtile1 = np.percentile(as_sorted, ir)
+    as_sorted = sorted(a, reverse=True)
+    qtile1 = as_sorted[ir]
 
     return qtile1

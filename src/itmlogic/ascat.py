@@ -1,7 +1,9 @@
 import numpy as np
 
 def ascat(d,prop):
+    """
 
+    """
     if prop['h0s'] > 15:
         h0 = prop['h0s']
 

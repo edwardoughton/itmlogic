@@ -22,7 +22,6 @@ def zlsq1(z, x1, x2):
         ???
 
     """
-
     xn  = z[0]
 
     xa  = int(max(x1 / z[1], 0))

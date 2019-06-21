@@ -3,7 +3,7 @@ from itmlogic.ahd import ahd
 
 # def test_ahd():
 
-    # assert round(aknfe(6), 2) == 20.73
+#     assert round(aknfe(6), 2) == 20.73
 
 
     
