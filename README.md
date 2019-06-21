@@ -1,5 +1,6 @@
 itmlogic
 ====
+[![Coverage Status](https://coveralls.io/repos/github/edwardoughton/itmlogic/badge.svg?branch=master)](https://coveralls.io/github/edwardoughton/itmlogic?branch=master)
 
 Longley-Rice Irregular Terrain Model 
 
