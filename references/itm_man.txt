@@ -1,0 +1,283 @@
+
+ A manual for
+       ITM,  "Irregular Terrain Model"
+
+   This is a series of subprograms which compute statistics of received
+radio field strengths.  Its use generally involves three consecutive steps:
+the preparation of parameters, the computation of the reference attenuation,
+and then the computation of selected statistics.  Around these processes the
+programmer will put others which assemble the required input and which
+manipulate the resulting output.  These latter we leave largely to the
+user's ingenuity and in what follows we try to describe only the central
+three processes.
+   The ITM may be used in two separate modes of operation: the "area pre-
+diction mode" and the "point-to-point" mode.  Both modes use very similar
+calling sequences and they are treated below in parallel.
+   Parameter preparation is accomplished by one of two subroutines: QLRA
+for the area prediction mode and QLRPFL for the point-to-point mode.  Also
+useful is the subroutine QLRPS.  The reference attenuation is computed by
+LRPROP and the statistics by the function subprogram AVAR.  Much of the
+input and output is through the two common blocks /PROP/ and /PROPV/ which
+must therefore be accessed directly by the user.
+
+  *Common Blocks*
+      COMMON/PROP/KWX,AREF,MDP,DIST,HG(2),WN,DH,ENS,GME,ZGND,
+         HE(2),DL(2),THE(2)
+           COMPLEX ZGND
+
+   This is the collection of the principle system and path parameters.  It
+also includes the reference attenuation and an error marker.  Note that all
+heights, lengths, and distances are measured in meters.
+      KWX     Error marker.  Indicates by its value the severity of the
+              warning:
+                 0   no warning
+                 1   caution; parameters are close to limits
+ 7 15 18         2   impossible parameters; default values have been
+                     substituted
+                 3   internal calculations show parameters out of range
+                 4   parameters out of range
+      AREF    Reference attenuation.  Computed by LRPROP.
+      MDP     Mode of the propagation model.  Values:
+                -1   point-to-point
+                 1   area prediction; to initialize
+                 0   area prediction; to continue
+              For further remarks see note 2 below.
+      DIST    Distance between terminals.  See note 3 below.
+      HG      Heights of the antennas above ground.
+      WN      Wave number of the radio frequency.
+      DH      Terrain irregularity parameter.
+      ENS     Surface refractivity of the atmosphere.
+      GME     Effective earth's curvature.
+      ZGND    Surface transfer impedance.
+      HE      Effective antenna heights.
+      DL      Horizon distances.
+      THE     Horizon elevation angles.
+
+   Note 1.  The error marker KWX is meant to serve as a warning to the user
+that one or more of the parameters have values that make the results dubious
+or unusable.  Except when it has the value 2, there is no effect on the
+computations.  The value is cumulative in that after a series of calcula-
+tions it will retain its highest value.  Since it is never reset to 0, users
+must do this themselves.
+   Note 2.  The value of MDP is handled automatically by QLRA and QLRPFL.
+In the area prediction mode it must first be set to 1 whereupon LRPROP will
+initialize various constants and set MDP to 0.  On subsequent calls where
+only the distance changes, LRPROP need not recompute these constants.
+   Note 3.  The value of DIST is enetered in two ways.  In the point-to-
+point mode it is entered directly into /PROP/.  This is done automatically
+by QLRPFL.  In the area prediction mode the distance is an actual parameter
+in the call to LRPROP.
+
+      COMMON/PROPV/LVAR,SGC,MDVAR,KLIM
+
+   This is the collection of instructions for treating variability in the
+subprogram AVAR.
+      LVAR    Level to which coefficients in AVAR must be redefined.  Each
+              time the parameter indicated below is changed, LVAR must be
+              set to at least:
+                 level   parameter
+                   0       quantiles
+                   1       DIST
+                   2       HE, etc.
+                   3       WN
+                   4       MDVAR
+                   5       KLIM
+              The subroutine AVAR will compute the necessary coefficients
+              and reset LVAR to 0.
+      SGC     The standard deviation of confidence.  This is output by AVAR
+              and may be used to compute a confidence level.
+      MDVAR   Mode of the variability calculations.  Values:
+                 0   Single message mode.  Time, location, and situation
+                     variability are combined together to give a con-
+                     fidence level
+                 1   Accidental mode.  Reliability is given by time
+                     availability.  Confidence is a combination of
+                     location and situation variability.
+                 2   Mobile mode.  Reliability is a combination of time
+                     and location variability.  Confidence is given by the
+                     situation variability.
+                 3   Broadcast mode.  Reliability is given by the twofold
+                     statement of -at least- qT of the time in qL of the
+                     locations.  Confidence is given by the situation
+                     variability.
+              In addition, to these values may be added either or both of
+              the numbers 10 and 20:
+                +10  For the point-to-point mode.  Location variability is
+                     eliminated.
+                +20  For interference problems.  Direct situation
+                     variability is eliminated.  Note that there may still
+                     be a small residual situation variability.
+      KLIM    Climate code.  Values:
+                 1   Equatorial
+                 2   Continental subtropical
+                 3   Maritime subtropical
+                 4   Desert
+                 5   Continental temperate
+                 6   Maritime temperate, overland
+                 7   Maritime temperate, oversea
+
+  *Parameter Preparation*
+   The reference attenuation requires the variables
+           MDP, DIST, HG, WN, DH, ENS, GME, ZGND, HE, DL, THE
+and also an attention to KWX.  The statistics require the variables
+                      MDVAR, KLIM, ZT, ZL, ZC
+and also an attention to LVAR; note that the value of MDVAR determines the
+meanings of ZT, ZL, ZC.  The following subroutines should be used to intro-
+duce many of these variables.
+
+      CALL QLRPS(FMHZ,ZSYS,EN0,IPOL,EPS,SGM)
+
+   This will define WN, ENS, GME, ZGND in /PROP/.
+      FMHZ    Radio frequency in MHz.
+      ZSYS    Average system elevation above sea level.  Used only to
+              adjust EN0.  If ZSYS=0., EN0 will be interpreted as ENS.
+      EN0     Minimum monthly mean surface refractivity reduced to sea
+              level.  If it is desired to introduce ENS instead, then
+              set ZSYS=0..
+      IPOL    Polarization code; 0=horizontal, 1=vertical.
+      EPS,SGM Ground constants; the dielectric constant and the conduc-
+              tivity.
+
+      CALL QLRA(KST,KLIM,MDVAR)
+
+   Prepares parameters for the area prediction mode.  Prior to this call
+one shouold define HG, DH and WN, ENS, GME, ZGND, all in /PROP/.  Then this
+routine will define HE, DL, THE, LVAR, and optionally KLIM, MDVAR.  It
+sets MDP=1.
+      KST     Siting criterion code for each terminal; an array of length 2.
+              Values: 0=randon, 1=careful, 2=very careful.
+      KLIM    Climate code.  If greater than 0 the routine will put this
+              value in /PROPV/ and set LVAR=5.
+      MDVAR   Mode of variability.  If nonnegative the routine will put
+              this value in /PROPV/ and set LVAR to at least 4.
+In any case, the routine set LVAR to at least 3.
+
+      CALL QLRPFL(PFL,KLIM,MDVAR)
+
+   Prepares parameters for the point-to-point mode and then calls LRPROP
+thus also defining the reference attenuation AREF.  Prior to this call, one
+should define HG and WN, ENS, GME, ZGND in /PROP/.  One should also have
+prepared a terrain profile in the array PFL.  For this we imagine a sequence
+of elevations P(0), P(1), ..., P(NP), taken at equal intervals XI from the
+point under the first terminal to the point under the second.  Note that
+the path distance is then NP*XI.
+      PFL     Terrain profile.  An array packed with the values NP, XI,
+              P(0), ..., P(NP), in that order.  Thus PFL(1) is the floating
+              point representation of NP, PFL(2) equals the interval XI
+              betwee profile points, and PFL(i+3) equals P(i), i=0, ..., NP,
+              i.e., the elevation of the point distant i*XI from the first
+              terminal.  The total length of the array is NP+3.
+      KLIM    Climate code.  If greater than 0 the routine will put this
+              value in /PROPV/ and set LVAR=5.
+      MDVAR   Mode of variability.  If nonnegative the routine will put
+              this value in /PROPV/ and set LVAR to at least 4.
+In any case, the routine set LVAR to at least 3.
+   It should be noted that the original ITM is silent on many of the
+details for defining some of the path parameters.  This is particularly
+true of the effective heights HE, and, to some lesser degree, of the
+terrain irregularity parameter DH.  The effective height, for example, is
+defined as the height above the "effective reflecting plane," and in the
+past the investigator has been urged to use his own best judgement as to
+where that plane should be placed.  The subroutine QLRPFL, in trying to
+automate the definition of all parameters, has been forced to define
+explicitly all missing details.  It has done this in a way that seems
+reasonable and in full accord with the intent of the model.  One should
+not, however, conclude that these efforts are completed.  Hopefully,
+better results are obtainable.
+
+  *The Reference Attenuation*
+   After defining all necessary parameters (MDP, WN, HG, DH, ENS, GME,
+ZGND, HE, DL, and THE, all in /PROP/) the next step is to compute the
+reference attenuation.  This is done by a single call
+
+      CALL LRPROP(D)
+
+In the point-to-point mode (when MDP=-1) the distance must be defined
+as DIST in /PROP/; then the formal parameter D is ignored.  In the area
+prediction mode (when MDP=1 or 0) D represents the distance.  In that
+case LRPROP will replace DIST in /PROP/ by this value.
+   In the area prediction mode there is also a special call obtained
+by setting D=0.  Normally, a call to LRPROP will result in the definition
+of only those coefficients that are necessary to compute the reference
+attenuation at the indicated distance.  With this special call, however,
+all the coefficients are defined.  If desired, the user can consider these
+coefficients to be additional output from LRPROP.  They may be found in
+the additional common block /PROPA/.
+
+  *Statistics*
+   Statistics are available through the function subprogram AVAR in the
+form of quantiles--i.e., values of attenuation which are not exceeded for
+a fraction q of the samples.  As a programming device, AVAR requires not
+the fraction q directly, but the corresponding -standard normal deviate- z.
+This is the value which satisfies q=Q(z), where Q(z) is the complementary
+normal probability function as given in most texts on statistics.  This
+standard normal deviate is preferred because the random variables involved
+are all normally distributed or very nearly normally distributed, and
+calculations with the deviates are greatly simplified.  We use the com-
+plementary function rather than the direct function because we usually
+think in terms of a received signal level rather than a loss or an
+attenuation and would like to say that this level is at least so large
+for a fraction q=Q(z) of the samples.
+   Note that Q(z) is a montone decreasing function and that as q goes from
+0 to 1, z covers the real line from right to left.  For example, Q(0)=0.5,
+Q(1.28155)=0.1, and Q(-1.28155)=0.9.
+   Before using AVAR one should have defined all system and path parameters
+in /PROP/ and have called LRPROP to also define AREF.  In addition, one
+should define LVAR, MDVAR, KLIM in /PROPV/.  Then the function AVAR can be
+evaluated.  It has three formal parameters whose meanings are determined
+by the mode of variability as specified in MDVAR.  In what follows we use
+freely a notation such as QC, ZC, to indicate a pair consisting of a
+probability and its corresponding standard normal deviate.
+  *Single message (MDVAR=0):
+      A=AVAR(0.,0.,ZC)
+   With confidence QC the attenuation will not exceed A.  The first two
+parameters are unused.
+  *Accidental and Mobile (MDVAR=1 or 2):
+      A=AVAR(ZR,0.,ZC)
+   With confidence QC the reliability is at least QR that the attenuation
+does not exceed A.  The second parameter is unused.
+  *Broadcast (MDVAR=3):
+      A=AVAR(ZT,ZL,ZC)
+   With confidence QC there will be at least QL of the locations where the
+attenuation will not exceed A for at least QT of the time.
+   These applications of AVAR are intended for use with the area prediction
+mode.  With the point-to-point mode it is probably best to always set
+MDVAR=11 and thus to use only the "Accidental" format above.
+
+   Finally, there are two small function subprograms which may, if desired,
+be used to facilitate the translation between probabilities and standard
+normal deviates.
+      Q=QERF(Z)
+      Z=QERFI(Q)
+These are the complimentary normal distribution function Q(z) and its
+inverse, respectively.
+
+  *Suggested Operational Flow*
+
+      TO use the area prediction mode:
+        set KWX=0, LVAR=5
+        define HG, DH, and call QLRPS
+        optionally, define MDVAR, KLIM
+        call QLRA
+        loop for selected distances D
+          set LVAR=max(LVAR,1)
+          call LRPROP(D)
+          loop for selected quantiles
+            A=AVAR(...)
+            output A
+          repeat
+        repeat
+        check KWX
+      endTO
+
+      TO use the point-to-point mode
+        set KWX=0, LVAR=5
+        define PFL, HG, and call QLRPS
+        optionally, define KLIM
+        call QLRPFL
+        loop for selected quantiles
+          A=AVAR(...)
+          output A
+        repeat
+        check KWX
+      endTO

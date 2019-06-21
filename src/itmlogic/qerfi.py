@@ -24,14 +24,16 @@ def qerfi(q):
     d2 = 0.189269
     d3 = 0.001308
 
-    #subtract element(s) in q from 0.5
-    x = [0.5 - (x/100) for x in q]
-
+    x = [0.5 - (x / 100) for x in q]
+        
     t = []
 
     for i in range(len(x)):
         t.append(max(0.5 - abs(x[i]), 0.000001))
+    
+    output = []
 
+    index = 0
     for entry in t:
         interim_result = math.sqrt(-2 * np.log(entry))
 
@@ -41,9 +43,12 @@ def qerfi(q):
                 (((d3 * interim_result + d2) * 
                 interim_result + d1) * 
                 interim_result + 1 ))
-            
-        #TODO: qerfi1(x < 0) = -qerfi1(x < 0) #what does this do?
-        print(qerfi1)    
-    return 0
 
-qerfi([50])
+        if x[index] < 0:
+            qerfi1 = -qerfi1
+
+        output.append(round(qerfi1, 4))
+    
+        index += 1
+        
+    return output

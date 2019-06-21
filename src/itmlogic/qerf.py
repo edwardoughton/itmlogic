@@ -1,5 +1,3 @@
-
-
 def qerf(z):
     """
     The standard normal complementary probability - see function in 

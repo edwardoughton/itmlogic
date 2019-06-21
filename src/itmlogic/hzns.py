@@ -24,7 +24,6 @@ def hzns(pfl, dist, hg, gme):
     the = {}
     dl = {}
 
-    #TODO: check the indexing differences between Matlab/Python!
     np = pfl[0]
     xi = pfl[1]
     za = pfl[2] + hg[0]  
@@ -46,17 +45,18 @@ def hzns(pfl, dist, hg, gme):
             sa = sa + xi
             sb = sb - xi
 
-            q = pfl[i+1] - (qc * sa + the[1]) * sa - za
+            q = pfl[i+1] - (qc * sa + the[0]) * sa - za
             
             if q > 0:
-                the[1] = (the[1] + q / sa)
-                dl[1] = sa
+                the[0] = the[0] + q / sa
+                dl[0] = sa
+
                 wq = 0
 
             if wq == 0:
-                q = pfl[i + 2] - (qc * sb + the[2]) * sb - zb
+                q = pfl[i + 1] - (qc * sb + the[1]) * sb - zb
                 if q > 0:
-                    the[2] = the[2] + q / sb
-                    dl[2] = sb
-    
+                    the[1] = the[1] + q / sb
+                    dl[1] = sb
+               
     return the, dl
