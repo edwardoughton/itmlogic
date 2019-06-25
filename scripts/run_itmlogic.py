@@ -120,34 +120,34 @@ def run_itmlogic():
             prop['mdvarx'] = 11
 
             prop = qlrpfl(prop)
-            # print(prop)
+            print(prop)
 
-            #Here HE = effective antenna heights, DL = horizon distances, THE = horizon elevation angles
-            #MDVAR = mode of variability calculation: 0=single message mode,
-            #1=accidental mode, 2=mobile mode, 3 =broadcast mode, +10 =point-to-point, +20=interference
+            Here HE = effective antenna heights, DL = horizon distances, THE = horizon elevation angles
+            MDVAR = mode of variability calculation: 0=single message mode,
+            1=accidental mode, 2=mobile mode, 3 =broadcast mode, +10 =point-to-point, +20=interference
 
-            # #Free space loss in dB
-            # fs = db * np.log(2 * prop['wn'] * prop['dist'])
+            #Free space loss in dB
+            fs = db * np.log(2 * prop['wn'] * prop['dist'])
 
-            # q = prop['dist'] - prop['dlsa']
+            q = prop['dist'] - prop['dlsa']
 
-            # q = max(q - 0.5 * PFL[2], 0) - max(-q - 0.5 * PFL[2], 0)
+            q = max(q - 0.5 * PFL[2], 0) - max(-q - 0.5 * PFL[2], 0)
 
-            # if q < 0:
-            #     print('Line of sight path')
-            # elif q == 0:
-            #     print('Single horizon path')
-            # else
-            #     print('Double-horizon path')
+            if q < 0:
+                print('Line of sight path')
+            elif q == 0:
+                print('Single horizon path')
+            else
+                print('Double-horizon path')
             
-            # if prop['dist'] <= prop['dlsa']:
-            #     print('Diffraction is the dominant mode')
-            # elif prop['dist'] > prop['dx']:
-            #     print('Tropospheric scatter is the dominant mode')
+            if prop['dist'] <= prop['dlsa']:
+                print('Diffraction is the dominant mode')
+            elif prop['dist'] > prop['dx']:
+                print('Tropospheric scatter is the dominant mode')
             
-            # print(['Estimated quantiles of basic transmission loss (dB),\
-            #     free space value ' num2str(fs) ' dB'])
-            # print(['Confidence levels ' num2str(qc(1)) ' ' num2str(qc(2)) ' ' num2str(qc(3))])
+            print(['Estimated quantiles of basic transmission loss (dB),\
+                free space value ' num2str(fs) ' dB'])
+            print(['Confidence levels ' num2str(qc(1)) ' ' num2str(qc(2)) ' ' num2str(qc(3))])
 
 
 
