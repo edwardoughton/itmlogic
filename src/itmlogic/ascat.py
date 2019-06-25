@@ -1,4 +1,7 @@
+import math
 import numpy as np
+from itmlogic.h0f import h0f
+from itmlogic.ahd import ahd
 
 def ascat(d,prop):
     """
@@ -15,7 +18,7 @@ def ascat(d,prop):
 
     if r1 < 0.2 and r2 < 0.2:
         prop['ascat1'] = 1001
-    
+
     ss = (d - prop['ad']) / (d + prop['ad'])
 
     q = prop['rr'] / ss
@@ -23,7 +26,7 @@ def ascat(d,prop):
     q = min(max(0.1, q), 10)
     z0 = (d - prop['ad']) * (d + prop['ad']) * th * 0.25 / d
 
-    et = (prop['etq'] * exp(-min(1.7, z0 / 8.0e3)**6) + 1) * z0 / 1.7556e3
+    et = (prop['etq'] * math.exp(-min(1.7, z0 / 8.0e3)**6) + 1) * z0 / 1.7556e3
 
     ett = max(et, 1)
     h0 = (h0f(r1, ett) + h0f(r2, ett)) * 0.5
@@ -38,18 +41,18 @@ def ascat(d,prop):
             (1 + 1.4142 / r2))**2 * (r1 + r2) / (r1 + r2 + 2.8284))
         )
 
-    if h0 > 15 and prop['h0s'] >= 0: 
-        h0 = prop['h0s'] 
+    if h0 > 15 and prop['h0s'] >= 0:
+        h0 = prop['h0s']
 
     if prop['ascat1'] != 1001:
-        
+
         prop['h0s'] = h0
-        
+
         th = prop['tha'] + d * prop['gme']
 
         prop['ascat1'] = (
-            ahd[th*d] + 4.343 * np.log(47.7 * prop['wn'] * th**4) - 
-            0.1 * (prop['ens'] - 301) * exp(-th * d / 40e3) + h0
+            ahd(th*d) + 4.343 * np.log(47.7 * prop['wn'] * th**4) -
+            0.1 * (prop['ens'] - 301) * math.exp(-th * d / 40e3) + h0
             )
 
     return prop
