@@ -19,7 +19,7 @@ DATA_INTERMEDIATE = os.path.join(BASE_PATH, 'intermediate')
 DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
 
 
-def run_itmlogic(surface_profile_m):
+def run_itmlogic(surface_profile_m, distance_km):
 
     prop = {}
 
@@ -39,12 +39,11 @@ def run_itmlogic(surface_profile_m):
     prop['ens0']  =   314 # Surface refractivity (N-units): also controls effective Earth radius
     qc = [50, 90, 10] # Confidence  levels for predictions
     qr = [1, 10, 50, 90, 99] # Reliability levels for predictions
-    prop['d'] = 77.8   # Length of profile (km)
+    prop['d'] = distance_km  # Length of profile
 
     pfl = []
-    pfl.append(156) # Number of points describing profile -1
+    pfl.append(len(surface_profile_m) - 1) # Number of points describing profile -1
     pfl.append(0)
-
 
     for profile in surface_profile_m:
         pfl.append(profile)
@@ -69,7 +68,8 @@ def run_itmlogic(surface_profile_m):
         dkm = xkm * pfl[0]
 
     if xkm <= 0:
-        xkm = dkm / pfl[0]
+        # print(dkm, pfl[0])
+        xkm = dkm // pfl[0]
 
         pfl[1] = dkm * 1000 / pfl[0]
 
@@ -105,25 +105,25 @@ def run_itmlogic(surface_profile_m):
     q = prop['dist'] - prop['dlsa']
     q = max(q - 0.5 * pfl[1], 0) - max(-q - 0.5 * pfl[1], 0)
 
-    if q < 0:
-        print('Line of sight path')
-    elif q == 0:
-        print('Single horizon path')
-    else:
-        print('Double-horizon path')
+    # if q < 0:
+    #     print('Line of sight path')
+    # elif q == 0:
+    #     print('Single horizon path')
+    # else:
+    #     print('Double-horizon path')
 
-    if prop['dist'] <= prop['dlsa']:
-        print('Diffraction is the dominant mode')
-    elif prop['dist'] > prop['dx']:
-        print('Tropospheric scatter is the dominant mode')
+    # if prop['dist'] <= prop['dlsa']:
+    #     print('Diffraction is the dominant mode')
+    # elif prop['dist'] > prop['dx']:
+    #     print('Tropospheric scatter is the dominant mode')
 
-    print(
-        'Estimated quantiles of basic transmission loss (db), \
-        free space value {} db',format(str(fs))
-        )
+    # print(
+    #     'Estimated quantiles of basic transmission loss (db), \
+    #     free space value {} db',format(str(fs))
+    #     )
 
-    print('Confidence levels {}, {}, {}'.format(
-        str(qc[0]), str(qc[1]), str(qc[2])))
+    # print('Confidence levels {}, {}, {}'.format(
+    #     str(qc[0]), str(qc[1]), str(qc[2])))
 
     output = []
     for jr in range(0, (nr)):
@@ -133,25 +133,24 @@ def run_itmlogic(surface_profile_m):
             xlb.append(fs + avar1)
         output.append((qr[jr], xlb[0], xlb[1], xlb[2]))
 
-    if prop['kwx'] == 1:
-        print('WARNING- SOME PARAMETERS ARE NEARLY OUT OF RANGE.  \
-            RESULTS SHOULD BE USED WITH CAUTION.')
-    elif prop['kwx'] == 2:
-        print('NOTE- DEFAULT PARAMETERS HAVE BEEN SUBSTITUTED FOR \
-            IMPOSSIBLE ONES.')
-    elif prop['kwx'] == 3:
-        print('WARNING- A COMBINATION OF PARAMETERS IS OUT OF RANGE. \
-            RESULTS ARE PROBABLY INVALID.')
-    elif prop['kwx'] == 4:
-        print('WARNING- SOME PARAMETERS ARE OUT OF RANGE. \
-            RESULTS ARE PROBABLY INVALID.')
+    # if prop['kwx'] == 1:
+    #     print('WARNING- SOME PARAMETERS ARE NEARLY OUT OF RANGE.  \
+    #         RESULTS SHOULD BE USED WITH CAUTION.')
+    # elif prop['kwx'] == 2:
+    #     print('NOTE- DEFAULT PARAMETERS HAVE BEEN SUBSTITUTED FOR \
+    #         IMPOSSIBLE ONES.')
+    # elif prop['kwx'] == 3:
+    #     print('WARNING- A COMBINATION OF PARAMETERS IS OUT OF RANGE. \
+    #         RESULTS ARE PROBABLY INVALID.')
+    # elif prop['kwx'] == 4:
+    #     print('WARNING- SOME PARAMETERS ARE OUT OF RANGE. \
+    #         RESULTS ARE PROBABLY INVALID.')
 
-    csv_writer(output, DATA_INTERMEDIATE, 'test1.csv')
-
-    return print('Completed run')
+    return output
 
 
-def csv_writer(data, directory, filename):
+def csv_writer(data, fs, directory, filename, transmitter_x,
+    transmitter_y, receiver_x, receiver_y):
     """
     Write data to a CSV file path
 
@@ -160,24 +159,29 @@ def csv_writer(data, directory, filename):
         os.makedirs(directory)
 
     full_path = os.path.join(directory, filename)
-    print(full_path)
+
     if not os.path.exists(full_path):
         results_file = open(full_path, 'w', newline='')
         results_writer = csv.writer(results_file)
         results_writer.writerow(
-            ('reliability_level', 'confidence_50', 'confidence_90', 'confidence_10'))
+            ('transmitter_x', 'transmitter_y', 'receiver_x',
+            'receiver_y', 'free_space', 'reliability_level',
+            'confidence_50', 'confidence_90', 'confidence_10'))
     else:
         results_file = open(full_path, 'a', newline='')
         results_writer = csv.writer(results_file)
 
     for row in data:
-        results_writer.writerow(
-            (row[0], row[1], row[2], row[3]))
+        results_writer.writerow((
+            transmitter_x, transmitter_y,
+            receiver_x, receiver_y,
+            fs, row[0], row[1], row[2], row[3]
+            ))
 
 
 if __name__ == '__main__':
 
-    surface_profile_m = [
+    original_surface_profile_m = [
         96,  84,  65,  46,  46,  46,  61,  41,  33,  27,  23,  19,  15,  15,  15,
         15,  15,  15,  15,  15,  15,  15,  15,  15,  17,  19,  21,  23,  25,  27,
         29,  35,  46,  41,  35,  30,  33,  35,  37,  40,  35,  30,  51,  62,  76,
@@ -196,8 +200,8 @@ if __name__ == '__main__':
         'geometry': {
             'type': 'LineString',
             'coordinates': [
-                (31.742076203022005, -0.33438483055855517),
-                (31.515083698402652, -0.2659505169747957),
+                (-0.07491679518573545, 51.42413477117786),
+                (-0.8119433954872186, 51.94972494521946)
                 ]
             },
         'properties': {
@@ -205,6 +209,18 @@ if __name__ == '__main__':
             }
         }
 
-    terrain_profile = terrain_module(line, 'EPSG:4326', 'EPSG:32633')
-    # print(terrain_profile)
-    run_itmlogic(terrain_profile)
+    transmitter_x = line['geometry']['coordinates'][0][0]
+    transmitter_y = line['geometry']['coordinates'][0][1]
+    receiver_x = line['geometry']['coordinates'][1][0]
+    receiver_y = line['geometry']['coordinates'][1][1]
+
+    measured_terrain_profile = terrain_module(line, 'EPSG:4326', 'EPSG:27700') #uganda 'EPSG:32633'
+
+    output = run_itmlogic(
+        measured_terrain_profile
+        )
+
+    # csv_writer(output, fs, DATA_INTERMEDIATE, 'test1.csv',
+    #     transmitter_x, transmitter_y, receiver_x, receiver_y)
+
+    # return print('Completed run')

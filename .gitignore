@@ -55,6 +55,7 @@ src/smif/sample_project/results/*
 
 # data file
 data/*
+visualise/*
 
 # Other files
 *.ipynb

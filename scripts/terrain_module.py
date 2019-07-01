@@ -55,6 +55,8 @@ def convert_raster_to_projected_coordinates(input_file, output, desired_crs):
     WGS84 to projected coordinates
 
     """
+    if not os.path.exists(output):
+        os.makedirs(os.path.dirname(output))
     input_raster = gdal.Open(input_file)
     gdal.Warp(output, input_raster, dstSRS=desired_crs)
 
@@ -105,23 +107,24 @@ def determine_length_increment(length):
     return int(round(increment,0))
 
 
-def terrain_module(unprojected_line, old_crs, new_crs):
+def terrain_module(line, old_crs, new_crs):
     """
     This module takes a set of point coordinates and returns the elevation
     profile.
 
     """
-    line = convert_shape_to_projected_crs(unprojected_line, old_crs, new_crs)
+    # line = convert_shape_to_projected_crs(unprojected_line, old_crs, new_crs)
 
-    input_folder = os.path.join(DATA_RAW, 'dem_uganda')
+    input_folder = os.path.join(DATA_RAW, 'dem_london')
     output_folder = os.path.join(input_folder, 'projected')
 
-    input_file = (os.path.join(input_folder, 'ASTGTM2_S01E031_dem.tif'))
-    output_file = (os.path.join(output_folder, 'ASTGTM2_S01E031_dem_proj.tif'))
+    input_file = (os.path.join(input_folder, 'ASTGTM2_N51W001_dem.tif'))
+    output_file = (os.path.join(output_folder, 'ASTGTM2_N51W001_dem_proj.tif'))
 
-    convert_raster_to_projected_coordinates(input_file, output_file, 'EPSG:32633')
+    if not os.path.exists(output_file):
+        convert_raster_to_projected_coordinates(input_file, output_file, new_crs)
 
-    dem_file = (os.path.join(output_folder, 'ASTGTM2_S01E031_dem_proj.tif'))
+    dem_file = (os.path.join(output_folder, 'ASTGTM2_N51W001_dem_proj.tif'))
 
     dem_layer, geotransformed_layer, bands = load_in_projected_dem_tile(dem_file)
 
@@ -131,13 +134,17 @@ def terrain_module(unprojected_line, old_crs, new_crs):
 
     increment = determine_length_increment(length)
 
+    if length < 100:
+        length = 101
+        increment = 100
+
     x = []
     y = []
     elevation_profile = []
-    full_output = []
+    # full_output = []
 
     for currentdistance  in range(0, int(length), int(increment)):
-
+        # print(currentdistance, increment)
         point = line_geometry.interpolate(currentdistance)
         xp, yp = point.x, point.y
         x.append(xp)
@@ -152,29 +159,33 @@ def terrain_module(unprojected_line, old_crs, new_crs):
         #         'z': z
         #         })
 
+    # if len(elevation_profile) == 0:
+    #     print(elevation_profile)
+
     return elevation_profile
 
 
 if __name__ == '__main__':
 
-    # with fiona.open(
-    #     os.path.join(DATA_RAW, 'elev_slice.shp'), 'r') as source:
-    #         line = next(iter(source))
+    with fiona.open(
+        os.path.join(DATA_RAW, 'crystal_palace_to_mursley.shp'), 'r') as source:
+            line = next(iter(source))
+            print(line)
 
-    line = {
-        'type': 'Feature',
-        'geometry': {
-            'type': 'LineString',
-            'coordinates': [
-                (31.742076203022005, -0.33438483055855517),
-                (31.515083698402652, -0.2659505169747957),
-                ]
-            },
-        'properties': {
-            'id': 'line1'
-            }
-        }
+    # line = {
+    #     'type': 'Feature',
+    #     'geometry': {
+    #         'type': 'LineString',
+    #         'coordinates': [
+    #             (31.742076203022005, -0.33438483055855517),
+    #             (31.515083698402652, -0.2659505169747957),
+    #             ]
+    #         },
+    #     'properties': {
+    #         'id': 'line1'
+    #         }
+    #     }
 
-    terrain_profile = terrain_module(line, 'EPSG:4326', 'EPSG:32633')
+    terrain_profile = terrain_module(line, 'EPSG:4326', 'EPSG:27700')
 
     # print(terrain_profile)

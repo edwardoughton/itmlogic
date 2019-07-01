@@ -4,7 +4,7 @@ def zlsq1(z, x1, x2):
     """
     A linear least squares fit between x1 and x2, to the function described
     by the array z.
-    
+
     Parameters
     ----------
     z : ???

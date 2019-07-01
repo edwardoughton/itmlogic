@@ -25,14 +25,14 @@ def hzns(pfl, dist, hg, gme):
     dl = {}
 
     np = pfl[0]
-    xi = pfl[1]
-    za = pfl[2] + hg[0]  
-    zb = pfl[np + 2] + hg[1] 
+    xi = pfl[0]
+    za = pfl[1] + hg[0]
+    zb = pfl[np + 2] + hg[1]
     qc = 0.5 * gme
     q = qc * dist
     the[1] = (zb - za) / dist
     the[0] = the[1] - q
-    the[1] = -the[1] - q 
+    the[1] = -the[1] - q
     dl[0]  = dist
     dl[1]  = dist
 
@@ -46,7 +46,7 @@ def hzns(pfl, dist, hg, gme):
             sb = sb - xi
 
             q = pfl[i+1] - (qc * sa + the[0]) * sa - za
-            
+
             if q > 0:
                 the[0] = the[0] + q / sa
                 dl[0] = sa
@@ -58,5 +58,5 @@ def hzns(pfl, dist, hg, gme):
                 if q > 0:
                     the[1] = the[1] + q / sb
                     dl[1] = sb
-               
+
     return the, dl
