@@ -8,8 +8,9 @@ June 2019
 """
 import configparser
 import glob
+import math
 import os
-from functools import partial
+from functools import partial, lru_cache
 
 import fiona
 import pyproj
@@ -88,11 +89,30 @@ def get_tile_path_for_point(extents, x, y):
 def get_value_from_dem_tile(tile_path, x, y):
     """Read all tile extents, load value from relevant tile
     """
-    dataset = rasterio.open(tile_path)
-    row, col = dataset.index(x, y)
-    band = dataset.read(1)
-    dataset.close()
+    band, transform = load_dataset(tile_path)
+    row, col = transform_xy_to_rowcol(transform, x, y)
     return band[row, col]
+
+
+def transform_xy_to_rowcol(transform, x, y):
+    """Transform point to dataset indices.
+
+    Informed by rasterio.transform.TransmMethodsMixin::transform and rowcol
+    see: https://github.com/mapbox/rasterio/blob/960a906dad2a4e426387ce048a52c6e90afdcd2b/rasterio/transform.py
+    """
+    eps = 0.0
+    col, row = transform * (x + eps, y - eps)
+    return math.floor(row), math.floor(col)
+
+
+@lru_cache(maxsize=32)
+def load_dataset(tile_path, band=1):
+    """Caching load of dataset band and affine transform
+    """
+    with rasterio.open(tile_path) as dataset:
+        band = dataset.read(band)
+        transform = ~dataset.transform  # we use the inverse of dataset transform 
+    return band, transform
 
 
 def determine_length_increment(length):
@@ -105,6 +125,7 @@ def determine_length_increment(length):
     else:
         increment = max(length / 100, 1)
     return int(increment)
+
 
 if __name__ == '__main__':
     dem_folder = os.path.join(DATA_RAW, 'dem_london')
