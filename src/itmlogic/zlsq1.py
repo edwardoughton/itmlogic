@@ -37,6 +37,7 @@ def zlsq1(z, x1, x2):
     xa = xb - xa
     x  = -0.5 * xa
     xb = xb + x
+
     a  = 0.5 * (z[(ja + 2)] + z[jb + 2])
     b  = 0.5 * (z[ja + 2] - z[jb + 2]) * x
 
@@ -46,10 +47,13 @@ def zlsq1(z, x1, x2):
         a  = a + z[ja + 2]
         b  = b + z[ja + 2] * x
 
-    a = a / xa
+    a = avoid_zero_division(a, xa)
     b = b * 12 / ((xa * xa + 2) * xa)
 
     z0 = a - b * xb
     zn = a + b * (xn - xb)
 
     return z0, zn
+
+def avoid_zero_division(n, d):
+    return n / d if d else 0
