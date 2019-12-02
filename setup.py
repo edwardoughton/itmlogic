@@ -49,6 +49,11 @@ setup(
     ],
     install_requires=[
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
+        'numpy',
+        'shapely',
+        'fiona',
+        'rasterio',
+        'pyproj',
     ],
     extras_require={
         # eg:
