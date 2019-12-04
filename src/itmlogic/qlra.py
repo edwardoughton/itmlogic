@@ -28,15 +28,15 @@ def qlra(kst, prop):
     if prop['hg'][j] < 5:
         q = q * math.sin(0.3141593 * prop['hg'][j])
         prop['he'][j] = (
-            prop['hg'][j] + (1 + q) * 
-            exp(-min(20, 2 * prop['hg'][j] / 
+            prop['hg'][j] + (1 + q) *
+            exp(-min(20, 2 * prop['hg'][j] /
             max(1e-3, prop['dh'])))
             )
 
         q = np.sqrt(2 * prop['he'][j] / prop['gme'])
 
         prop['dl'][j] = (
-            q * exp(-0.07 * np.sqrt(prop['dh'] / 
+            q * exp(-0.07 * np.sqrt(prop['dh'] /
             max(prop['he'][j], 5)))
             )
 
@@ -47,11 +47,11 @@ def qlra(kst, prop):
 
     prop['mdp'] = 1
     prop['lvar'] = max(prop['lvar'], 3)
-    
+
     if prop['mdvarx'] >= 0:
         prop['mdvar'] = prop['mdvarx']
         prop['lvar'] = max(prop['lvar'], 4)
-    
+
     if prop['klimx'] > 0:
         prop['klim'] = prop['klimx']
         prop['lvar'] = 5

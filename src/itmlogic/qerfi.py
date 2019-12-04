@@ -1,5 +1,5 @@
 import numpy as np
-import math 
+import math
 
 def qerfi(q):
     """
@@ -25,12 +25,12 @@ def qerfi(q):
     d3 = 0.001308
 
     x = [0.5 - (x / 100) for x in q]
-        
+
     t = []
 
     for i in range(len(x)):
         t.append(max(0.5 - abs(x[i]), 0.000001))
-    
+
     output = []
 
     index = 0
@@ -38,17 +38,17 @@ def qerfi(q):
         interim_result = math.sqrt(-2 * np.log(entry))
 
         qerfi1 = (interim_result - (
-                (c2 * interim_result + c1) * 
-                interim_result + c0) / 
-                (((d3 * interim_result + d2) * 
-                interim_result + d1) * 
+                (c2 * interim_result + c1) *
+                interim_result + c0) /
+                (((d3 * interim_result + d2) *
+                interim_result + d1) *
                 interim_result + 1 ))
 
         if x[index] < 0:
             qerfi1 = -qerfi1
 
         output.append(round(qerfi1, 4))
-    
+
         index += 1
-        
+
     return output
