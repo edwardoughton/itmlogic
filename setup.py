@@ -18,7 +18,8 @@ def readme():
 
 setup(
     name='itmlogic',
-    use_scm_version=True,
+    # use_scm_version=True,
+    version=0.1,
     license='MIT License',
     description='Longley-Rice irregular terrain propagation model',
     long_description=readme(),
@@ -42,7 +43,7 @@ setup(
         'Topic :: Utilities',
     ],
     keywords=[
-        # eg: 'keyword1', 'keyword2', 'keyword3',
+        'Longley-Rice', 'propagation model', 'irregular terrain model'
     ],
     setup_requires=[
         'setuptools_scm'
@@ -55,11 +56,6 @@ setup(
         'rasterio',
         'pyproj',
     ],
-    extras_require={
-        # eg:
-        #   'rst': ['docutils>=0.11'],
-        #   ':python_version=="2.6"': ['argparse'],
-    },
     entry_points={
         'console_scripts': [
             # eg: 'snkit = snkit.cli:main',

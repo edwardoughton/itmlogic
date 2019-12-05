@@ -1,15 +1,17 @@
 """
 Terrain profile module
 
-Written by Ed Oughton
+Written by Ed Oughton and Tom Russell
 
 June 2019
 
 """
 import configparser
 import glob
+
 import os
-from functools import partial
+import math
+from functools import partial, lru_cache
 
 import fiona
 import pyproj
