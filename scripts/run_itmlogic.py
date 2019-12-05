@@ -146,8 +146,8 @@ def run_itmlogic():
                 print('Tropospheric scatter is the dominant mode')
 
             print(['Estimated quantiles of basic transmission loss (dB),\
-                free space value ' num2str(fs) ' dB'])
-            print(['Confidence levels ' num2str(qc(1)) ' ' num2str(qc(2)) ' ' num2str(qc(3))])
+                free space value {} dB'.format(str(fs))])
+            print(['Confidence levels {}, {}, {}'.format(str(qc[1]), str(qc[2]), str(qc[3]))])
 
 
 
