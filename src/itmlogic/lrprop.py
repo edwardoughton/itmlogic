@@ -1,5 +1,5 @@
 import math
-import numpy as np 
+import numpy as np
 
 from itmlogic.adiff import adiff
 from itmlogic.alos import alos
@@ -15,7 +15,7 @@ def lrprop(d, prop):
         ???
     prop : dict
         ???
-    
+
     Returns
     -------
     prop : dict
@@ -25,42 +25,48 @@ def lrprop(d, prop):
     third = 1 / 3
 
     if prop['mdp'] != 0:
+
         prop['dls'] = []
+
         for entry in prop['he']:
             prop['dls'].append(math.sqrt(2 * entry / prop['gme']))
+
         prop['dlsa']  = prop['dls'][0] + prop['dls'][1]
+
         prop['dla'] = prop['dl'][0] + prop['dl'][1]
+
         prop['tha'] = (
-            max(prop['the'][0] + prop['the'][1], 
+            max(prop['the'][0] + prop['the'][1],
             -prop['dla'] * prop['gme'])
             )
+
         prop['wlos'] = 0
         prop['wscat'] = 0
 
         if prop['wn'] < 0.838 or prop['wn'] > 210:
-            prop['kwx'] = max(prop['kwx'], 1) 
+            prop['kwx'] = max(prop['kwx'], 1)
 
         if prop['hg'][0] < 1 or prop['hg'][0] > 1000:
             prop['kwx'] = max(prop['kwx'], 1)
-        
+
         if prop['hg'][1] < 1 or prop['hg'][1] > 1000:
-            prop['kwx'] = max(prop['kwx'], 1) 
-        
-        if (abs(prop['the'][0]) > 0.2 or 
-            prop['dl'][0] < 0.1 * prop['dls'][0] or 
+            prop['kwx'] = max(prop['kwx'], 1)
+
+        if (abs(prop['the'][0]) > 0.2 or
+            prop['dl'][0] < 0.1 * prop['dls'][0] or
             prop['dl'][1] > 3 * prop['dls'][0]):
-            prop['kwx'] = max(prop['kwx'], 3) 
-        
-        if (abs(prop['the'][1]) > 0.2 or 
+            prop['kwx'] = max(prop['kwx'], 3)
+
+        if (abs(prop['the'][1]) > 0.2 or
             prop['dl'][1] < 0.1 * prop['dls'][1] or
             prop['dl'][1] > 3 * prop['dls'][1]):
-            prop['kwx'] = max(prop['kwx'], 3) 
+            prop['kwx'] = max(prop['kwx'], 3)
 
-        if (prop['ens'] < 250 or prop['ens'] > 400 or prop['gme'] < 75e-9 or 
-            prop['gme'] > 250e-9 or prop['zgnd'].real < abs(prop['zgnd'].imag) or 
+        if (prop['ens'] < 250 or prop['ens'] > 400 or prop['gme'] < 75e-9 or
+            prop['gme'] > 250e-9 or prop['zgnd'].real < abs(prop['zgnd'].imag) or
             prop['wn'] < 0.419 or prop['wn'] > 420):
             prop['kwx'] = 4
-        
+
         if prop['hg'][0] < 0.5 or prop['hg'][0] > 3000:
             prop['kwx'] = 4
 
@@ -82,7 +88,7 @@ def lrprop(d, prop):
 
         prop['aed'] = a3 - prop['emd'] * d3
         prop['wis'] = (
-            0.021 / (0.021 + prop['wn'] * 
+            0.021 / (0.021 + prop['wn'] *
             prop['dh'] / max(10e3, prop['dlsa']))
             )
         prop['ascat1'] = 0
@@ -98,7 +104,7 @@ def lrprop(d, prop):
             prop['kwx'] = max(prop['kwx'], 3)
         if prop['dist'] < 1e3 or prop['dist'] > 2000e3:
             prop['kwx'] = 4
-        
+
     if prop['dist'] < prop['dlsa']:
         if prop['wlos'] == 0:
             d2 = prop['dlsa']
@@ -110,7 +116,7 @@ def lrprop(d, prop):
                 d1 = d0 + 0.25 * (prop['dla'] - d0)
             else:
                 d1 = max(-prop['aed'] / prop['emd'], 0.25 * prop['dla'])
-        
+
             a1 = alos(d1, prop)
 
             wq=0
@@ -118,8 +124,8 @@ def lrprop(d, prop):
                 a0 = alos(d0, prop)
                 q = np.log(d2 / d0)
                 prop['ak2'] = (
-                    max(0,((d2 - d0) * (a1 - a0) - (d1 - d0) * 
-                    (a2 - a0)) / ((d2 - d0) * np.log(d1 / d0) - 
+                    max(0,((d2 - d0) * (a1 - a0) - (d1 - d0) *
+                    (a2 - a0)) / ((d2 - d0) * np.log(d1 / d0) -
                     (d1 - d0) * q))
                     )
 
@@ -132,21 +138,21 @@ def lrprop(d, prop):
                         prop['ak2'] = max(a2 - a0, 0) / q
                         if prop['ak2'] == 0:
                             prop['ak1'] = prop['emd']
-            
-        if wq == 0:
-            prop['ak1'] = max(a2 - a1, 0) / (d2 - d1)
-            prop['ak2'] = 0
-            if prop['ak1'] == 0:
-                prop['ak1'] = prop['emd']
 
-        prop['ael'] = a2 - prop['ak1'] * d2 - prop['ak2'] * np.log(d2)
-        prop['wlos'] = 1
+            if wq == 0:
+                prop['ak1'] = max(a2 - a1, 0) / (d2 - d1)
+                prop['ak2'] = 0
+                if prop['ak1'] == 0:
+                    prop['ak1'] = prop['emd']
 
-        if prop['dist'] > 0:
-            prop['aref'] = (
-                prop['ael'] + prop['ak1'] * 
-                prop['dist'] + prop['ak2'] * np.log(prop['dist']) 
-                )
+            prop['ael'] = a2 - prop['ak1'] * d2 - prop['ak2'] * np.log(d2)
+            prop['wlos'] = 1
+
+            if prop['dist'] > 0:
+                prop['aref'] = (
+                    prop['ael'] + prop['ak1'] *
+                    prop['dist'] + prop['ak2'] * np.log(prop['dist'])
+                    )
 
     if prop['dist'] <= 0 or prop['dist'] >= prop['dlsa']:
 
@@ -158,10 +164,10 @@ def lrprop(d, prop):
                 prop['rr'] = 1 / prop['rr']
 
             prop['etq'] = (
-                (5.67e-6 * prop['ens'] - 2.32e-3) * 
+                (5.67e-6 * prop['ens'] - 2.32e-3) *
                 prop['ens'] + 0.031
                 )
-            
+
             prop['h0s'] = -15
 
             d5 = prop['dla'] + 200e3
@@ -176,11 +182,11 @@ def lrprop(d, prop):
                 prop['ems'] = (a6 - a5) / 200e3
                 prop['dx'] = (
                     max([prop['dlsa'], prop['dla'] + 0.3 * prop['xae'] *
-                    np.log(47.7 * prop['wn']), (a5 - prop['aed'] - 
+                    np.log(47.7 * prop['wn']), (a5 - prop['aed'] -
                     prop['ems'] * d5) / (prop['emd'] - prop['ems'])])
                     )
                 prop['aes'] = (
-                    (prop['emd'] - prop['ems']) * 
+                    (prop['emd'] - prop['ems']) *
                     prop['dx'] + prop['aed']
                     )
 
