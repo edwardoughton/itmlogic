@@ -1,23 +1,21 @@
+import cmath
 import math
 
 def qlrps(fmhz, zsys, en0, ipol, eps, sgm):
-    """
-    ???
-
+    """???
     """
     gma = 157e-9
-    wn  = fmhz / 47.7
-    ens  = en0
+    wn = fmhz / 47.7
+    ens = en0
 
     if zsys != 0:
-
         ens = ens * math.exp(-zsys / 9460)
 
-    gme  = gma * (1 - 0.04665 * math.exp(ens / 179.3))
+    gme = gma * (1 - 0.04665 * math.exp(ens / 179.3))
 
-    zq   = complex(eps, 376.62 * sgm / wn)
+    zq = complex(eps, 376.62 * sgm / wn)
 
-    zgnd = math.sqrt(zq - 1)
+    zgnd = cmath.sqrt(zq - 1)
 
     if ipol != 0:
 
