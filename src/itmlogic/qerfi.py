@@ -24,7 +24,7 @@ def qerfi(q):
     d2 = 0.189269
     d3 = 0.001308
 
-    x = [0.5 - (x / 100) for x in q]
+    x = [0.5 - x  for x in q]
 
     t = []
 
