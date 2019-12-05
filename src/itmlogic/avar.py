@@ -27,7 +27,7 @@ def avar(zzt, zzl, zzc, prop):
 
     """
     third = 1 / 3
-    
+
     bv1 = [   -9.67,   -0.62,    1.26,   -9.21,   -0.62,   -0.39,    3.15]
     bv2 = [    12.7,    9.19,    15.5,    9.05,    9.19,    2.86,   857.9]
     xv1 = [ 144.9e3, 228.9e3, 262.6e3,  84.1e3, 228.9e3, 141.7e3, 2222.e3]
@@ -84,20 +84,20 @@ def avar(zzt, zzl, zzc, prop):
             prop['cfp1'] = bfp1[prop['klim'] - 1]
             prop['cfp2'] = bfp2[prop['klim'] - 1]
             prop['cfp3'] = bfp3[prop['klim'] - 1]
-  
+
         if prop['lvar'] > 3:
 
             prop['kdv'] = prop['mdvar']
-            prop['ws'] = (prop['kdv'] >= 20) 
-            
+            prop['ws'] = (prop['kdv'] >= 20)
+
             if prop['ws']:
                 prop['kdv'] = prop['kdv'] - 20
-            
+
             prop['wl'] = prop['kdv'] >= 10
-            
+
             if prop['wl']:
                 prop['kdv'] = prop['kdv'] - 10
-            
+
             if prop['kdv'] < 0 or prop['kdv'] > 3:
                 prop['kdv'] = 0
                 prop['kwx'] = max(prop['kwx'], 2)
@@ -107,17 +107,17 @@ def avar(zzt, zzl, zzc, prop):
             q = np.log(0.133 * prop['wn'])
 
             prop['gm'] = (
-                prop['cfm1'] + prop['cfm2'] / 
+                prop['cfm1'] + prop['cfm2'] /
                 ((prop['cfm3'] * q)**2 + 1)
                 )
 
             prop['gp'] = (
-                prop['cfp1'] + prop['cfp2'] / 
+                prop['cfp1'] + prop['cfp2'] /
                 ((prop['cfp3'] * q)**2 + 1)
                 )
 
         if prop['lvar'] > 1:
-            
+
             prop['dexa'] = (
                 math.sqrt(18e6 * prop['he'][0]) +
                 math.sqrt(18e6 * prop['he'][1]) +
@@ -126,15 +126,15 @@ def avar(zzt, zzl, zzc, prop):
 
         if prop['dist'] < prop['dexa']:
             de = 130e3 * prop['dist'] / prop['dexa']
-        
+
         else:
             de = 130e3 + prop['dist'] - prop['dexa']
-        
+
         prop['vmd'] = curv(
-            prop['cv1'], prop['cv2'], prop['yv1'], 
+            prop['cv1'], prop['cv2'], prop['yv1'],
             prop['yv2'], prop['yv3'], de
             )
-            
+
         prop['sgtm'] = curv(
             prop['csm1'], prop['csm2'], prop['ysm1'],
             prop['ysm2'], prop['ysm3'], de) * prop['gm']
@@ -186,7 +186,7 @@ def avar(zzt, zzl, zzc, prop):
         sgt = prop['sgtd'] + prop['tgtd'] / zt
 
     vs = (
-        prop['vs0'] + (sgt * zt)**2 / (rt + zc**2) + 
+        prop['vs0'] + (sgt * zt)**2 / (rt + zc**2) +
         (prop['sgl'] * zl)**2 / (rl + zc**2)
         )
 
@@ -202,13 +202,13 @@ def avar(zzt, zzl, zzc, prop):
     else:
         yr = sgt * zt + prop['sgl'] * zl
         sgc = math.sqrt(vs)
-    
-    # print('AVAR YR, KDV, SGT, ZT ' + str(yr) + ' ' + 
+
+    # print('AVAR YR, KDV, SGT, ZT ' + str(yr) + ' ' +
     #     str(['kdv']) + ' ' + str(sgt) + ' ' +  str(zt))
 
     avar1 = prop['aref'] - prop['vmd'] - yr - sgc * zc
 
-    # print('AVAR: ' + str(prop['aref']) + ' ' + str(prop['vmd']) + 
+    # print('AVAR: ' + str(prop['aref']) + ' ' + str(prop['vmd']) +
     #     ' ' + str(yr) + ' ' + str(sgc) + ' ' + str(zc))
 
     if avar1 < 0:

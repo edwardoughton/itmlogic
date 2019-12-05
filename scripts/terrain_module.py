@@ -8,8 +8,9 @@ June 2019
 """
 import configparser
 import glob
-import math
+
 import os
+import math
 from functools import partial, lru_cache
 
 import fiona
@@ -18,29 +19,28 @@ import rasterio
 from shapely.ops import transform
 from shapely.geometry import LineString, mapping
 
-# #set up file paths
-CONFIG = configparser.ConfigParser()
-CONFIG.read(os.path.join(os.path.dirname(__file__), 'script_config.ini'))
-BASE_PATH = CONFIG['file_locations']['base_path']
-
-DATA_RAW = os.path.join(BASE_PATH, 'raw')
-DATA_INTERMEDIATE = os.path.join(BASE_PATH, 'intermediate')
-DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
-
 
 def terrain_module(dem_folder, line, old_crs, new_crs):
     """This module takes a set of point coordinates and returns the elevation
     profile.
+
+    old_crs = epsg:4326
+    new_crs = epsg:3857
+
+    Line : dict
+        Geojson. Must be in WGS84 / EPSG: 4326
+
     """
     extents = load_extents(dem_folder)
 
-    line_geometry = LineString(line['geometry']['coordinates'])    
+    line_geometry = LineString(line['geometry']['coordinates'])
+
     ll_to_osgb = partial(
         pyproj.transform,
-        pyproj.Proj(init='epsg:4326'),
-        pyproj.Proj(init='epsg:27700'))
-        
-    
+        pyproj.Proj(init=old_crs),
+        pyproj.Proj(init=new_crs))
+
+    #convert line geometry to projected
     line_geometry = transform(ll_to_osgb, line_geometry)
 
     length = int(line_geometry.length)
@@ -51,8 +51,8 @@ def terrain_module(dem_folder, line, old_crs, new_crs):
     elevation_profile = []
     osgb_to_ll = partial(
         pyproj.transform,
-        pyproj.Proj(init='epsg:27700'),
-        pyproj.Proj(init='epsg:4326'))
+        pyproj.Proj(init=new_crs),
+        pyproj.Proj(init=old_crs))
 
     for currentdistance  in range(0, length, increment):
         point = line_geometry.interpolate(currentdistance)
@@ -74,7 +74,7 @@ def load_extents(dem_folder):
     extents = {}
     for tile_path in glob.glob(os.path.join(dem_folder, "*.tif")):
         dataset = rasterio.open(tile_path)
-        print("Extent of", tile_path, tuple(dataset.bounds))
+        # print("Extent of", tile_path, tuple(dataset.bounds))
         extents[tuple(dataset.bounds)] = tile_path
     return extents
 
@@ -89,47 +89,46 @@ def get_tile_path_for_point(extents, x, y):
 def get_value_from_dem_tile(tile_path, x, y):
     """Read all tile extents, load value from relevant tile
     """
-    band, transform = load_dataset(tile_path)
-    row, col = transform_xy_to_rowcol(transform, x, y)
+    dataset = rasterio.open(tile_path)
+    row, col = dataset.index(x, y)
+    band = dataset.read(1)
+    dataset.close()
     return band[row, col]
 
 
-def transform_xy_to_rowcol(transform, x, y):
-    """Transform point to dataset indices.
-
-    Informed by rasterio.transform.TransmMethodsMixin::transform and rowcol
-    see: https://github.com/mapbox/rasterio/blob/960a906dad2a4e426387ce048a52c6e90afdcd2b/rasterio/transform.py
-    """
-    eps = 0.0
-    col, row = transform * (x + eps, y - eps)
-    return math.floor(row), math.floor(col)
-
-
-@lru_cache(maxsize=32)
-def load_dataset(tile_path, band=1):
-    """Caching load of dataset band and affine transform
-    """
-    with rasterio.open(tile_path) as dataset:
-        band = dataset.read(band)
-        transform = ~dataset.transform  # we use the inverse of dataset transform 
-    return band, transform
-
-
 def determine_length_increment(length):
-    """Longley-Rice Irregular Terrain Model is limited to only 600 elevation points, so this 
-    function maximises ensures this number is not passed (while maintaining computational 
+    """Longley-Rice Irregular Terrain Model is limited to only 600 elevation points, so this
+    function maximises ensures this number is not passed (while maintaining computational
     speed)
     """
-    if length >= 60000:
-        increment = length / 600
-    else:
-        increment = max(length / 100, 1)
+    # if length >= 60000:
+    #     increment = length / 600
+    # else:
+    #     increment = max(length / 200, 1)
+    increment = 1000
     return int(increment)
 
+# if __name__ == '__main__':
 
-if __name__ == '__main__':
-    dem_folder = os.path.join(DATA_RAW, 'dem_london')
+#     with fiona.open(
+#         os.path.join(DATA_RAW, 'crystal_palace_to_mursley.shp'), 'r') as source:
+#             line = next(iter(source))
+#             print(line)
 
-    with fiona.open(os.path.join(DATA_RAW, 'crystal_palace_to_cambridge.shp'), 'r') as source:
-        line = next(iter(source))
-        terrain_profile = terrain_module(dem_folder, line, 'EPSG:4326', 'EPSG:27700')
+#     # line = {
+#     #     'type': 'Feature',
+#     #     'geometry': {
+#     #         'type': 'LineString',
+#     #         'coordinates': [
+#     #             (31.742076203022005, -0.33438483055855517),
+#     #             (31.515083698402652, -0.2659505169747957),
+#     #             ]
+#     #         },
+#     #     'properties': {
+#     #         'id': 'line1'
+#     #         }
+#     #     }
+
+#     terrain_profile = terrain_module(line, 'EPSG:4326', 'EPSG:3857')
+
+#     # print(terrain_profile)

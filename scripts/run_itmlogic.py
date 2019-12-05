@@ -3,7 +3,7 @@ import os
 import csv
 import math
 
-from itmlogic.qlrpfl import qlrpfl 
+from itmlogic.qlrpfl import qlrpfl
 
 # #set up file paths
 CONFIG = configparser.ConfigParser()
@@ -21,7 +21,7 @@ DATA_PIMTER = os.path.join(BASE_PATH, 'pimter_campaign')
 def run_itmlogic():
 
     frequencies = [
-        0.4491, 0.4541, 0.4561, 0.4601, 0.4651, 0.4691, 
+        0.4491, 0.4541, 0.4561, 0.4601, 0.4651, 0.4691,
         2.02, 2.3941, 2.3991, 2.4131, 2.4231, 2.4341,
         2.5781, 2.69, 3.01, 3.52, 3.7891, 3.9561,
         3.9991, 4.0121, 4.1231, 4.52, 5.15, 5.51,
@@ -31,30 +31,30 @@ def run_itmlogic():
 
     prop = {}
     # Polarization selection (0=horizontal, 1=vertical)
-    prop['ipol'] = 1  
+    prop['ipol'] = 1
     # Receiver heights (m)        -> need to confirm
-    rxht = [1.5, 2, 2.5] 
+    rxht = [1.5, 2, 2.5]
     # Transmit Antenna height (m) -> need to confirm
-    prop['hg'] = [1.5]   
+    prop['hg'] = [1.5]
 
     # Terrain relative permittivity  -> unknown
-    prop['eps'] = 15 
+    prop['eps'] = 15
     # Terrain conductivity (S/m)     -> unknown
     prop['sgm'] = 0.005
-    # Surface refractivity (N-units): also controls effective Earth radius -> unknown 
+    # Surface refractivity (N-units): also controls effective Earth radius -> unknown
     prop['ens0'] = 314
 
-    # Climate selection (1 = equatorial, 2 = continental, subtropical, 
-    #   3 = maritime subtropical, 4 = desert, 5 = continental temperate, 
-    #   6 = maritime temperate overland, 7 = maritime temperate, 
+    # Climate selection (1 = equatorial, 2 = continental, subtropical,
+    #   3 = maritime subtropical, 4 = desert, 5 = continental temperate,
+    #   6 = maritime temperate overland, 7 = maritime temperate,
     #   oversea (5 is the default)
 
-    prop['klim'] = 5   
+    prop['klim'] = 5
     # Refractivity scaling ens['ens0']*exp(-zsys/9460.);  (Average system elev above sea level)
     zsys = 0
     # Confidence levels for predictions
     qc = [50]
-    # Reliability levels for predictions   
+    # Reliability levels for predictions
     qr = [50]
 
     ### A few preliminary calcs
@@ -70,10 +70,10 @@ def run_itmlogic():
     prop['ens'] = prop['ens0']
 
     if zsys != 0:
-      prop['ens'] = prop['ens'] * math.exp(-zsys / 9460) 
+      prop['ens'] = prop['ens'] * math.exp(-zsys / 9460)
 
     prop['gme'] = (
-        prop['gma'] * 
+        prop['gma'] *
         (1 - 0.04665 * math.exp(prop['ens'] / 179.3))
         )
 
@@ -102,13 +102,13 @@ def run_itmlogic():
         prop['fmhz'] = frequency * 1000
         prop['wn'] = prop['fmhz'] / 47.7
 
-        zq = complex(prop['eps'], 376.62 * prop['sgm'] / prop['wn']) 
+        zq = complex(prop['eps'], 376.62 * prop['sgm'] / prop['wn'])
 
         prop['zgnd'] = math.sqrt(prop['eps'] - 1)
 
         if prop['ipol'] != 0:
             prop['zgnd'] = prop['zgnd'] / zq
-        
+
         #TODO: where does iht come from?
         for iht in range(0, 3):
 
@@ -122,9 +122,9 @@ def run_itmlogic():
             prop = qlrpfl(prop)
             print(prop)
 
-            Here HE = effective antenna heights, DL = horizon distances, THE = horizon elevation angles
-            MDVAR = mode of variability calculation: 0=single message mode,
-            1=accidental mode, 2=mobile mode, 3 =broadcast mode, +10 =point-to-point, +20=interference
+            ## Here HE = effective antenna heights, DL = horizon distances, THE = horizon elevation angles
+            ## MDVAR = mode of variability calculation: 0=single message mode,
+            ## 1=accidental mode, 2=mobile mode, 3 =broadcast mode, +10 =point-to-point, +20=interference
 
             #Free space loss in dB
             fs = db * np.log(2 * prop['wn'] * prop['dist'])
@@ -137,17 +137,17 @@ def run_itmlogic():
                 print('Line of sight path')
             elif q == 0:
                 print('Single horizon path')
-            else
+            else:
                 print('Double-horizon path')
-            
+
             if prop['dist'] <= prop['dlsa']:
                 print('Diffraction is the dominant mode')
             elif prop['dist'] > prop['dx']:
                 print('Tropospheric scatter is the dominant mode')
-            
+
             print(['Estimated quantiles of basic transmission loss (dB),\
-                free space value ' num2str(fs) ' dB'])
-            print(['Confidence levels ' num2str(qc(1)) ' ' num2str(qc(2)) ' ' num2str(qc(3))])
+                free space value {} dB'.format(str(fs))])
+            print(['Confidence levels {}, {}, {}'.format(str(qc[1]), str(qc[2]), str(qc[3]))])
 
 
 
@@ -172,7 +172,7 @@ def load_data(num):
 
     for row in load_csv(directory_height):
         height.append(float(row))
-    
+
     for row in load_csv(directory_length):
         length.append(float(row))
 
@@ -183,11 +183,10 @@ def load_data(num):
     #         'height': row_height,
     #         'length': row_length
     #     })
-    
+
     return height, length
 
 
 if __name__ == '__main__':
 
     run_itmlogic()
-

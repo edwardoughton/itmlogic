@@ -25,8 +25,9 @@ def hzns(pfl, dist, hg, gme):
     dl = {}
 
     np = pfl[0]
-    xi = pfl[0]
-    za = pfl[1] + hg[0]
+    xi = pfl[1] #should this be 0 or 1?
+    # print('xi is {}'.format(xi))
+    za = pfl[2] + hg[0]
     zb = pfl[np + 2] + hg[1]
     qc = 0.5 * gme
     q = qc * dist
