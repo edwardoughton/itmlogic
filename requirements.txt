@@ -1,1 +1,7 @@
-numpy>=1.16.4
+numpy
+shapely
+fiona
+rasterio
+pyproj
+tqdm
+pytest
