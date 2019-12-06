@@ -5,8 +5,8 @@
 
 Longley-Rice Irregular Terrain Model
 
-**itmlogic** is a Python implementation of the Longley-Rice propagation model (v1.2.2) and
-capable of estimating the propagation effects resulting from irregular terrain.
+**itmlogic** is a Python implementation of the classic Longley-Rice propagation model (v1.2.2)
+and capable of estimating the signal propagation effects resulting from irregular terrain.
 
 Model properties and the algorithm defining it are available in:
 
