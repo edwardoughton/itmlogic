@@ -12,3 +12,11 @@ def test_h0f():
     expected_answer = 34.28154717133048
 
     assert actual_answer == expected_answer
+
+    actual_answer = h0f(2, -1)
+
+    assert round(actual_answer, 2) == 9.33
+
+    actual_answer = h0f(2, 6)
+
+    assert round(actual_answer, 2) == 18.53
