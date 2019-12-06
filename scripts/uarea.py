@@ -1,19 +1,26 @@
+"""
+Area prediction mode runner.
+
+Written by Ed Oughton
+
+November 2019
+
+Original Matlab code implemented by Joel Johnson
+and team at Ohio State.
+
+"""
+
 import configparser
 import os
 import csv
 import math
 import numpy as np
 from functools import partial
-# from shapely.geometry import LineString, mapping
-# from shapely.ops import transform
 
 from itmlogic.qerfi import qerfi
 from itmlogic.qlra import qlra
 from itmlogic.lrprop import lrprop
-# from itmlogic.qlrpfl import qlrpfl
 from itmlogic.avar import avar
-# from terrain_module import terrain_module
-# import pyproj
 
 # #set up file paths
 CONFIG = configparser.ConfigParser()
