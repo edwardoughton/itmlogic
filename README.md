@@ -15,6 +15,7 @@ Model properties and the algorithm defining it are available in:
   PB82-217977)
 * Hufford, G. A. (1995) The ITS Irregular Terrain Model, version 1.2.2, the Algorithm.
 
+![Example](/terrain_profile.png)
 
 ## Setup and configuration
 
