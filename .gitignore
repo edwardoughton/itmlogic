@@ -54,8 +54,10 @@ src/smif/app/dist
 src/smif/sample_project/results/*
 
 # data file
-data/*
-visualise/*
+data/processed/*
+data/intermediate/*
+data/raw/*
+vis/*
 
 # Other files
 *.ipynb
