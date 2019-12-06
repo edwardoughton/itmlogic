@@ -23,7 +23,7 @@ Terrain profile slice: Crystal Palace (South London) to Mursley
 
 ## Setup and configuration
 
-All code for ``itmlogic`` is written in Python (Python>=3.6).
+All code for ``itmlogic`` is written in Python (Python>=3.7).
 
 See requirements.txt for a full list of dependencies.
 
@@ -59,6 +59,18 @@ Run the tests:
     pytest
 
 
+Quick start
+-----------
+
+If you want to quickly generate results run using point-to-point mode:
+
+    python scripts/qkpfl.py
+
+Or using area prediction mode:
+
+    python scripts/uarea.py
+
+
 ## Background
 
 The model was developed by the Institute for Telecommunication Sciences (ITS) for frequencies
@@ -84,5 +96,11 @@ text present in any copied or derivative works.
 ## Thanks for the support
 
 **itmlogic** was written and developed at the [Environmental Change Institute, University of
-Oxford](http://www.eci.ox.ac.uk) within the EPSRC-sponsored MISTRAL programme, as part of the
-[Infrastructure Transition Research Consortium](http://www.itrc.org.uk/)
+Oxford](http://www.eci.ox.ac.uk) within the EPSRC-sponsored MISTRAL programme (	EP/N017064/1),
+as part of the [Infrastructure Transition Research Consortium](http://www.itrc.org.uk/)
+
+## Contributors
+Edward J. Oughton (University of Oxford)
+Tom Russell (University of Oxford)
+
+If you find an error or have a question, please submit an issue.
