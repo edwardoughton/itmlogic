@@ -1,9 +1,20 @@
+"""
+Point to Point prediction mode runner.
+
+Written by Ed Oughton
+
+June 2019
+
+"""
 import configparser
 import os
 import csv
 import math
 import numpy as np
 from functools import partial
+from collections import OrderedDict
+
+import fiona
 from shapely.geometry import LineString, mapping
 from shapely.ops import transform
 
@@ -11,7 +22,7 @@ from itmlogic.qerfi import qerfi
 from itmlogic.qlrpfl import qlrpfl
 from itmlogic.avar import avar
 from terrain_module import terrain_module
-import pyproj
+from pyproj import Transformer
 
 # #set up file paths
 CONFIG = configparser.ConfigParser()
@@ -24,7 +35,10 @@ DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
 
 
 def run_itmlogic(surface_profile_m, distance_km):
+    """
+    Run itmlogic in point to point (p2p) prediction mode.
 
+    """
     prop = {}
 
     # Terrain relative permittivity
@@ -180,20 +194,23 @@ def run_itmlogic(surface_profile_m, distance_km):
     return output, fs
 
 
-def convert_shape_to_projected_crs(line, original_crs, new_crs):
+def convert_shape_to_projected_crs(line, old_crs, new_crs):
     """
     Existing elevation path needs to be converted from WGS84 to projected
     coordinates.
 
     """
     # Geometry transform function based on pyproj.transform
-    project = partial(
-        pyproj.transform,
-        pyproj.Proj(init = original_crs),
-        pyproj.Proj(init = new_crs)
-        )
+    # project = partial(
+    #     pyproj.transform,
+    #     pyproj.Proj(init = old_crs),
+    #     pyproj.Proj(init = new_crs)
+    #     )
 
-    new_geom = transform(project, LineString(line['geometry']['coordinates']))
+    transformer = Transformer.from_crs(old_crs, new_crs, always_xy=True)
+    # print(line['geometry']['coordinates'])
+    #transform(project, LineString(line['geometry']['coordinates']))
+    new_geom = LineString(transformer.transform(line['geometry']['coordinates'][1], line['geometry']['coordinates'][0]))
 
     output = {
         'type': 'Feature',
@@ -207,7 +224,7 @@ def convert_shape_to_projected_crs(line, original_crs, new_crs):
 def csv_writer(data, fs, directory, filename, transmitter_x,
     transmitter_y, receiver_x, receiver_y):
     """
-    Write data to a CSV file path
+    Write data to a CSV file path.
 
     """
     if not os.path.exists(directory):
@@ -234,11 +251,47 @@ def csv_writer(data, fs, directory, filename, transmitter_x,
             ))
 
 
+def write_shapefile(data, directory, filename, crs):
+    """
+    Write geojson data to shapefile.
+
+    """
+    prop_schema = []
+    for name, value in data[0]['properties'].items():
+        fiona_prop_type = next((
+            fiona_type for fiona_type, python_type in \
+                fiona.FIELD_TYPES_MAP.items() if \
+                python_type == type(value)), None
+            )
+
+        prop_schema.append((name, fiona_prop_type))
+
+    sink_driver = 'ESRI Shapefile'
+    sink_crs = {'init': crs}
+    sink_schema = {
+        'geometry': data[0]['geometry']['type'],
+        'properties': OrderedDict(prop_schema)
+    }
+
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    with fiona.open(
+        os.path.join(directory, filename), 'w',
+        driver=sink_driver, crs=sink_crs, schema=sink_schema) as sink:
+        for datum in data:
+            sink.write(datum)
+
+
 if __name__ == '__main__':
+
+    dem_folder = os.path.join(BASE_PATH)
+    directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
 
     old_crs = 'EPSG:4326'
     new_crs = 'EPSG:3857'
 
+    #original surface profile from Longley Rice docs
     original_surface_profile_m = [
         96,  84,  65,  46,  46,  46,  61,  41,  33,  27,  23,  19,  15,  15,  15,
         15,  15,  15,  15,  15,  15,  15,  15,  15,  17,  19,  21,  23,  25,  27,
@@ -253,43 +306,101 @@ if __name__ == '__main__':
         137, 140, 144, 147, 150, 152, 159
         ]
 
+    #create new geojson for Crystal Palace radio transmitter
+    transmitter = {
+        'type': 'Feature',
+        'geometry': {
+            'type': 'Point',
+            'coordinates': (-0.07491679518573545, 51.42413477117786)
+            },
+        'properties': {
+            'id': 'Crystal Palace radio transmitter'
+            }
+        }
+
+    #create new geojson for Mursley
+    receiver = {
+        'type': 'Feature',
+        'geometry': {
+            'type': 'Point',
+            'coordinates': (-0.8119433954872186, 51.94972494521946)
+            },
+        'properties': {
+            'id': 'Mursley'
+            }
+        }
+
+    #create new geojson for terrain path
     line = {
         'type': 'Feature',
         'geometry': {
             'type': 'LineString',
             'coordinates': [
-                (-0.07491679518573545, 51.42413477117786),
-                (-0.8119433954872186, 51.94972494521946)
+                    (
+                        transmitter['geometry']['coordinates'][0],
+                        transmitter['geometry']['coordinates'][1]
+                    ),
+                    (
+                        receiver['geometry']['coordinates'][0],
+                        receiver['geometry']['coordinates'][1]
+                    ),
                 ]
             },
         'properties': {
-            'id': 'line1'
+            'id': 'terrain path'
             }
         }
 
-    #77572
-    line_projected = convert_shape_to_projected_crs(line, old_crs, new_crs)
+    # initial_line_write = []
+    # initial_line_write.append(line)
+    # write_shapefile(initial_line_write, directory_shapes, 'initial_line.shp', old_crs)
 
-    geom = LineString(line_projected['geometry']['coordinates'])
+    # #convert from unprojected WGS94 ('EPSG:4326') to projected WGS94/pseudo
+    # #web mercator ('EPSG:3857')
+    # line_projected = convert_shape_to_projected_crs(line, old_crs, new_crs)
 
-    distance_km = geom.length / 1e3
 
-    transmitter_x = line['geometry']['coordinates'][0][0]
-    transmitter_y = line['geometry']['coordinates'][0][1]
-    receiver_x = line['geometry']['coordinates'][1][0]
-    receiver_y = line['geometry']['coordinates'][1][1]
+    # #creat shapely geometry object out of line
+    # geom = LineString(line_projected['geometry']['coordinates'])
 
-    dem_folder = os.path.join(DATA_RAW, 'dem')
-    measured_terrain_profile = terrain_module(dem_folder, line, old_crs, new_crs)
-    print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
-    print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
-    print('distance_km {}'.format(distance_km))
-
-    output, fs = run_itmlogic(
-        original_surface_profile_m, distance_km #100770
+    # #convert to km
+    # distance_km = geom.length #/ 1e3
+    # print(distance_km)
+    print(line)
+    current_crs = 'EPSG:4326'
+    #run terrain module
+    measured_terrain_profile, distance_km, points = terrain_module(
+        dem_folder, line, current_crs
         )
 
-    csv_writer(output, fs, DATA_INTERMEDIATE, 'test1.csv',
+    #check (out of interest) how many measurements are in each profile
+    print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
+    print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
+    # print('distance_km {}'.format(distance_km))
+
+    #run model and get output
+    output, fs = run_itmlogic(
+        original_surface_profile_m, distance_km
+        )
+
+    #grab coordinates for transmitter and receiver for writing to .csv
+    transmitter_x = transmitter['geometry']['coordinates'][0]
+    transmitter_y = transmitter['geometry']['coordinates'][1]
+    receiver_x = receiver['geometry']['coordinates'][0]
+    receiver_y = receiver['geometry']['coordinates'][1]
+
+    #write results to .csv
+    csv_writer(output, fs, DATA_PROCESSED, 'qkpfl_results.csv',
         transmitter_x, transmitter_y, receiver_x, receiver_y)
+
+    transmitter_shape = []
+    transmitter_shape.append(transmitter)
+    write_shapefile(transmitter_shape, directory_shapes, 'transmitter.shp', old_crs)
+
+    receiver_shape = []
+    receiver_shape.append(receiver)
+    write_shapefile(receiver_shape, directory_shapes, 'receiver.shp', old_crs)
+
+    write_shapefile(points, directory_shapes, 'points.shp', new_crs)
 
     print('Completed run')

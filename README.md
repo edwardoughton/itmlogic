@@ -16,20 +16,27 @@ Model properties and the algorithm defining it are available in:
 * Hufford, G. A. (1995) The ITS Irregular Terrain Model, version 1.2.2, the Algorithm.
 
 
+Terrain profile slice: Crystal Palace (South London) to Mursley
+---------------------------------------------------------------
+![Example](/terrain_profile.png)
+
+
 ## Setup and configuration
 
-All code for ``itmlogic`` is written in Python (Python>=3.6).
+All code for ``itmlogic`` is written in Python (Python>=3.7).
 
 See requirements.txt for a full list of dependencies.
 
 
 ## Conda
 
-The recommended installation method is to use conda, which handles packages and virtual environments, along with the conda-forge channel which has a host of pre-built libraries and packages.
+The recommended installation method is to use conda, which handles packages and virtual
+environments, along with the conda-forge channel which has a host of pre-built libraries
+and packages.
 
 Create a conda environment called ``itmlogic``:
 
-    conda create --name itmlogic python=3.7
+    conda create --name itmlogic python=3.7 gdal
 
 Activate it (run this each time you switch projects):
 
@@ -37,7 +44,7 @@ Activate it (run this each time you switch projects):
 
 First, install optional packages:
 
-    conda install numpy fiona shapely rtree rasterio pyproj tqdm
+    conda install numpy fiona shapely rtree rasterio pyproj tqdm pytest
 
 Then install itmlogic:
 
@@ -47,13 +54,21 @@ Alternatively, for development purposes, clone this repository and run:
 
     python setup.py develop
 
-Install test/dev requirements:
-
-    conda install pytest pytest-cov
-
 Run the tests:
 
-    pytest --cov-report=term --cov=itmlogic tests/
+    pytest
+
+
+Quick start
+-----------
+
+If you want to quickly generate results run using point-to-point mode:
+
+    python scripts/qkpfl.py
+
+Or using area prediction mode:
+
+    python scripts/uarea.py
 
 
 ## Background
@@ -81,5 +96,11 @@ text present in any copied or derivative works.
 ## Thanks for the support
 
 **itmlogic** was written and developed at the [Environmental Change Institute, University of
-Oxford](http://www.eci.ox.ac.uk) within the EPSRC-sponsored MISTRAL programme, as part of the
-[Infrastructure Transition Research Consortium](http://www.itrc.org.uk/)
+Oxford](http://www.eci.ox.ac.uk) within the EPSRC-sponsored MISTRAL programme (	EP/N017064/1),
+as part of the [Infrastructure Transition Research Consortium](http://www.itrc.org.uk/)
+
+## Contributors
+Edward J. Oughton (University of Oxford)
+Tom Russell (University of Oxford)
+
+If you find an error or have a question, please submit an issue.
