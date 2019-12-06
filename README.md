@@ -25,11 +25,13 @@ See requirements.txt for a full list of dependencies.
 
 ## Conda
 
-The recommended installation method is to use conda, which handles packages and virtual environments, along with the conda-forge channel which has a host of pre-built libraries and packages.
+The recommended installation method is to use conda, which handles packages and virtual
+environments, along with the conda-forge channel which has a host of pre-built libraries
+and packages.
 
 Create a conda environment called ``itmlogic``:
 
-    conda create --name itmlogic python=3.7
+    conda create --name itmlogic python=3.7 gdal
 
 Activate it (run this each time you switch projects):
 
@@ -37,7 +39,7 @@ Activate it (run this each time you switch projects):
 
 First, install optional packages:
 
-    conda install numpy fiona shapely rtree rasterio pyproj tqdm
+    conda install numpy fiona shapely rtree rasterio pyproj tqdm pytest
 
 Then install itmlogic:
 
@@ -47,13 +49,9 @@ Alternatively, for development purposes, clone this repository and run:
 
     python setup.py develop
 
-Install test/dev requirements:
-
-    conda install pytest pytest-cov
-
 Run the tests:
 
-    pytest --cov-report=term --cov=itmlogic tests/
+    pytest
 
 
 ## Background
