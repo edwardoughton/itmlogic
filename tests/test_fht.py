@@ -12,5 +12,6 @@ def test_fht():
 
     assert actual_answer == expected_answer
 
+    assert round(fht(150, 20), 2) == 11.05
 
-    
+    assert round(fht(150, 1e-6), 2) == -29.96
