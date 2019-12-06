@@ -1,3 +1,11 @@
+"""
+Point to Point prediction mode runner.
+
+Written by Ed Oughton
+
+June 2019
+
+"""
 import configparser
 import os
 import csv
