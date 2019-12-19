@@ -46,17 +46,13 @@ First, install optional packages:
 
     conda install numpy fiona shapely rtree rasterio pyproj tqdm pytest
 
-Then install itmlogic:
-
-    pip install itmlogic
-
-Alternatively, for development purposes, clone this repository and run:
+For development purposes, clone this repository and run:
 
     python setup.py develop
 
 Run the tests:
 
-    pytest
+    python -m pytest
 
 
 Quick start
