@@ -17,7 +17,7 @@ authors:
   - name: Caglar Yardim
     orcid: 
     affiliation: 3
-  - name: Julius Kasuma
+  - name: Julius Kusuma
     orcid: 
     affiliation: 4
 affiliations:
@@ -25,7 +25,7 @@ affiliations:
     index: 1
   - name: Computer Laboratory, University of Cambridge
     index: 2
-  - name: ElectroScience Laboratory, Ohio State University
+  - name: ElectroScience Laboratory, The Ohio State University
     index: 3
   - name: Facebook Connectivity Lab, Facebook Research
     index: 4
