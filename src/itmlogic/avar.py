@@ -15,15 +15,15 @@ def avar(zzt, zzl, zzc, prop):
         ???
     zzc : ???
         ???
-    prop : ???
-        ???
+    prop : dict
+        Propagation parameters and results.
 
     Returns
     -------
     avar1 : ???
         ???
     prop : dict
-        ???
+        Propagation parameters and results.
 
     """
     third = 1 / 3
