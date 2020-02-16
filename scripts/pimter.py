@@ -25,10 +25,10 @@ BASE_PATH = CONFIG['file_locations']['base_path']
 
 DATA_PIMTER = os.path.join(BASE_PATH, 'pimter')
 
-
 def run_itmlogic(surface_profile_m, distance_km):
     """
     Run itmlogic in point to point (p2p) prediction mode.
+
     """
     prop = {}
 
@@ -118,7 +118,7 @@ def run_itmlogic(surface_profile_m, distance_km):
             prop['hg'][0] = rxht[1]
 
         #Tx ht (UAV)
-        for iht in range(0,1):#range(0, len(txht)):
+        for iht in range(0, len(txht)):
 
             hg = txht[iht]
 
@@ -135,10 +135,9 @@ def run_itmlogic(surface_profile_m, distance_km):
             prop['kwx'] = 0
             prop['klimx'] = 0
             prop['mdvarx'] = 11
-            print(prop)
+
             prop = qlrpfl(prop)
-            print('---')
-            print(prop)
+
             #Here HE = effective antenna heights
             #DL = horizon distances
             #THE = horizon elevation angles
@@ -180,6 +179,7 @@ if __name__ == '__main__':
     #terrain profile with no trees
     terrain_height_no_tree = []
     terrain_height_no_tree_path = os.path.join(DATA_PIMTER, 'PIMTER_2019_Rx_Tx0_dem_height.csv')
+
     with open(terrain_height_no_tree_path) as source:
         reader = csv.reader(source)
         for row in reader:
@@ -187,12 +187,12 @@ if __name__ == '__main__':
 
     #terrain length
     terrain_length = []
+
     terrain_length_path = os.path.join(DATA_PIMTER, 'PIMTER_2019_Rx_Tx0_dem_length.csv')
+
     with open(terrain_length_path) as source:
         reader = csv.reader(source)
         for row in reader:
             terrain_length.append(float(row[0]))
 
     results = run_itmlogic(terrain_height_no_tree, terrain_length)
-
-    # print(results)
