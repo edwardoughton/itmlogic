@@ -1,6 +1,6 @@
 """
 Program for evaluating Longley-Rice path loss prediction for conditions
-of OSU's 2018 PIMTER propagation campaign
+of OSU's 2018 PIMTER propagation campaign.
 
 Code written by Edward Oughton, based on original work by Johnson & Yardim
 
@@ -15,24 +15,15 @@ import numpy as np
 from functools import partial
 from collections import OrderedDict
 
-# import fiona
-# from shapely.geometry import LineString, mapping
-# from shapely.ops import transform
-
 from itmlogic.qerfi import qerfi
 from itmlogic.qlrpfl import qlrpfl
 from itmlogic.avar import avar
-# from terrain_module import terrain_module
-# from pyproj import Transformer
 
-# #set up file paths
 CONFIG = configparser.ConfigParser()
 CONFIG.read(os.path.join(os.path.dirname(__file__), 'script_config.ini'))
 BASE_PATH = CONFIG['file_locations']['base_path']
 
 DATA_PIMTER = os.path.join(BASE_PATH, 'pimter')
-# DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
-
 
 def run_itmlogic(surface_profile_m, distance_km):
     """
@@ -110,7 +101,7 @@ def run_itmlogic(surface_profile_m, distance_km):
     for frequency in range(0, len(frequencies)):
 
         prop['fmhz'] = frequencies[frequency] * 1000
-        print(prop['fmhz'])
+
         prop['wn'] = prop['fmhz'] / 47.7
         zq = complex(prop['eps'], (376.62 * prop['sgm'] / prop['wn']))
         prop['zgnd'] = np.sqrt(zq - 1)
@@ -169,9 +160,26 @@ def run_itmlogic(surface_profile_m, distance_km):
 
 if __name__ == '__main__':
 
+    # #terrain profile with no trees
+    # terrain_height_no_tree = []
+    # terrain_height_no_tree_path = os.path.join(DATA_PIMTER, 'PIMTER_Tx_Rx1_dem_height.csv')
+    # with open(terrain_height_no_tree_path) as source:
+    #     reader = csv.reader(source)
+    #     for row in reader:
+    #         terrain_height_no_tree.append(float(row[0]))
+
+    # #terrain length
+    # terrain_length = []
+    # terrain_length_path = os.path.join(DATA_PIMTER, 'PIMTER_Tx_Rx1_dem_length.csv')
+    # with open(terrain_length_path) as source:
+    #     reader = csv.reader(source)
+    #     for row in reader:
+    #         terrain_length.append(float(row[0]))
+
     #terrain profile with no trees
     terrain_height_no_tree = []
-    terrain_height_no_tree_path = os.path.join(DATA_PIMTER, 'PIMTER_Tx_Rx1_dem_height.csv')
+    terrain_height_no_tree_path = os.path.join(DATA_PIMTER, 'PIMTER_2019_Rx_Tx0_dem_height.csv')
+
     with open(terrain_height_no_tree_path) as source:
         reader = csv.reader(source)
         for row in reader:
@@ -179,12 +187,12 @@ if __name__ == '__main__':
 
     #terrain length
     terrain_length = []
-    terrain_length_path = os.path.join(DATA_PIMTER, 'PIMTER_Tx_Rx1_dem_length.csv')
+
+    terrain_length_path = os.path.join(DATA_PIMTER, 'PIMTER_2019_Rx_Tx0_dem_length.csv')
+
     with open(terrain_length_path) as source:
         reader = csv.reader(source)
         for row in reader:
             terrain_length.append(float(row[0]))
 
     results = run_itmlogic(terrain_height_no_tree, terrain_length)
-
-    print(results)
