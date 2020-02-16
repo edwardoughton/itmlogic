@@ -5,11 +5,9 @@ Written by Ed Oughton
 
 November 2019
 
-Original Matlab code implemented by Joel Johnson
-and team at Ohio State.
+Original Matlab code implemented by Johnson and Yardim at OSU.
 
 """
-
 import configparser
 import os
 import csv
@@ -27,8 +25,6 @@ CONFIG = configparser.ConfigParser()
 CONFIG.read(os.path.join(os.path.dirname(__file__), 'script_config.ini'))
 BASE_PATH = CONFIG['file_locations']['base_path']
 
-DATA_RAW = os.path.join(BASE_PATH, 'raw')
-DATA_INTERMEDIATE = os.path.join(BASE_PATH, 'intermediate')
 DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
 
 
@@ -37,7 +33,7 @@ def run_itmlogic():
     prop = {}
 
     #Antenna height 1 (m), Antenna height 2 (m)
-    prop['hg']  =     [3.3, 1.3]
+    prop['hg'] = [3.3, 1.3]
 
     #Frequency (MHz)
     prop['fmhz'] = 20
@@ -164,7 +160,9 @@ def run_itmlogic():
 
         for JC in range(0, NC): #0-3
             confidence_level = QC[JC]
+
             avar1, prop = avar(ZT, ZL, ZC[JC], prop)
+
             output.append({
                 'distance_km': D,
                 'confidence_level_%': confidence_level,
