@@ -276,6 +276,7 @@ def setup_prop_to_test_lrprop_2():
         'kwx': 0,
         'lvar': 5,
         'mdp': -1,
+        'wlos': 0,
         'mdvar': 11,
         'mdvarx': 11,
         'pfl': [
