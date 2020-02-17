@@ -62,7 +62,7 @@ Inputs to the model are in the MKS system of units, so that the transmitter and 
 
 The model's purpose is to predict properties of the propagation loss in a communications link between a transmitter and receiver. The predicted propagation loss is described using cumulative distributions given the stochastic nature of radiowave propagation. The model originally was created in the 1960s when television broadcasting and terrestrial radio were important systems that required better engineering [@Hufford:1982]. The model is based on empirical curve fits to an extensive set of propagation measurements peformed by the Institution for Telecommunication Sciences and other organizations.
 
-Two modes of prediction are available: "area prediction" and "point-to-point". Area prediction mode does not require specification of a terrain profile but instead uses an effective roughness parameter to represent the terrain. Point-to-point mode in contrast requires a quantiative description of the profile of the terrain between transmitter and receiver [@Hufford:1995].
+Two modes of prediction are available: "area prediction" and "point-to-point". Area prediction mode uses a terrain irregularity parameter based on the inter-decile range of terrain elevations (the range after removing the top 10% and bottom 10% of elevations). Point-to-point mode in contrast requires a quantiative description of the profile of the terrain between transmitter and receiver [@Hufford:1995].
 
 ## Applications
 
