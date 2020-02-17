@@ -107,6 +107,7 @@ def lrprop(d, prop):
 
     if prop['dist'] < prop['dlsa']:
         if prop['wlos'] == 0:
+
             d2 = prop['dlsa']
             a2 = prop['aed'] + d2 * prop['emd']
             d0 = 1.908 * prop['wn'] * prop['he'][0] * prop['he'][1]
