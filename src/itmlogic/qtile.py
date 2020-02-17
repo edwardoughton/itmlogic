@@ -2,7 +2,7 @@ import numpy as np
 
 def qtile(a, ir):
     """
-    This routine returns the ith entry of vector after sorting in 
+    This routine returns the ith entry of vector after sorting in
     descending order.
 
     Parameters
@@ -10,7 +10,7 @@ def qtile(a, ir):
     a : list
         Input data distribution
     ir : int
-        Quartile value 
+        Quartile value
 
     Returns
     -------

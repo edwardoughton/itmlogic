@@ -1330,7 +1330,7 @@ def setup_prop_to_test_qlrpfl_pimter():
         'mdvarx': 11
         }
 
-  
+@fixture(scope='function')
 def setup_prop_to_test_qlra_uarea():
     return {
         'hg': [3.3, 1.3],
@@ -1351,7 +1351,7 @@ def setup_prop_to_test_qlra_uarea():
         'zgnd': (0.24855253543510109-0.014883967087395276j)
     }
 
-  
+
 @fixture(scope='function')
 def setup_final_prop_to_test_qlrpfl_pimter():
     return {
@@ -1394,8 +1394,8 @@ def setup_final_prop_to_test_qlrpfl_pimter():
         'aref': 32.481756780137
      }
 
-  
-  def setup_final_prop_to_test_qlra_uarea():
+@fixture(scope='function')
+def setup_final_prop_to_test_qlra_uarea():
     return {
         'hg': [3.3, 1.3],
         'fmhz': 20,

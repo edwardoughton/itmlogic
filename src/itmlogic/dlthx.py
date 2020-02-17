@@ -50,6 +50,7 @@ def dlthx(pfl1, x1, x2):
                 s.append(pfl1[k+2] + (pfl1[k+2] - pfl1[k + 1]) * xa)
             else: #addition to avoid indexing beyond the length of a list
                 s.append(pfl1[len(pfl1) - 1] + (pfl1[len(pfl1) - 1] - pfl1[len(pfl1) - 2]) * xa)
+
             xa = xa + xb
 
         xa, xb = zlsq1(s, 0, sn)

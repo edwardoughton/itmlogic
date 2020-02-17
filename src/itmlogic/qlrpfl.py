@@ -21,7 +21,7 @@ def qlrpfl(prop):
     for j in range(0,2):
         xl[j] = min(15 * prop['hg'][j], 0.1 * prop['dl'][j])
 
-    xl[1]  = prop['dist'] - xl[1]
+    xl[1] = prop['dist'] - xl[1]
 
     prop['dh'] = dlthx(prop['pfl'], xl[0], xl[1])
 

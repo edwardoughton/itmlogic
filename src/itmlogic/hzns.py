@@ -42,7 +42,8 @@ def hzns(pfl, dist, hg, gme):
         sb = dist
         wq = 1
 
-        for i in range(2, np):
+        for i in range(2, np + 1):
+
             sa = sa + xi
             sb = sb - xi
 

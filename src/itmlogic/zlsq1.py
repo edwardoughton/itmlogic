@@ -41,7 +41,7 @@ def zlsq1(z, x1, x2):
     a  = 0.5 * (z[(ja + 2)] + z[jb + 2])
     b  = 0.5 * (z[ja + 2] - z[jb + 2]) * x
 
-    for i in range(1, n):
+    for i in range(2, n+1):
         ja = ja + 1
         x  = x + 1
         a  = a + z[ja + 2]
@@ -51,7 +51,7 @@ def zlsq1(z, x1, x2):
     b = b * 12 / ((xa * xa + 2) * xa)
 
     z0 = a - b * xb
-    zn = a + b * (xn - xb)
+    zn = a + (b * (xn - xb))
 
     return z0, zn
 
