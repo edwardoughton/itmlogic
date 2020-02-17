@@ -21,6 +21,9 @@ def test_lrprop(
     actual_prop = lrprop(0, setup_prop_to_test_lrprop_2)
 
     assert round(actual_prop['aref'], 2) == 35.42
+    assert round(actual_prop['etq'], 2) == -0.14
+    assert round(actual_prop['dx'], 2) ==162911.96
+    assert round(actual_prop['aes'], 2) == 44.14
 
     actual_prop = lrprop(10000, setup_prop_to_test_lrprop_uarea)
 
