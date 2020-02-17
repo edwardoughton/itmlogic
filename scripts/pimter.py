@@ -160,39 +160,31 @@ def run_itmlogic(surface_profile_m, distance_km):
 
 if __name__ == '__main__':
 
-    # #terrain profile with no trees
-    # terrain_height_no_tree = []
-    # terrain_height_no_tree_path = os.path.join(DATA_PIMTER, 'PIMTER_Tx_Rx1_dem_height.csv')
-    # with open(terrain_height_no_tree_path) as source:
-    #     reader = csv.reader(source)
-    #     for row in reader:
-    #         terrain_height_no_tree.append(float(row[0]))
+    files = [
+        ('PIMTER_Tx_Rx1_dem_height.csv', 'PIMTER_Tx_Rx1_dem_length.csv'),
+        ('PIMTER_2019_Rx_Tx0_dem_height.csv', 'PIMTER_2019_Rx_Tx0_dem_length.csv'),
+        ('PIMTER_2019_Rx_Tx2_dem_height.csv', 'PIMTER_2019_Rx_Tx2_dem_length.csv'),
+        ('PIMTER_2019_Rx_Tx3_dem_height.csv', 'PIMTER_2019_Rx_Tx3_dem_length.csv'),
+        ('PIMTER_2019_Rx_Tx4_dem_height.csv', 'PIMTER_2019_Rx_Tx4_dem_length.csv'),
+        ('PIMTER_2019_Rx_Tx5_dem_height.csv', 'PIMTER_2019_Rx_Tx5_dem_length.csv'),
+    ]
+    for measurements in files:
+        #terrain profile with no trees
+        terrain_height_no_tree = []
+        terrain_height_no_tree_path = os.path.join(DATA_PIMTER, measurements[0])
+        with open(terrain_height_no_tree_path) as source:
+            reader = csv.reader(source)
+            for row in reader:
+                terrain_height_no_tree.append(float(row[0]))
 
-    # #terrain length
-    # terrain_length = []
-    # terrain_length_path = os.path.join(DATA_PIMTER, 'PIMTER_Tx_Rx1_dem_length.csv')
-    # with open(terrain_length_path) as source:
-    #     reader = csv.reader(source)
-    #     for row in reader:
-    #         terrain_length.append(float(row[0]))
+        #terrain length
+        terrain_length = []
+        terrain_length_path = os.path.join(DATA_PIMTER, measurements[1])
+        with open(terrain_length_path) as source:
+            reader = csv.reader(source)
+            for row in reader:
+                terrain_length.append(float(row[0]))
 
-    #terrain profile with no trees
-    terrain_height_no_tree = []
-    terrain_height_no_tree_path = os.path.join(DATA_PIMTER, 'PIMTER_2019_Rx_Tx0_dem_height.csv')
+        results = run_itmlogic(terrain_height_no_tree, terrain_length)
 
-    with open(terrain_height_no_tree_path) as source:
-        reader = csv.reader(source)
-        for row in reader:
-            terrain_height_no_tree.append(float(row[0]))
-
-    #terrain length
-    terrain_length = []
-
-    terrain_length_path = os.path.join(DATA_PIMTER, 'PIMTER_2019_Rx_Tx0_dem_length.csv')
-
-    with open(terrain_length_path) as source:
-        reader = csv.reader(source)
-        for row in reader:
-            terrain_length.append(float(row[0]))
-
-    results = run_itmlogic(terrain_height_no_tree, terrain_length)
+        print('Completed results for {}'.format(measurements[0]))
