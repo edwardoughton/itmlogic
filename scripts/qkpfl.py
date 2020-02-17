@@ -198,17 +198,10 @@ def convert_shape_to_projected_crs(line, old_crs, new_crs):
     coordinates.
 
     """
-    # Geometry transform function based on pyproj.transform
-    # project = partial(
-    #     pyproj.transform,
-    #     pyproj.Proj(init = old_crs),
-    #     pyproj.Proj(init = new_crs)
-    #     )
-
     transformer = Transformer.from_crs(old_crs, new_crs, always_xy=True)
-    # print(line['geometry']['coordinates'])
-    #transform(project, LineString(line['geometry']['coordinates']))
-    new_geom = LineString(transformer.transform(line['geometry']['coordinates'][1], line['geometry']['coordinates'][0]))
+
+    new_geom = LineString(transformer.transform(
+        line['geometry']['coordinates'][1], line['geometry']['coordinates'][0]))
 
     output = {
         'type': 'Feature',
@@ -349,23 +342,8 @@ if __name__ == '__main__':
             }
         }
 
-    # initial_line_write = []
-    # initial_line_write.append(line)
-    # write_shapefile(initial_line_write, directory_shapes, 'initial_line.shp', old_crs)
-
-    # #convert from unprojected WGS94 ('EPSG:4326') to projected WGS94/pseudo
-    # #web mercator ('EPSG:3857')
-    # line_projected = convert_shape_to_projected_crs(line, old_crs, new_crs)
-
-
-    # #creat shapely geometry object out of line
-    # geom = LineString(line_projected['geometry']['coordinates'])
-
-    # #convert to km
-    # distance_km = geom.length #/ 1e3
-    # print(distance_km)
-    print(line)
     current_crs = 'EPSG:4326'
+
     #run terrain module
     measured_terrain_profile, distance_km, points = terrain_module(
         dem_folder, line, current_crs
@@ -374,7 +352,6 @@ if __name__ == '__main__':
     #check (out of interest) how many measurements are in each profile
     print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
     print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
-    # print('distance_km {}'.format(distance_km))
 
     #run model and get output
     output, fs = run_itmlogic(
