@@ -3,6 +3,15 @@
 
 import pytest
 from pytest import fixture
+import configparser
+import os
+import csv
+
+CONFIG = configparser.ConfigParser()
+CONFIG.read(os.path.join(os.path.dirname(__file__),'..','scripts', 'script_config.ini'))
+BASE_PATH = CONFIG['file_locations']['base_path']
+
+DATA_PIMTER = os.path.join(BASE_PATH, 'pimter')
 
 @fixture(scope='function')
 def setup_a():
@@ -912,6 +921,28 @@ def setup_prop_to_test_ascat():
         'h0s': -15,
     }
 
+#terrain profile with no trees
+PIMTER_2019_Rx_Tx5_dem_height = []
+terrain_height_no_tree_path = os.path.join(DATA_PIMTER, 'PIMTER_2019_Rx_Tx0_dem_height.csv')
+with open(terrain_height_no_tree_path) as source:
+    reader = csv.reader(source)
+    for row in reader:
+        PIMTER_2019_Rx_Tx5_dem_height.append(float(row[0]))
+
+#terrain length
+PIMTER_2019_Rx_Tx5_dem_length = []
+terrain_length_path = os.path.join(DATA_PIMTER, 'PIMTER_2019_Rx_Tx0_dem_length.csv')
+with open(terrain_length_path) as source:
+    reader = csv.reader(source)
+    for row in reader:
+        PIMTER_2019_Rx_Tx5_dem_length.append(float(row[0]))
+
+PFL = []
+
+PFL.append(len(PIMTER_2019_Rx_Tx5_dem_length)-1)
+PFL.append(PIMTER_2019_Rx_Tx5_dem_length[1] - PIMTER_2019_Rx_Tx5_dem_length[0])
+PFL = PFL + PIMTER_2019_Rx_Tx5_dem_height
+
 
 @fixture(scope='function')
 def setup_prop_to_test_qlrpfl_pimter():
@@ -1542,3 +1573,64 @@ def setup_expected_prop_to_test_lrprop_uarea():
         'dx': 394188.31816884695,
         'aref': 33.45233190346009
     }
+
+#terrain profile with no trees
+PIMTER_2019_Rx_Tx5_dem_height = []
+terrain_height_no_tree_path = os.path.join(DATA_PIMTER, 'PIMTER_2019_Rx_Tx5_dem_height.csv')
+with open(terrain_height_no_tree_path) as source:
+    reader = csv.reader(source)
+    for row in reader:
+        PIMTER_2019_Rx_Tx5_dem_height.append(float(row[0]))
+
+#terrain length
+PIMTER_2019_Rx_Tx5_dem_length = []
+terrain_length_path = os.path.join(DATA_PIMTER, 'PIMTER_2019_Rx_Tx5_dem_length.csv')
+with open(terrain_length_path) as source:
+    reader = csv.reader(source)
+    for row in reader:
+        PIMTER_2019_Rx_Tx5_dem_length.append(float(row[0]))
+
+PFL = []
+
+PFL.append(len(PIMTER_2019_Rx_Tx5_dem_length)-1)
+PFL.append(PIMTER_2019_Rx_Tx5_dem_length[1] - PIMTER_2019_Rx_Tx5_dem_length[0])
+PFL = PFL + PIMTER_2019_Rx_Tx5_dem_height
+
+@fixture(scope='function')
+def setup_prop_to_test_qlrpfl_pimter_5():
+    return {
+        'ipol': 1,
+        'eps': 15,
+        'sgm': 0.005, 'ens0': 314, 'klim': 5, 'gma': 1.57e-07, 'ens': 314,
+        'gme': 1.1480007964369815e-07, 'd': 20.332, 'fmhz': 2488.0, 'wn': 52.15932914046121,
+        'zgnd': (0.24944336223829638-0.00027874487124943527j), 'hg': [2.56, 130], 'lvar': 5,
+        'kwx': 0, 'klimx': 0, 'mdvarx': 11, 'dist': 20332.0,
+        'the': {1: -0.005521545434651358, 0: 0.007951094210340877},
+        'dl': {0: 14769.0, 1: 5563.0}, 'dh': 132.27923780108733,
+        'he': [14.730468673227902, 164.7674582929427],
+        'mdp': -1, 'mdvar': 11, 'dls': [16019.619098454172, 53577.15202613262],
+        'dlsa': 69596.7711245868, 'dla': 20332.0, 'tha': 0.002429548775689519, 'wlos': 1,
+        'wscat': 0, 'dmin': 750.184948098574, 'qk': 4.008923575518408, 'wd1': 2.67635770328552,
+        'xd1': 41495.30217914519, 'afo': 10.689800698707407, 'aht': 111.2031673819813,
+        'xht': 2756.615960205355, 'xae': 11330.8165469108, 'emd': 0.00033214154007838,
+        'aed': 34.73063170718022, 'wis': 0.17480082912521097, 'ascat1': 0, 'ak2': 0,
+        'ak1': 0.0004473980690751654, 'ael': 26.709149437976645, 'aref': 35.80564697841291,
+        'cv1': -0.62, 'cv2': 9.19, 'yv1': 228900.0, 'yv2': 205200.0, 'yv3': 143600.0,
+        'csm1': 2.68, 'csm2': 7.16, 'ysm1': 93700.0, 'ysm2': 186800.0, 'ysm3': 133500.0,
+        'csp1': 4.75, 'csp2': 8.12, 'ysp1': 93200.0, 'ysp2': 135900.0, 'ysp3': 113400.0,
+        'csd1': 1.224, 'zd': 1.282, 'cfm1': 0.92, 'cfm2': 0.25, 'cfm3': 1.77, 'cfp1': 0.93,
+        'cfp2': 0.31, 'cfp3': 2.0, 'kdv': 1, 'ws': False, 'wl': True, 'gm': 0.9396027810582842,
+        'gp': 0.9493674001286208, 'dexa': 93007.60290664443, 'vmd': 0.046046025117968015,
+        'sgtm': 0.44752485900725875, 'sgtp': 0.7290633750591631, 'sgtd': 0.8923735710724156,
+        'tgtd': -0.20936367128898967, 'sgl': 0, 'vs0': 52.67677125570803,
+        'pfl': PFL
+        }
+
+
+@fixture(scope='function')
+def setup_final_prop_to_test_qlrpfl_pimter_5():
+    return {
+        'ipol': 1, 'eps': 15, 'sgm': 0.005, 'ens0': 314, 'klim': 5, 'gma': 1.57e-07,
+        'ens': 314, 'gme': 1.1480007964369815e-07, 'd': 20.332, 'fmhz': 2488.0, 'wn': 52.15932914046121, 'zgnd': (0.24944336223829638-0.00027874487124943527j), 'hg': [2.56, 130], 'lvar': 5, 'kwx': 0, 'klimx': 0, 'mdvarx': 11, 'dist': 20332.0, 'the': {1: -0.005701304557426842, 0: 0.007951094210340877}, 'dl': {0: 14769.0, 1: 5563.0}, 'dh': 132.27923780108733, 'he': [14.730468673227902, 165.7674582929427],
+        'mdp': -1, 'mdvar': 11, 'dls': [16019.619098454172, 53739.490227693575], 'dlsa': 69759.10932614775, 'dla': 20332.0, 'tha': 0.0022497896529140356, 'wlos': 1, 'wscat': 0, 'dmin': 755.184948098574, 'qk': 4.008923575518408, 'wd1': 2.6743914734535834, 'xd1': 39929.45724825842, 'afo': 10.707482134416004, 'aht': 111.74073398023953, 'xht': 2766.2656734115976, 'xae': 11330.8165469108, 'emd': 0.0003332708533275097, 'aed': 34.31656458929073, 'wis': 0.1751371523591854, 'ascat1': 0, 'ak2': 0, 'ak1': 0.0004472598641719525, 'ael': 26.364792719813803, 'aref': 35.45848027815794, 'cv1': -0.62, 'cv2': 9.19, 'yv1': 228900.0, 'yv2': 205200.0, 'yv3': 143600.0, 'csm1': 2.68, 'csm2': 7.16, 'ysm1': 93700.0, 'ysm2': 186800.0, 'ysm3': 133500.0, 'csp1': 4.75, 'csp2': 8.12, 'ysp1': 93200.0, 'ysp2': 135900.0, 'ysp3': 113400.0, 'csd1': 1.224, 'zd': 1.282, 'cfm1': 0.92, 'cfm2': 0.25, 'cfm3': 1.77, 'cfp1': 0.93, 'cfp2': 0.31, 'cfp3': 2.0, 'kdv': 1, 'ws': False, 'wl': True, 'gm': 0.9396027810582842, 'gp': 0.9493674001286208, 'dexa': 93007.60290664443, 'vmd': 0.046046025117968015, 'sgtm': 0.44752485900725875, 'sgtp': 0.7290633750591631, 'sgtd': 0.8923735710724156, 'tgtd': -0.20936367128898967, 'sgl': 0, 'vs0': 52.67677125570803
+        }
