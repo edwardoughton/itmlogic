@@ -28,6 +28,61 @@ CONFIG.read(os.path.join(os.path.dirname(__file__), 'script_config.ini'))
 BASE_PATH = CONFIG['file_locations']['base_path']
 
 
+def terrain_area(dem_folder, transmitter, cell_range, current_crs):
+    """
+    This module takes a single set of point coordinates for a site
+    along with an estimate of the cell range. The irregular terrain
+    parameter is returned.
+
+    Parameters
+    ----------
+    dem_folder : string
+        Folder path to the available Digital Elevation Model tiles.
+    transmitter : dict
+        Geojson. Must be in WGS84 / EPSG: 4326
+    cell_range : int
+        Radius of cell area in meters.
+    current_crs : string
+        The coordinate reference system the transmitter coordinates
+        are in (must be WGS84 / EPSG: 4326).
+
+    Returns
+    -------
+    Inter-decile range : int
+        The terrain irregularity parameter.
+
+    """
+    point_geometry = Point(transmitter['geometry']['coordinates'])
+
+    wgs84_to_projected = partial(
+        pyproj.transform,
+        pyproj.Proj(init=current_crs),
+        pyproj.Proj(init='EPSG:3857'))
+
+    #convert line geometry to projected to allow buffer in meters
+    point_geometry = transform(wgs84_to_projected, point_geometry)
+
+    cell_area_projected = point_geometry.buffer(cell_range)
+
+    projected_to_wgs84 = partial(
+        pyproj.transform,
+        pyproj.Proj(init='EPSG:3857'),
+        pyproj.Proj(init=current_crs))
+
+    cell_area_unprojected = transform(projected_to_wgs84, cell_area_projected)
+
+    stats = zonal_stats([cell_area_unprojected],
+                        os.path.join(BASE_PATH,'ASTGTM2_N51W001_dem.tif'),
+                        add_stats={'interdecile_range':interdecile_range})
+
+    return stats[0]['interdecile_range']
+
+
+def interdecile_range(x):
+    q90, q10 = np.percentile(x, [90, 10])
+    return int(round(q90 - q10, 0))
+
+
 def terrain_p2p(dem_folder, line, current_crs):
     """
     This module takes a set of point coordinates and returns
@@ -84,49 +139,6 @@ def terrain_p2p(dem_folder, line, current_crs):
             })
 
     return elevation_profile, distance, points
-
-
-def terrain_area(dem_folder, transmitter, cell_range, current_crs):
-    """
-    This module takes a single set of point coordinates for a site
-    along with an estimate of the cell range. The irregular terrain
-    parameter is returned.
-
-    Line : dict
-        Geojson. Must be in WGS84 / EPSG: 4326
-
-    """
-    extents = load_extents(dem_folder)
-
-    point_geometry = Point(transmitter['geometry']['coordinates'])
-
-    wgs84_to_projected = partial(
-        pyproj.transform,
-        pyproj.Proj(init=current_crs),
-        pyproj.Proj(init='EPSG:3857'))
-
-    #convert line geometry to projected
-    point_geometry = transform(wgs84_to_projected, point_geometry)
-
-    cell_area_projected = point_geometry.buffer(cell_range)
-
-    projected_to_wgs84 = partial(
-        pyproj.transform,
-        pyproj.Proj(init='EPSG:3857'),
-        pyproj.Proj(init=current_crs))
-
-    cell_area_unprojected = transform(projected_to_wgs84, cell_area_projected)
-
-    stats = zonal_stats([cell_area_unprojected],
-                        os.path.join(BASE_PATH,'ASTGTM2_N51W001_dem.tif'),
-                        add_stats={'interdecile_range':interdecile_range})
-
-    return stats[0]['interdecile_range']
-
-
-def interdecile_range(x):
-    q90, q10 = np.percentile(x, [90, 10])
-    return int(round(q90 - q10, 0))
 
 
 def load_extents(dem_folder):
