@@ -16,11 +16,19 @@ from functools import partial, lru_cache
 import fiona
 import pyproj
 import rasterio
+import numpy as np
 from shapely.ops import transform
-from shapely.geometry import LineString, mapping
+from shapely.geometry import Point, LineString, mapping
+from rasterstats import zonal_stats
+import configparser
+from collections import OrderedDict
+
+CONFIG = configparser.ConfigParser()
+CONFIG.read(os.path.join(os.path.dirname(__file__), 'script_config.ini'))
+BASE_PATH = CONFIG['file_locations']['base_path']
 
 
-def terrain_module(dem_folder, line, current_crs):
+def terrain_p2p(dem_folder, line, current_crs):
     """
     This module takes a set of point coordinates and returns
     the elevation profile.
@@ -64,8 +72,7 @@ def terrain_module(dem_folder, line, current_crs):
         y.append(yp)
         tile_path = get_tile_path_for_point(extents, xp, yp)
         z = get_value_from_dem_tile(tile_path, xp, yp)
-        # print(os.path.basename(tile_path), xp, yp, z)
-        # print('increment is {}'.format(increment))
+
         elevation_profile.append(z)
 
         points.append({
@@ -77,6 +84,49 @@ def terrain_module(dem_folder, line, current_crs):
             })
 
     return elevation_profile, distance, points
+
+
+def terrain_area(dem_folder, transmitter, cell_range, current_crs):
+    """
+    This module takes a single set of point coordinates for a site
+    along with an estimate of the cell range. The irregular terrain
+    parameter is returned.
+
+    Line : dict
+        Geojson. Must be in WGS84 / EPSG: 4326
+
+    """
+    extents = load_extents(dem_folder)
+
+    point_geometry = Point(transmitter['geometry']['coordinates'])
+
+    wgs84_to_projected = partial(
+        pyproj.transform,
+        pyproj.Proj(init=current_crs),
+        pyproj.Proj(init='EPSG:3857'))
+
+    #convert line geometry to projected
+    point_geometry = transform(wgs84_to_projected, point_geometry)
+
+    cell_area_projected = point_geometry.buffer(cell_range)
+
+    projected_to_wgs84 = partial(
+        pyproj.transform,
+        pyproj.Proj(init='EPSG:3857'),
+        pyproj.Proj(init=current_crs))
+
+    cell_area_unprojected = transform(projected_to_wgs84, cell_area_projected)
+
+    stats = zonal_stats([cell_area_unprojected],
+                        os.path.join(BASE_PATH,'ASTGTM2_N51W001_dem.tif'),
+                        add_stats={'interdecile_range':interdecile_range})
+
+    return stats[0]['interdecile_range']
+
+
+def interdecile_range(x):
+    q90, q10 = np.percentile(x, [90, 10])
+    return int(round(q90 - q10, 0))
 
 
 def load_extents(dem_folder):

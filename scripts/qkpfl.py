@@ -21,7 +21,7 @@ from shapely.ops import transform
 from itmlogic.qerfi import qerfi
 from itmlogic.qlrpfl import qlrpfl
 from itmlogic.avar import avar
-from terrain_module import terrain_module
+from terrain_module import terrain_p2p
 from pyproj import Transformer
 
 # #set up file paths
@@ -118,7 +118,6 @@ def run_itmlogic(surface_profile_m, distance_km):
         pfl[1] = dkm * 1000 / pfl[0]
 
         prop['pfl'] = pfl
-        # Zero out error flag
         prop['kwx'] = 0
         prop['wn'] = prop['fmhz'] / 47.7
         prop['ens'] = prop['ens0']
@@ -175,19 +174,6 @@ def run_itmlogic(surface_profile_m, distance_km):
             avar1, prop = avar(zr[jr], 0, zc[jc], prop)
             xlb.append(fs + avar1)
         output.append((qr[jr], xlb[0], xlb[1], xlb[2]))
-
-    if prop['kwx'] == 1:
-        print('WARNING- SOME PARAMETERS ARE NEARLY OUT OF RANGE.')
-        print('RESULTS SHOULD BE USED WITH CAUTION.')
-    elif prop['kwx'] == 2:
-        print('NOTE-')
-        print('DEFAULT PARAMETERS HAVE BEEN SUBSTITUTED FOR IMPOSSIBLE ONES.')
-    elif prop['kwx'] == 3:
-        print('WARNING- A COMBINATION OF PARAMETERS IS OUT OF RANGE.')
-        print('RESULTS ARE PROBABLY INVALID.')
-    elif prop['kwx'] == 4:
-        print('WARNING- SOME PARAMETERS ARE OUT OF RANGE.')
-        print('RESULTS ARE PROBABLY INVALID.')
 
     return output, fs
 
@@ -345,7 +331,7 @@ if __name__ == '__main__':
     current_crs = 'EPSG:4326'
 
     #run terrain module
-    measured_terrain_profile, distance_km, points = terrain_module(
+    measured_terrain_profile, distance_km, points = terrain_p2p(
         dem_folder, line, current_crs
         )
 

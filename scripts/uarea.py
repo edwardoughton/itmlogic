@@ -19,6 +19,7 @@ from itmlogic.qerfi import qerfi
 from itmlogic.qlra import qlra
 from itmlogic.lrprop import lrprop
 from itmlogic.avar import avar
+from terrain_module import terrain_area
 
 # #set up file paths
 CONFIG = configparser.ConfigParser()
@@ -28,7 +29,7 @@ BASE_PATH = CONFIG['file_locations']['base_path']
 DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
 
 
-def run_itmlogic():
+def run_itmlogic(terrain_reggularity_parameter):
 
     prop = {}
 
@@ -39,7 +40,7 @@ def run_itmlogic():
     prop['fmhz'] = 20
 
     #Terrain irregularity parameter dh (m)
-    prop['dh'] = 90
+    prop['dh'] = terrain_reggularity_parameter
 
     #Surface refractivity (N-units)
     prop['ens0'] = 301
@@ -199,9 +200,29 @@ def csv_writer(data, directory, filename):
 if __name__ == '__main__':
 
     directory = DATA_PROCESSED
+    directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
 
+    old_crs = 'EPSG:4326'
+    new_crs = 'EPSG:3857'
+
+    #create new geojson for Crystal Palace radio transmitter
+    transmitter = {
+        'type': 'Feature',
+        'geometry': {
+            'type': 'Point',
+            'coordinates': (-0.07491679518573545, 51.42413477117786)
+            },
+        'properties': {
+            'id': 'Crystal Palace radio transmitter'
+            }
+        }
+
+    #Terrain irregularity parameter delta h (in meters)
+    terrain_reggularity_parameter = terrain_area(BASE_PATH, transmitter,
+        20000, old_crs)
+    print(terrain_reggularity_parameter)
     print('Running itmlogic')
-    output = run_itmlogic()
+    output = run_itmlogic(terrain_reggularity_parameter)
 
     print('Writing results to .csv')
     csv_writer(output, directory, 'uarea_output.csv')

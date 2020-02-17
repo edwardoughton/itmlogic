@@ -190,7 +190,7 @@ def lrprop(d, prop):
                     (prop['emd'] - prop['ems']) *
                     prop['dx'] + prop['aed']
                     )
-                print(prop)
+
             else:
                 prop['ems'] = prop['emd']
                 prop['aes'] = prop['aed']
