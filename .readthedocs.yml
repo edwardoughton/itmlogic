@@ -1,0 +1,12 @@
+# Read The Docs config
+# - https://docs.readthedocs.io/en/latest/config-file/v2.html
+version: 2
+
+# python version
+python:
+  version: 3
+  system_packages: true
+
+sphinx:
+  builder: html
+  configuration: docs/conf.py
