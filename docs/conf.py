@@ -27,6 +27,9 @@ author = 'Ed Oughton, Tom Russell, Joel Johnson, Caglar Yardim, Julius Kusuma'
 
 # -- General configuration ---------------------------------------------------
 
+# Specify master_doc, else ReadTheDocs build fails with Sphinx error (contents.rst not found)
+master_doc = 'index'
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
