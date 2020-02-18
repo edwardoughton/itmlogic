@@ -54,22 +54,19 @@ def terrain_area(dem_folder, transmitter, cell_range, current_crs):
     """
     point_geometry = Point(transmitter['geometry']['coordinates'])
 
-    wgs84_to_projected = partial(
-        pyproj.transform,
-        pyproj.Proj(init=current_crs),
-        pyproj.Proj(init='EPSG:3857'))
+    to_projected = pyproj.Transformer.from_proj(
+        pyproj.Proj('epsg:4326'), # source coordinate system
+        pyproj.Proj('epsg:3857')) # destination coordinate system
 
-    #convert line geometry to projected to allow buffer in meters
-    point_geometry = transform(wgs84_to_projected, point_geometry)
+    point_geometry = transform(to_projected.transform, point_geometry)
 
     cell_area_projected = point_geometry.buffer(cell_range)
 
-    projected_to_wgs84 = partial(
-        pyproj.transform,
-        pyproj.Proj(init='EPSG:3857'),
-        pyproj.Proj(init=current_crs))
+    to_unprojected = pyproj.Transformer.from_proj(
+        pyproj.Proj('epsg:3857'), # source coordinate system
+        pyproj.Proj('epsg:4326')) # destination coordinate system
 
-    cell_area_unprojected = transform(projected_to_wgs84, cell_area_projected)
+    cell_area_unprojected = transform(to_unprojected.transform, cell_area_projected)
 
     stats = zonal_stats([cell_area_unprojected],
                         os.path.join(BASE_PATH,'ASTGTM2_N51W001_dem.tif'),
@@ -79,7 +76,12 @@ def terrain_area(dem_folder, transmitter, cell_range, current_crs):
 
 
 def interdecile_range(x):
+    """
+    Get range between bottom 10% and top 10% of values.
+
+    """
     q90, q10 = np.percentile(x, [90, 10])
+
     return int(round(q90 - q10, 0))
 
 
@@ -96,36 +98,23 @@ def terrain_p2p(dem_folder, line, current_crs):
 
     line_geometry = LineString(line['geometry']['coordinates'])
 
-    ll_to_osgb = partial(
-        pyproj.transform,
-        pyproj.Proj(init=current_crs),
-        pyproj.Proj(init='EPSG:3857'))
+    geod = pyproj.Geod(ellps="WGS84")
+    distance = geod.line_length(
+        [line_geometry.coords[0][0], line_geometry.coords[1][0]],
+        [line_geometry.coords[0][1], line_geometry.coords[1][1]]
+    )
 
-    #convert line geometry to projected
-    line_geometry = transform(ll_to_osgb, line_geometry)
-
-    distance = int(line_geometry.length)
-
-    increment = determine_distance_increment(distance)
+    increment = int(determine_distance_increment(distance))
 
     distance_km = distance / 1e3
 
-    x = []
-    y = []
     elevation_profile = []
-    osgb_to_ll = partial(
-        pyproj.transform,
-        pyproj.Proj(init='EPSG:3857'),
-        pyproj.Proj(init=current_crs))
 
     points = []
 
-    for currentdistance  in range(0, distance, increment):
-        point_old_crs = line_geometry.interpolate(currentdistance)
-        point_new_crs = transform(osgb_to_ll, point_old_crs)
-        xp, yp = point_new_crs.x, point_new_crs.y
-        x.append(xp)
-        y.append(yp)
+    for currentdistance  in range(0, int(distance), int(increment)):
+        point = line_geometry.interpolate(currentdistance)
+        xp, yp = point.x, point.y
         tile_path = get_tile_path_for_point(extents, xp, yp)
         z = get_value_from_dem_tile(tile_path, xp, yp)
 
@@ -133,7 +122,7 @@ def terrain_p2p(dem_folder, line, current_crs):
 
         points.append({
             'type': 'Feature',
-            'geometry': mapping(point_old_crs),
+            'geometry': mapping(point),
             'properties': {
                 'elevation': float(z),
                 }
@@ -150,8 +139,8 @@ def load_extents(dem_folder):
     extents = {}
     for tile_path in glob.glob(os.path.join(dem_folder, "*.tif")):
         dataset = rasterio.open(tile_path)
-        # print("Extent of", tile_path, tuple(dataset.bounds))
         extents[tuple(dataset.bounds)] = tile_path
+
     return extents
 
 

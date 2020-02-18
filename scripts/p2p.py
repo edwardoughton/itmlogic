@@ -186,7 +186,7 @@ def itmlogic_p2p(surface_profile_m, distance_km):
                 'propagation_loss_dB': fs + avar1
                 })
 
-    return output, fs
+    return output
 
 
 def convert_shape_to_projected_crs(line, old_crs, new_crs):
@@ -268,6 +268,9 @@ if __name__ == '__main__':
     old_crs = 'EPSG:4326'
     new_crs = 'EPSG:3857'
 
+    #original distance in km from Longley Rice docs
+    original_distance = 77.8
+
     #original surface profile from Longley Rice docs
     original_surface_profile_m = [
         96,  84,  65,  46,  46,  46,  61,  41,  33,  27,  23,  19,  15,  15,  15,
@@ -330,22 +333,21 @@ if __name__ == '__main__':
 
     current_crs = 'EPSG:4326'
 
-    # #run terrain module
-    # measured_terrain_profile, distance_km, points = terrain_p2p(
-    #     dem_folder, line, current_crs
-    #     )
-    # print('Distance is {}'.format(distance_km))
-    # #check (out of interest) how many measurements are in each profile
-    # print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
-    # print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
-    original_distance = 77.8
+    #run terrain module
+    measured_terrain_profile, distance_km, points = terrain_p2p(
+        dem_folder, line, current_crs
+        )
+    print('Distance is {}'.format(distance_km))
+
+    #check (out of interest) how many measurements are in each profile
+    print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
+    print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
+
     #run model and get output
-    output, fs = itmlogic_p2p(
+    output = itmlogic_p2p(
         original_surface_profile_m, original_distance
         )
-    import pprint
-    pprint.pprint(output)
-    print(fs)
+
     #grab coordinates for transmitter and receiver for writing to .csv
     transmitter_x = transmitter['geometry']['coordinates'][0]
     transmitter_y = transmitter['geometry']['coordinates'][1]
@@ -355,14 +357,14 @@ if __name__ == '__main__':
     #write results to .csv
     csv_writer(output, DATA_PROCESSED, 'p2p_results.csv')
 
-    # transmitter_shape = []
-    # transmitter_shape.append(transmitter)
-    # write_shapefile(transmitter_shape, directory_shapes, 'transmitter.shp', old_crs)
+    transmitter_shape = []
+    transmitter_shape.append(transmitter)
+    write_shapefile(transmitter_shape, directory_shapes, 'transmitter.shp', old_crs)
 
-    # receiver_shape = []
-    # receiver_shape.append(receiver)
-    # write_shapefile(receiver_shape, directory_shapes, 'receiver.shp', old_crs)
+    receiver_shape = []
+    receiver_shape.append(receiver)
+    write_shapefile(receiver_shape, directory_shapes, 'receiver.shp', old_crs)
 
-    # write_shapefile(points, directory_shapes, 'points.shp', new_crs)
+    write_shapefile(points, directory_shapes, 'points.shp', new_crs)
 
     print('Completed run')

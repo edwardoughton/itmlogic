@@ -223,6 +223,6 @@ if __name__ == '__main__':
 
     print('Running itmlogic')
     output = itmlogic_area(tip)
-    print(output)
+
     print('Writing results to .csv')
     csv_writer(output, directory, 'uarea_output.csv')
