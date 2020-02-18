@@ -29,7 +29,7 @@ BASE_PATH = CONFIG['file_locations']['base_path']
 DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
 
 
-def run_itmlogic(terrain_reggularity_parameter):
+def itmlogic_area(tip):
 
     prop = {}
 
@@ -40,7 +40,7 @@ def run_itmlogic(terrain_reggularity_parameter):
     prop['fmhz'] = 20
 
     #Terrain irregularity parameter dh (m)
-    prop['dh'] = terrain_reggularity_parameter
+    prop['dh'] = tip
 
     #Surface refractivity (N-units)
     prop['ens0'] = 301
@@ -199,6 +199,7 @@ def csv_writer(data, directory, filename):
 
 if __name__ == '__main__':
 
+    dem_path = BASE_PATH
     directory = DATA_PROCESSED
     directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
 
@@ -217,12 +218,11 @@ if __name__ == '__main__':
             }
         }
 
-    #Terrain irregularity parameter delta h (in meters)
-    terrain_reggularity_parameter = terrain_area(BASE_PATH, transmitter,
-        20000, old_crs)
-    print(terrain_reggularity_parameter)
+    #Terrain Irregularity Parameter delta h (in meters)
+    tip = terrain_area(dem_path, transmitter, 20000, old_crs)
+
     print('Running itmlogic')
-    output = run_itmlogic(terrain_reggularity_parameter)
+    output = itmlogic_area(tip)
 
     print('Writing results to .csv')
     csv_writer(output, directory, 'uarea_output.csv')

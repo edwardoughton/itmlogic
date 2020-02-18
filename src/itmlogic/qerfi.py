@@ -8,8 +8,8 @@ def qerfi(q):
 
     Parameters
     ----------
-    q : list of int(s)
-        Confidence levels for predictions
+    q : list of floats(s)
+        Confidence levels for predictions (e.g. [0.01, 0.1, 0.5, 0.9, 0.99])
 
     Output
     ------
@@ -24,11 +24,12 @@ def qerfi(q):
     d2 = 0.189269
     d3 = 0.001308
 
-    x = [0.5 - x  for x in q]
+    x = [0.5 - x for x in q]
 
     t = []
 
     for i in range(len(x)):
+
         t.append(max(0.5 - abs(x[i]), 0.000001))
 
     output = []

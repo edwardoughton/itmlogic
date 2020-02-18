@@ -1,6 +1,8 @@
 """
 Point to Point prediction mode runner.
 
+Referred to as qkpfl in the original Fortran codebase.
+
 Written by Ed Oughton
 
 June 2019
@@ -32,7 +34,7 @@ BASE_PATH = CONFIG['file_locations']['base_path']
 DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
 
 
-def run_itmlogic(surface_profile_m, distance_km):
+def itmlogic_p2p(surface_profile_m, distance_km):
     """
     Run itmlogic in point to point (p2p) prediction mode.
 
@@ -136,8 +138,8 @@ def run_itmlogic(surface_profile_m, distance_km):
     prop['klimx'] = 0
     prop['mdvarx'] = 11
 
-    zr = qerfi(qr)
-    zc = qerfi(qc)
+    zr = qerfi([x / 100 for x in qr])
+    zc = qerfi([x / 100 for x in qc])
 
     prop = qlrpfl(prop)
 
@@ -167,15 +169,24 @@ def run_itmlogic(surface_profile_m, distance_km):
     print('Confidence levels {}, {}, {}'.format(
         str(qc[0]), str(qc[1]), str(qc[2])))
 
+    # Confidence  levels for predictions
+    qc = [50, 90, 10]
+
+    # Reliability levels for predictions
+    qr = [1, 10, 50, 90, 99]
+
     output = []
     for jr in range(0, (nr)):
-        xlb = []
         for jc in range(0, nc):
             avar1, prop = avar(zr[jr], 0, zc[jc], prop)
-            xlb.append(fs + avar1)
-        output.append((qr[jr], xlb[0], xlb[1], xlb[2]))
+            output.append({
+                'distance_km': prop['d'],
+                'reliability_level_%': qr[jr],
+                'confidence_level_%': qc[jc],
+                'propagation_loss_dB': fs + avar1
+                })
 
-    return output, fs
+    return output
 
 
 def convert_shape_to_projected_crs(line, old_crs, new_crs):
@@ -198,34 +209,23 @@ def convert_shape_to_projected_crs(line, old_crs, new_crs):
     return output
 
 
-def csv_writer(data, fs, directory, filename, transmitter_x,
-    transmitter_y, receiver_x, receiver_y):
+def csv_writer(data, directory, filename):
     """
     Write data to a CSV file path.
 
     """
+    # Create path
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    full_path = os.path.join(directory, filename)
+    fieldnames = []
+    for name, value in data[0].items():
+        fieldnames.append(name)
 
-    if not os.path.exists(full_path):
-        results_file = open(full_path, 'w', newline='')
-        results_writer = csv.writer(results_file)
-        results_writer.writerow(
-            ('transmitter_x', 'transmitter_y', 'receiver_x',
-            'receiver_y', 'free_space', 'reliability_level',
-            'confidence_50', 'confidence_90', 'confidence_10'))
-    else:
-        results_file = open(full_path, 'a', newline='')
-        results_writer = csv.writer(results_file)
-
-    for row in data:
-        results_writer.writerow((
-            transmitter_x, transmitter_y,
-            receiver_x, receiver_y,
-            fs, row[0], row[1], row[2], row[3]
-            ))
+    with open(os.path.join(directory, filename), 'w') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames, lineterminator = '\n')
+        writer.writeheader()
+        writer.writerows(data)
 
 
 def write_shapefile(data, directory, filename, crs):
@@ -267,6 +267,9 @@ if __name__ == '__main__':
 
     old_crs = 'EPSG:4326'
     new_crs = 'EPSG:3857'
+
+    #original distance in km from Longley Rice docs
+    original_distance = 77.8
 
     #original surface profile from Longley Rice docs
     original_surface_profile_m = [
@@ -334,14 +337,15 @@ if __name__ == '__main__':
     measured_terrain_profile, distance_km, points = terrain_p2p(
         dem_folder, line, current_crs
         )
+    print('Distance is {}'.format(distance_km))
 
     #check (out of interest) how many measurements are in each profile
     print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
     print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
 
     #run model and get output
-    output, fs = run_itmlogic(
-        original_surface_profile_m, distance_km
+    output = itmlogic_p2p(
+        original_surface_profile_m, original_distance
         )
 
     #grab coordinates for transmitter and receiver for writing to .csv
@@ -351,8 +355,7 @@ if __name__ == '__main__':
     receiver_y = receiver['geometry']['coordinates'][1]
 
     #write results to .csv
-    csv_writer(output, fs, DATA_PROCESSED, 'qkpfl_results.csv',
-        transmitter_x, transmitter_y, receiver_x, receiver_y)
+    csv_writer(output, DATA_PROCESSED, 'p2p_results.csv')
 
     transmitter_shape = []
     transmitter_shape.append(transmitter)
