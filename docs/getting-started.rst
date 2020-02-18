@@ -155,9 +155,10 @@ geojson object.
 A list of terrain elevation values (``measured_terrain_profile``) (in meters) is returned:
 
 .. code-block:: python
+
     measured_terrain_profile = [
         109, 66, 28, 48, 29, 32, 29, 20, 13, 9...
-        ]
+    ]
 
 These data can then be passed to the ``itmlogic_p2p`` function along with the distance (km)
 of the link:
