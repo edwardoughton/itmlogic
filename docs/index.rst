@@ -7,8 +7,8 @@ itmlogic - Longley-Rice Irregular Terrain Model
 ===================================================
 
 .. image:: https://readthedocs.org/projects/itmlogic/badge/?version=latest
-:target: https://itmlogic.readthedocs.io/en/latest/?badge=latest
-:alt: Documentation Status
+    :target: https://itmlogic.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 Welcome to the documentation for itmlogic!
 
@@ -88,11 +88,6 @@ Contents
    Getting Started <getting-started>
 
 .. toctree::
-   :maxdepth: 3
-
-   Reference <api/modules>
-
-.. toctree::
    :maxdepth: 1
 
    License <license>
@@ -102,4 +97,4 @@ Make Contact
 ============
 
 - Report bugs, suggest features or view the source code `on GitHub`_.
-.. _on GitHub: https://github.com/edwardoughton/itmlogic
+    .. _on GitHub: https://github.com/edwardoughton/itmlogic
