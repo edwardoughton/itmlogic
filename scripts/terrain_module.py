@@ -107,7 +107,8 @@ def terrain_p2p(dem_folder, line, current_crs):
     distance = int(line_geometry.length)
 
     increment = determine_distance_increment(distance)
-    print('increment is {}'.format(increment))
+
+    distance_km = distance / 1e3
 
     x = []
     y = []
@@ -138,7 +139,7 @@ def terrain_p2p(dem_folder, line, current_crs):
                 }
             })
 
-    return elevation_profile, distance, points
+    return elevation_profile, distance_km, points
 
 
 def load_extents(dem_folder):
@@ -180,7 +181,6 @@ def determine_distance_increment(distance):
     passed.
 
     """
-    print(distance)
     if distance >= 60000:
         return int(distance / 100)
     elif distance >= 30000:
