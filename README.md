@@ -19,7 +19,7 @@ Model properties and the algorithm defining it are available in:
 
 Terrain profile slice: Crystal Palace (South London) to Mursley
 ---------------------------------------------------------------
-![Example](/terrain_profile.png)
+![Example](/docs/_static/terrain_profile.png)
 
 
 ## Setup and configuration
