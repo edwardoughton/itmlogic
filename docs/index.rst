@@ -6,6 +6,10 @@
 itmlogic - Longley-Rice Irregular Terrain Model
 ===================================================
 
+.. image:: https://readthedocs.org/projects/itmlogic/badge/?version=latest
+:target: https://itmlogic.readthedocs.io/en/latest/?badge=latest
+:alt: Documentation Status
+
 Welcome to the documentation for itmlogic!
 
 These docs will focus on the python implementation of the Longley Rice model. For in-depth
