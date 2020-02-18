@@ -1,26 +1,27 @@
 def hzns(pfl, dist, hg, gme):
     """
-    Find horizons
+    Subroutine to finds horizons.
 
     Parameters
     ----------
-    pfl : ??
-        ???
+    pfl : List
+        Terrain profile.
     dist : float
         Distance
-    hg : ???
+    hg : list
         ???
-    gme : ???
-        ???
+    gme : float
+        Effective earth curvature.
 
     Returns
     -------
-    the : ???
-        ???
-    dl : ???
-        ???
+    the : dict
+        Horizon take-off angle.
+    dl : dict
+        Horizon distances.
 
     """
+    print(pfl)
     the = {}
     dl = {}
 

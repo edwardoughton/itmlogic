@@ -7,19 +7,25 @@ from itmlogic.ascat import ascat
 
 def lrprop(d, prop):
     """
-    Calls adiff, alos, and ascat.
+    The basic Longley-Rice propagation program which returns the reference attenuation (aref).
+
+    The value of mdp controls some of the program flow. When it equals -1 we are in
+    point-to-point mode, when 1 we are in the beginning of the area mode, and when in 0 we
+    are continuing the area mode. The assumption is that when one uses the area mode, one will
+    want a sequence of results for varying distances.
 
     Parameters
     ----------
     d : float
-        ???
+        Distance
     prop : dict
-        ???
+        Contains all input propagation parameters
 
     Returns
     -------
     prop : dict
-        ???mdp
+        Contains all input and output propagation parameters, including the reference
+        attenuation (aref).
 
     """
     third = 1 / 3

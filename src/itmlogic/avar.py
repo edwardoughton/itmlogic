@@ -5,7 +5,10 @@ from itmlogic.curv import curv
 
 def avar(zzt, zzl, zzc, prop):
     """
-    ???
+    Finds the quantiles of attenuation using the output from lrprop.
+    When in area prediction mode we need a threefold quantile of attenuation corresponding to
+    tim, locations and situations. For efficiency, avar is written as a function of the
+    standard normal deviates corresponding to the requested fractions.
 
     Parameters
     ----------
@@ -16,14 +19,14 @@ def avar(zzt, zzl, zzc, prop):
     zzc : ???
         ???
     prop : dict
-        Propagation parameters and results.
+        Contains all input propagation parameters
 
     Returns
     -------
     avar1 : ???
         ???
     prop : dict
-        Propagation parameters and results.
+        Contains all input and output propagation parameters.
 
     """
     third = 1 / 3
@@ -203,13 +206,7 @@ def avar(zzt, zzl, zzc, prop):
         yr = sgt * zt + prop['sgl'] * zl
         sgc = math.sqrt(vs)
 
-    # print('AVAR YR, KDV, SGT, ZT ' + str(yr) + ' ' +
-    #     str(['kdv']) + ' ' + str(sgt) + ' ' +  str(zt))
-
     avar1 = prop['aref'] - prop['vmd'] - yr - sgc * zc
-
-    # print('AVAR: ' + str(prop['aref']) + ' ' + str(prop['vmd']) +
-    #     ' ' + str(yr) + ' ' + str(sgc) + ' ' + str(zc))
 
     if avar1 < 0:
         avar1 = avar1 * (29 - avar1) / (29 - 10 * avar1)

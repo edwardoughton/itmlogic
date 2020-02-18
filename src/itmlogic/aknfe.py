@@ -3,7 +3,8 @@ import numpy as np
 
 def aknfe(v2):
     """
-    Returns knife edge diffraction loss
+    Returns the attenuation due to a single knife edge - the Fresnal integral (in decibels)
+    as a function of v2.
 
     Parameters
     ----------
@@ -12,8 +13,8 @@ def aknfe(v2):
 
     Returns
     -------
-    aknfe1 : ???
-        ???
+    aknfe1 : float
+        Attenuation due to a single knife edge.
 
     """
     if v2 < 5.76:

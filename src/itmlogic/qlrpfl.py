@@ -6,7 +6,7 @@ from itmlogic.lrprop import lrprop
 
 def qlrpfl(prop):
     """
-    % Initialization routine for point-to-point mode
+    Preparatory subroutine for point-to-point mode.
 
     """
     prop['dist'] = prop['pfl'][0] * prop['pfl'][1]

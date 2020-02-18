@@ -4,21 +4,22 @@ from itmlogic.zlsq1 import zlsq1
 
 def dlthx(pfl1, x1, x2):
     """
-    Find delta h
+    Use the terrain profile pfl1 to find delta h, interdecile range of elevations between
+    point x1 and point x2.
 
     Parameters
     ----------
-    pfl1 : ???
-        ???
-    x1 : ???
-        ???
-    x2 : ???
-        ???
+    pfl1 : list
+        Terrain profile.
+    x1 : int
+        Point 1
+    x2 : int
+        Point 2
 
     Returns
     -------
-    dlthx1 : ???
-        ???
+    dlthx1 : float
+        Interdecile range of elevations
 
     """
     np = pfl1[0]

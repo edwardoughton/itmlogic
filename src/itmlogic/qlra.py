@@ -3,18 +3,19 @@ import numpy as np
 
 def qlra(kst, prop):
     """
-    ???
+    Preparatory subroutine for area prediction mode.
 
     Parameters
     ----------
     kst : ???
         ???
-    propr : ???
-        ???
+    prop : dict
+        Contains all input propagation parameters.
 
     Returns
     -------
-    prop
+    prop : dict
+        Contains all input and output propagation parameters.
 
     """
     prop['he'] = [0, 0]

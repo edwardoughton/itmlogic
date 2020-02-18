@@ -5,6 +5,21 @@ from itmlogic.ahd import ahd
 
 def ascat(d, prop):
     """
+    Finds the scatter attenuation at the distance d using an approximation to the methods of
+    NBS TN101 with checks for inadmissable situations. A call with d = 0 set up initial
+    constants.
+
+    Parameters
+    ----------
+    d : float
+        Distance in meters.
+    prop : dict
+        Contains all input propagation parameters
+
+    Returns
+    -------
+    prop : dict
+        Contains all input and output propagation parameters.
 
     """
     if prop['h0s'] > 15:

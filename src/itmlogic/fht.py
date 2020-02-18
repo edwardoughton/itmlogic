@@ -3,7 +3,7 @@ import numpy as np
 
 def fht(x,pk):
     """
-    ???
+    The height-gain over a smooth spherical earth. Used in the 'three radii' method.
 
     Parameters
     ----------
