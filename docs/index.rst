@@ -83,9 +83,10 @@ Contents
 ========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    Getting Started <getting-started>
+   Reference <api/modules>
 
 .. toctree::
    :maxdepth: 1
