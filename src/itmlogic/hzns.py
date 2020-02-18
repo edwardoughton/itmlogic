@@ -21,13 +21,12 @@ def hzns(pfl, dist, hg, gme):
         Horizon distances.
 
     """
-    print(pfl)
+
     the = {}
     dl = {}
 
     np = pfl[0]
-    xi = pfl[1] #should this be 0 or 1?
-    # print('xi is {}'.format(xi))
+    xi = pfl[1]
     za = pfl[2] + hg[0]
     zb = pfl[np + 2] + hg[1]
     qc = 0.5 * gme
