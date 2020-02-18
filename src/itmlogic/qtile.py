@@ -8,14 +8,14 @@ def qtile(a, ir):
     Parameters
     ----------
     a : list
-        Input data distribution
+        Input data distribution.
     ir : int
-        Quartile value
+        Desired percentile.
 
     Returns
     -------
-    qtile : ???
-        ???
+    qtile : float
+        Percentile value.
 
     """
     as_sorted = sorted(a, reverse=True)

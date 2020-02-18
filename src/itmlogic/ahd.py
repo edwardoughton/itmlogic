@@ -2,6 +2,17 @@ import numpy as np
 
 def ahd(td):
     """
+    This is the H01 function for scatter fields.
+
+    Parameters
+    ----------
+    td : ???
+        ???
+
+    Returns
+    -------
+    ahd1 : ???
+        ???
 
     """
     a = [133.4, 104.6, 71.8]

@@ -2,7 +2,7 @@ import numpy as np
 
 def h0f(r, et):
     """
-    ???
+    This is the H01 function for scatter fields.
 
     Parameters
     ----------

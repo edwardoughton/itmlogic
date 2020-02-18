@@ -5,6 +5,16 @@ def qerf(z):
     The standard normal complementary probability - see function in
     C. Hastings, Jr. (1955). The maximum error should be 7.5x10^-8.
 
+    Parameters
+    ----------
+    z : ??
+        ???
+
+    Output
+    ------
+    qerfi1 : float
+        The standard normal complementary probability
+
     """
     b1 = 0.319381530
     b2 = -0.356563782
