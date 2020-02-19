@@ -2,21 +2,23 @@
 Getting Started
 ===============
 
-This tutorial can help you get ``itmlogic`` working quickly in various available modes.
+This tutorial provides explanation for the various modes available for ``itmlogic``.
 
 Area Prediction Mode
 --------------------
 
-A reproducible example for the Crystal Palace radio transmitter (South London) is provided:
+A reproducible example for the Crystal Palace radio transmitter (South London) is provided.
+Use the following to run the code:
 
 .. code-block:: python
 
-    python scripts/uarea.py
+    python scripts/area.py
 
-The repo includes a Digital Elevation Model tile for London (see the .tif in the data folder).
+The repo already includes a Digital Elevation Model tile for London (see the .tif in the
+data folder).
 
-Firstly, the coordinates of the transmitter are provided using the geojson format (WGS84
-reference system - epsg: 4326):
+For simplicity, this example specifies the coordinates of the ``transmitter`` using the geojson
+format (WGS84 reference system - epsg: 4326):
 
 .. code-block:: python
 
@@ -31,28 +33,29 @@ reference system - epsg: 4326):
             }
         }
 
-An estimated range (in meters) is also provided as a maximum cell radius.
+An estimated range (``cell_range``) is also provided as a maximum cell radius (in meters).
 
-The ``terrain_area`` function is imported from the ``terrain_module`` and we can get the
-necessary Terrain Irregularity Parameter (``tip``) as follows, for an cell radius of 20,000
-meters (20 km):
+To assess landscape elevation the ``terrain_area`` function is imported from the
+``terrain_module``. The function enables the estimation of the Terrain Irregularity Parameter
+(``tip``), for a cell radius of 20,000 meters (20 km):
 
 .. code-block:: python
 
     tip = terrain_area(dem_path, transmitter, 20000, old_crs)
 
 The ``tip`` is the inter-decile range for all elevation values (the range between the top
-10% and bottom 10% of values) and then be passed to the ``itmlogic_area`` function:
+10% and bottom 10% of values). This parameter can then be passed to the ``itmlogic_area``
+function:
 
 .. code-block:: python
 
     output = itmlogic_area(tip)
 
-For a specific propagation scenario the ``itmlogic_area`` function will need adapting. For
-example, the user will want to specify the specific antenna heights, frequency to be modeled
-and local atmospheric conditions. In the given scenario, the propagation loss across this
-terrain is estimated for a certain distance, at a specific confidence level, and returned
-as a list of dicts named ``output`` as follows:
+As the ``itmlogic_area`` is used here to merely demonstrate the code functionality, a user will
+need to adapt parameters to their specific scenario. For example, the user will want to
+specify the specific antenna heights, frequency to be modeled and local atmospheric conditions.
+In the given scenario, the propagation loss across this terrain is estimated for a certain
+distance, at a specific confidence level, and returned as a list of dicts named ``output``:
 
 .. code-block:: python
 
@@ -88,7 +91,7 @@ the Crystal Palace radio transmitter in South London and a receiver in the small
 Mursley in Buckinghamshire, England. For consistency, ``itmlogic`` also uses this example,
 particularly for providing tests for the codebase, to guarantee reliability.
 
-The transmitter is specified:
+The geojson transmitter is specified:
 
 .. code-block:: python
 
@@ -103,7 +106,7 @@ The transmitter is specified:
             }
         }
 
-Along with the receiver:
+Along with the geojson receiver:
 
 .. code-block:: python
 

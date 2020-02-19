@@ -205,6 +205,7 @@ if __name__ == '__main__':
 
     old_crs = 'EPSG:4326'
     new_crs = 'EPSG:3857'
+    cell_range = 20000
 
     #create new geojson for Crystal Palace radio transmitter
     transmitter = {
@@ -219,7 +220,7 @@ if __name__ == '__main__':
         }
 
     #Terrain Irregularity Parameter delta h (in meters)
-    tip = terrain_area(dem_path, transmitter, 20000, old_crs)
+    tip = terrain_area(dem_path, transmitter, cell_range, old_crs)
 
     print('Running itmlogic')
     output = itmlogic_area(tip)

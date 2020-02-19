@@ -3,17 +3,30 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-itmlogic - Longley-Rice Irregular Terrain Model
-===================================================
+itmlogic - A Python Version of the Longley-Rice Irregular Terrain Model
+=======================================================================
 
 .. image:: https://readthedocs.org/projects/itmlogic/badge/?version=latest
     :target: https://itmlogic.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://travis-ci.com/edwardoughton/itmlogic.svg?branch=master
+    :target: https://travis-ci.com/edwardoughton/itmlogic
+    :alt: Build Status
+
+.. image:: https://coveralls.io/repos/github/edwardoughton/itmlogic/badge.svg?branch=master
+    :target: https://coveralls.io/github/edwardoughton/itmlogic?branch=master
+    :alt: Coverage Status
+
+.. image:: https://img.shields.io/badge/github-itmlogic-brightgreen
+    :target: https://github.com/edwardoughton/itmlogic
+    :alt: Source Code
+
 Welcome to the documentation for itmlogic!
 
-These docs will focus on the python implementation of the Longley Rice model. For in-depth
-detail on the engineering model you should refer to the original Longley Rice documents.
+These docs provide an overview of the python implementation of the classic Longley Rice
+propagation model. For in-depth detail on the engineering model we advise you to refer to the
+original Longley Rice documents provided in the repo folder named `References`.
 
 Description
 ===========
@@ -22,9 +35,6 @@ The Longley-Rice Irregular Terrain Model is one of the classic radio propagation
 model is still widely used, particularly in industry. In comparison with other radio models,
 Longley-Rice accounts for various physical effects that result from irregular terrain.
 
-The itmlogic repo provides a Python version of this classic model and enables users to easily
-incorporate terrain effects into their analysis.
-
 Statement of Need
 =================
 
@@ -32,7 +42,8 @@ Many engineering models for wireless networks completely ignore terrain effects.
 software packages are available to address this, they usually need to be commerically licensed.
 Those that are open-source are usually in less commonly used languages such as Fortran.
 This open-source python package overcomes these limitations by providing an easy-to-use Python
-version.
+version. Given the popularity of Python, there is a need for an easy-to-use Python version of
+this model.
 
 Setup and configuration
 =======================
@@ -48,7 +59,7 @@ The recommended installation method is to use conda, which handles packages and 
 environments, along with the conda-forge channel which has a host of pre-built libraries
 and packages.
 
-Create a conda environment called ``itmlogic``:
+Create a conda environment called ``itmlogic`` type:
 
     conda create --name itmlogic python=3.7 gdal
 
@@ -56,7 +67,7 @@ Activate it (run this each time you switch projects):
 
     conda activate itmlogic
 
-First, install optional packages:
+Install any optional packages:
 
     conda install numpy fiona shapely rtree rasterio pyproj tqdm pytest
 
@@ -71,13 +82,13 @@ Run the tests:
 Quick start
 ===========
 
-If you want to quickly generate results run using area prediction mode:
+If you want to quickly generate results run using area prediction mode type:
 
-    python scripts/uarea.py
+    python scripts/area.py
 
-or using point-to-point mode:
+Or using point-to-point mode type:
 
-    python scripts/qkpfl.py
+    python scripts/p2p.py
 
 Contents
 ========
