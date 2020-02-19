@@ -11,7 +11,7 @@ itmlogic - A Python Version of the Longley-Rice Irregular Terrain Model
     :alt: Documentation Status
 
 .. image:: https://travis-ci.com/edwardoughton/itmlogic.svg?branch=master
-    :target: https://travis-ci.com/edwardoughton/itmlogic
+    :target: https://travis-ci.org/edwardoughton/itmlogic
     :alt: Build Status
 
 .. image:: https://coveralls.io/repos/github/edwardoughton/itmlogic/badge.svg?branch=master
