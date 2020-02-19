@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-itmlogic - A Python Version of the Longley-Rice Irregular Terrain Model
+itmlogic - Longley-Rice Irregular Terrain Model
 =======================================================================
 
 .. image:: https://readthedocs.org/projects/itmlogic/badge/?version=latest
@@ -21,6 +21,7 @@ itmlogic - A Python Version of the Longley-Rice Irregular Terrain Model
 .. image:: https://img.shields.io/badge/github-itmlogic-brightgreen
     :target: https://github.com/edwardoughton/itmlogic
     :alt: Source Code
+
 
 Welcome to the documentation for itmlogic!
 
