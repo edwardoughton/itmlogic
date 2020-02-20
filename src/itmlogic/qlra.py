@@ -3,12 +3,15 @@ import numpy as np
 
 def qlra(kst, prop):
     """
-    Preparatory subroutine for area prediction mode.
+    Preparatory subroutine for area prediction mode, as described in equations (3.1)-(3.4)
+    of "The ITS Irregular Terrain Model, version 1.2.2: The Algorithm" and as a function of
+    the siting criteria for the transmit and receive terminals described using 2 element
+    array KST (0=random, 1= "with care", 2= "with great care").
 
     Parameters
     ----------
-    kst : ???
-        ???
+    kst : list
+        Siting criteria for the transmitter and receiver.
     prop : dict
         Contains all input propagation parameters.
 

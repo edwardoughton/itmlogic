@@ -2,17 +2,20 @@ import numpy as np
 
 def ahd(td):
     """
-    This is the H01 function for scatter fields.
+    Returns the function F0(D) (Eqn 6.9 of "The ITS Irregular Terrain Model, version 1.2.2:
+    The Algorithm") used in the computation of tropospheric scatter attenuation,
+    with the input D in meters.
 
     Parameters
     ----------
-    td : ???
-        ???
+    td : float
+        Distance in meters.
 
     Returns
     -------
-    ahd1 : ???
-        ???
+    ahd1 : float
+        The returned value for function F0(D) (Eqn 6.9 of "The ITS Irregular Terrain Model,
+        version 1.2.2: The Algorithm").
 
     """
     a = [133.4, 104.6, 71.8]

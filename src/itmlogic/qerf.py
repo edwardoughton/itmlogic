@@ -7,8 +7,9 @@ def qerf(z):
 
     Parameters
     ----------
-    z : ??
-        ???
+    z : float
+        Defined value to assess the probability of exceedance of a standardized normal random
+        variable.
 
     Output
     ------

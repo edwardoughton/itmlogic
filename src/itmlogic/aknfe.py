@@ -8,8 +8,8 @@ def aknfe(v2):
 
     Parameters
     ----------
-    v2 : ??
-        ???
+    v2 : float
+        Input for computing knife edge diffraction.
 
     Returns
     -------
