@@ -2,19 +2,22 @@ import numpy as np
 
 def h0f(r, et):
     """
-    This is the H01 function for scatter fields.
+    Routine for computing the H01 "frequency gain" function described in Eqn (6.13)
+    of "The ITS Irregular Terrain Model, version 1.2.2: The Algorithm" and used in
+    computing troposcatter attenuation.
 
     Parameters
     ----------
-    r : ???
-        ???
-    et : ???
-        ???
+    r : float
+        Input r parameter for Eqn (6.13) of "The ITS Irregular Terrain Model, version 1.2.2:
+        The Algorithm".
+    et : float
+        Scattering efficiency coefficient.
 
     Returns
     -------
     h0f1 : ???
-        ???
+        Frequency gain value used for computing path loss.
 
     """
     a = [25, 80, 177, 395, 705]

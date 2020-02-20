@@ -1,15 +1,15 @@
 def hzns(pfl, dist, hg, gme):
     """
-    Subroutine to finds horizons.
+    Subroutine to finds horizon parameters.
 
     Parameters
     ----------
     pfl : List
-        Terrain profile.
+        Terrain profile in meters.
     dist : float
-        Distance
+        Distance in meters.
     hg : list
-        ???
+        Heights of transmitter and receiver off ground (meters).
     gme : float
         Effective earth curvature.
 
@@ -21,7 +21,6 @@ def hzns(pfl, dist, hg, gme):
         Horizon distances.
 
     """
-
     the = {}
     dl = {}
 

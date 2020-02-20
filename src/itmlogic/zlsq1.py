@@ -5,21 +5,27 @@ def zlsq1(z, x1, x2):
     A linear least squares fit between x1 and x2, to the function described
     by the array z.
 
+    Evaluates a least squares fit to an input function z (in the form of a terrain profile
+    having first element the number of profile samples, second element the spacing between
+    them, and third through end elements the profile data) between horizontal locations
+    x1 and x2.  Returns the interpolated heights at location 0 and the end of the
+    profile.
+
     Parameters
     ----------
-    z : ???
-        ???
-    x1 : ???
-        ???
-    x2 : ???
-        ???
+    z : list
+        Terrain profile in meters.
+    x1 : float
+        Location 1.
+    x2 : float
+        Location 2.
 
     Returns
     -------
-    z0 : ???
-        ???
-    zn : ???
-        ???
+    z0 : float
+        Interpolated height.
+    zn : float
+        Interpolated height.
 
     """
     xn  = z[0]

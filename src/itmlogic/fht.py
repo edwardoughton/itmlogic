@@ -3,19 +3,24 @@ import numpy as np
 
 def fht(x,pk):
     """
-    The height-gain over a smooth spherical earth. Used in the 'three radii' method.
+    Supporting function for the height gain in the "three radii method" used in the
+    computation of diffractive attenuation, as described in equations (4.20) and (6.2)-(6.7)
+    of "The ITS Irregular Terrain Model, version 1.2.2: The Algorithm" with inputs
+    corresponding to the "x" and "K" parameters of these equations.
 
     Parameters
     ----------
-    x : ???
-        ???
-    pk : ???
-        ???
+    x : float
+        x parameter specified in equations (4.20) and (6.2)-(6.7) of "The ITS Irregular
+        Terrain Model, version 1.2.2: The Algorithm"
+    pk : float
+        k parameter specified in equations (4.20) and (6.2)-(6.7) of "The ITS Irregular
+        Terrain Model, version 1.2.2: The Algorithm"
 
     Returns
     -------
-    fht1 : ???
-        ???
+    fht1 : float
+        Estimated diffractive attenuation.
 
     """
     if x < 200:
