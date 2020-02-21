@@ -10,41 +10,47 @@ given.
 Primary input parameters
 ------------------------
 
-| Parameters    | Description                 |
-| ------------- |:---------------------------:|
-| mdp           | Controlling                 |
-| dist          | Distance                    |
-| hg            | Antenna structural heights  |
-| wn            | Wave number                 |
-| dh            | Terrain irregularity        |
-| ens           | Surface refractivity        |
-| gme           | Earth's effective curvature |
-| zgnd          | Surface transfer impedance  |
-| ze            | Effective antenna heights   |
-| dl            | Horizon distances           |
-| the           | Horizon elevation angles    |
+============= ============================
+Parameters    Description
+============= ============================
+mdp           Controlling
+dist          Distance
+hg            Antenna structural heights
+wn            Wave number
+dh            Terrain irregularity
+ens           Surface refractivity
+gme           Earth's effective curvature
+zgnd          Surface transfer impedance
+ze            Effective antenna heights
+dl            Horizon distances
+the           Horizon elevation angles
+============= ============================
 
 Secondary parameters (computer in lrprop)
 -----------------------------------------
 
-| Parameters    | Description                    |
-| ------------- |:------------------------------:|
-| dlsa          | Line-of-sight distance         |
-| dx            | Scatter distance               |
-| ael, ak1, ak2 | Line-of-sight coefficients     |
-| aed, emd      | Diffraction coefficients       |
-| aes, ems      | Scatter coefficients           |
-| dls           | Smooth earth horizon distances |
-| dla           | Total horizon distance         |
-| tha           | Total bending angle            |
+=============== ============================
+ Parameters     Description
+=============== ============================
+ dlsa           Line-of-sight distance
+ dx             Scatter distance
+ ael, ak1, ak2  Line-of-sight coefficients
+ aed, emd       Diffraction coefficients
+ aes, ems       Scatter coefficients
+ dls            Smooth earth horizon distances
+ dla            Total horizon distance
+ tha            Total bending angle
+=============== ============================
 
 Output values
 -------------
 
-| Output values    | Description                 |
-| ---------------- |:---------------------------:|
-| kwx              | Error indicator             |
-| aref             | Reference attenuation       |
+================ ============================
+Output values    Description
+================ ============================
+ kwx             Error indicator
+ aref            Reference attenuation
+================ ============================
 
 
 Figure 1 provides a macro personective on the program flow, subroutines, statistics etc.
