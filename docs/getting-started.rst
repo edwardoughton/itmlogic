@@ -57,7 +57,9 @@ Figure 1 provides a macro personective on the program flow, subroutines, statist
 
 Longley-Rice Irregular Terrain Model Scripts, Routines and Functions
 --------------------------------------------------------------------
-![Example](/_static/lritm_box_diagram.png)
+
+.. image:: _static/lritm_box_diagram.png
+    :target: _static/lritm_box_diagram.png
 
 
 The various prediction modes will now covered.
