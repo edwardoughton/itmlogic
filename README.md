@@ -9,13 +9,16 @@ Longley-Rice Irregular Terrain Model
 **itmlogic** is a Python implementation of the classic Longley-Rice propagation model (v1.2.2)
 and capable of estimating the signal propagation effects resulting from irregular terrain.
 
-Model properties and the algorithm defining it are available in:
+This Python repo implements the model properties and algorithm defining it from:
 
 * Hufford, G. A., A. G. Longley, and W. A. Kissick (1982), A guide    to the use of the ITS
   Irregular Terrain Model in the area prediction mode, NTIA Report 82-100. (NTIS Order No.
   PB82-217977)
 * Hufford, G. A. (1995) The ITS Irregular Terrain Model, version 1.2.2, the Algorithm.
 
+**itmlogic** enables you to account for the radio propagation impacts arising from irregular
+terrain. For example, the image below shows the terrain implications arising between the
+Crystal Palace (South London) transmitter and Mursley, Buckinghamshire, England.
 
 Terrain profile slice: Crystal Palace (South London) to Mursley
 ---------------------------------------------------------------
