@@ -18,8 +18,7 @@ def readme():
 
 setup(
     name='itmlogic',
-    # use_scm_version=True,
-    version=0.1,
+    use_scm_version=True,
     license='MIT License',
     description='Longley-Rice irregular terrain propagation model',
     long_description=readme(),
