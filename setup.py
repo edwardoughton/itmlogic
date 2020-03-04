@@ -50,10 +50,6 @@ setup(
     install_requires=[
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
         'numpy',
-        'shapely',
-        'fiona',
-        'rasterio',
-        'pyproj',
     ],
     entry_points={
         'console_scripts': [
