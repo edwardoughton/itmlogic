@@ -17,6 +17,8 @@ from functools import partial
 from collections import OrderedDict
 
 import fiona
+from fiona.crs import from_epsg
+from pyproj import Transformer
 from shapely.geometry import LineString, mapping
 from shapely.ops import transform
 
@@ -24,7 +26,6 @@ from itmlogic.qerfi import qerfi
 from itmlogic.qlrpfl import qlrpfl
 from itmlogic.avar import avar
 from terrain_module import terrain_p2p
-from pyproj import Transformer
 
 # #set up file paths
 CONFIG = configparser.ConfigParser()
@@ -260,6 +261,28 @@ def write_shapefile(data, directory, filename, crs):
             sink.write(datum)
 
 
+def straight_line_from_points(a, b):
+    return {
+        'type': 'Feature',
+        'geometry': {
+            'type': 'LineString',
+            'coordinates': [
+                (
+                    a['geometry']['coordinates'][0],
+                    a['geometry']['coordinates'][1]
+                ),
+                (
+                    b['geometry']['coordinates'][0],
+                    b['geometry']['coordinates'][1]
+                ),
+            ]
+        },
+        'properties': {
+            'id': 'terrain path'
+        }
+    }
+
+
 if __name__ == '__main__':
 
     dem_folder = os.path.join(BASE_PATH)
@@ -284,7 +307,7 @@ if __name__ == '__main__':
         116, 107, 104, 101,  98,  95, 103,  91,  97, 102, 107, 107, 107, 103,  98,
         94,  91, 105, 122, 122, 122, 122, 122, 137, 137, 137, 137, 137, 137, 137,
         137, 140, 144, 147, 150, 152, 159
-        ]
+    ]
 
     #create new geojson for Crystal Palace radio transmitter
     transmitter = {
@@ -292,11 +315,11 @@ if __name__ == '__main__':
         'geometry': {
             'type': 'Point',
             'coordinates': (-0.07491679518573545, 51.42413477117786)
-            },
+        },
         'properties': {
             'id': 'Crystal Palace radio transmitter'
-            }
         }
+    }
 
     #create new geojson for Mursley
     receiver = {
@@ -304,49 +327,27 @@ if __name__ == '__main__':
         'geometry': {
             'type': 'Point',
             'coordinates': (-0.8119433954872186, 51.94972494521946)
-            },
+        },
         'properties': {
             'id': 'Mursley'
-            }
         }
+    }
 
     #create new geojson for terrain path
-    line = {
-        'type': 'Feature',
-        'geometry': {
-            'type': 'LineString',
-            'coordinates': [
-                    (
-                        transmitter['geometry']['coordinates'][0],
-                        transmitter['geometry']['coordinates'][1]
-                    ),
-                    (
-                        receiver['geometry']['coordinates'][0],
-                        receiver['geometry']['coordinates'][1]
-                    ),
-                ]
-            },
-        'properties': {
-            'id': 'terrain path'
-            }
-        }
+    line = straight_line_from_points(transmitter, receiver)
 
     current_crs = 'EPSG:4326'
 
     #run terrain module
-    measured_terrain_profile, distance_km, points = terrain_p2p(
-        dem_folder, line, current_crs
-        )
-    print('Distance is {}'.format(distance_km))
+    measured_terrain_profile, distance_km, points = terrain_p2p(dem_folder, line, current_crs)
+    print('Distance is {}km'.format(distance_km))
 
     #check (out of interest) how many measurements are in each profile
     print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
     print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
 
     #run model and get output
-    output = itmlogic_p2p(
-        original_surface_profile_m, original_distance
-        )
+    output = itmlogic_p2p(original_surface_profile_m, original_distance)
 
     #grab coordinates for transmitter and receiver for writing to .csv
     transmitter_x = transmitter['geometry']['coordinates'][0]
@@ -368,3 +369,53 @@ if __name__ == '__main__':
     write_shapefile(points, directory_shapes, 'points.shp', new_crs)
 
     print('Completed run')
+
+
+    print('Start two-tile test')
+    transmitter = {
+        'type': 'Feature',
+        'geometry': {
+            'type': 'Point',
+            'coordinates': (26.676,-3.513)
+        },
+        'properties': {
+            'id': 'A'
+        }
+    }
+
+    receiver = {
+        'type': 'Feature',
+        'geometry': {
+            'type': 'Point',
+            'coordinates': (27.594,-3.514)
+        },
+        'properties': {
+            'id': 'B'
+        }
+    }
+
+    #create new geojson for terrain path
+    line = straight_line_from_points(transmitter, receiver)
+
+    current_crs = 'EPSG:4326'
+
+    #run terrain module
+    measured_terrain_profile, distance_km, points = terrain_p2p(dem_folder, line, current_crs)
+
+    print("Profile [", measured_terrain_profile[0], ",  ... ,", measured_terrain_profile[-1], "]")
+    print("Distance is {}km".format(distance_km))
+    print("Sampled", len(points), "points")
+
+    schema = {
+        'geometry': 'Point',
+        'properties': {'elevation': 'float'}
+    }
+    crs = from_epsg(4326)
+    with fiona.open('data/processed/shapes/two_tile_points.shp',
+                    'w',
+                    driver='ESRI Shapefile',
+                    crs=crs,
+                    schema=schema) as fh:
+        for point in points:
+            fh.write(point)
+    print("Wrote two-tile profile to data/processed/shapes/two_tile_points.shp")

@@ -1,0 +1,63 @@
+DOI: https://doi.org/10.5069/G94M92HB
+OT Collection ID: OT.112016.4326.2
+Dataset Name: ALOS World 3D - 30m Ellipsoidal
+Short Name: AW3D30_E
+Collection Platform: Satellite Data
+
+----------------------------------------------------------
+
+Dataset Overview: The ALOS Global Digital Surface Model (AW3D30) is a global dataset generated from images collected using the Panchromatic Remote-sensing  Instrument for Stereo Mapping (PRISM) aboard the Advanced Land Observing Satellite (ALOS) from 2006 to 2011. As described by the Japan Aerospace Exploration Agency: The Japan Aerospace Exploration Agency (JAXA) releases the global digital surface model (DSM) dataset with a horizontal resolution of approx. 30-meter mesh (1 arcsec) free of charge. The dataset has been compiled with images acquired by the Advanced Land Observing Satellite "DAICHI" (ALOS). The dataset is published based on the DSM dataset (5-meter mesh version) of the "World 3D Topographic Data", which is the most precise global-scale elevation data at this time, and its elevation precision is also at a world-leading level as a 30-meter mesh version. This dataset is expected to be useful for scientific research, education, as well as the private service sector that uses geospatial information.    Version: May 2016: Global terrestrial region (within approx. 82 deg. of N/S latitudes) of Version 1 released (approx. 22,100 tiles)  Note: JAXA provides two versions of AW3D30 created from the original 5-meter mesh using different downsampling methods: average (provided here) and median (not available from OpenTopography).
+
+Dataset Acknowledgement: J. Takaku, T. Tadono, K. Tsutsui : Generation of High Resolution Global DSM from ALOS PRISM, The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences, pp.243-248, Vol. XL-4, ISPRS TC IV Symposium, Suzhou, China, 2014. [PDF file]
+
+  T. Tadono, H. Ishida, F. Oda, S. Naito, K. Minakawa, H. Iwamoto : Precise Global DEM Generation By ALOS PRISM, ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences, pp.71-76, Vol.II-4, 2014.  [PDF file]
+
+Dataset Keywords: global, gdem, ellipsoidal, sar
+
+Survey Date: 01/01/2006 - 01/01/2011
+
+----------------------------------------------------------
+
+Data Provider and Roles:
+	1. Japan Aerospace Exploration Agency
+	Role: Collector
+	Url: https://global.jaxa.jp/
+
+
+----------------------------------------------------------
+
+Total lidar Points: N/A
+
+Area: N/A
+
+Point Density: N/A
+
+Raster Resolution: 30 meter
+
+Coordinates System:
+	Horizontal: WGS 1984 [EPSG: 4326]
+	Vertical: WGS84 (Ellipsoid)
+
+Survey Report: http://www.eorc.jaxa.jp/ALOS/en/aw3d30/
+
+----------------------------------------------------------
+
+Download and Access Products:
+	1. Raster
+		opentopoID: OTALOS.082017.4326.1
+		Data Processing: http://opentopo.sdsc.edu/raster?opentopoID=OTALOS.082017.4326.1
+
+	2. Raster
+		opentopoID: OTALOS.112016.4326.2
+		Data Processing: http://opentopo.sdsc.edu/raster?opentopoID=OTALOS.112016.4326.2
+
+
+----------------------------------------------------------
+
+Dataset Extent in KMZ format: https://cloud.sdsc.edu/v1/AUTH_opentopography/www/lidarkmls/raster/AW3D30_bounds.kmz
+
+Dataset Spatial Bounds:
+	North: 83.0°
+	South: -81.9999999999999°
+	East: 180.0°
+	West: -180.0°
