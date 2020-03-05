@@ -95,25 +95,22 @@ def terrain_p2p(dem_folder, line, current_crs):
 
     """
     extents = load_extents(dem_folder)
+    line_geom = LineString(line['geometry']['coordinates'])
 
-    line_geometry = LineString(line['geometry']['coordinates'])
-
+    # Geographic distance
     geod = pyproj.Geod(ellps="WGS84")
-    distance = geod.line_length(
-        [line_geometry.coords[0][0], line_geometry.coords[1][0]],
-        [line_geometry.coords[0][1], line_geometry.coords[1][1]]
-    )
+    distance_m = geod.geometry_length(line_geom)
+    distance_km = distance_m / 1e3
 
-    increment = int(determine_distance_increment(distance))
+    num_samples = determine_num_samples(distance_m)
 
-    distance_km = distance / 1e3
+    steps = np.interp(range(num_samples), [0,num_samples], [0, line_geom.length])
 
     elevation_profile = []
-
     points = []
 
-    for currentdistance  in range(0, int(distance), int(increment)):
-        point = line_geometry.interpolate(currentdistance)
+    for currentdistance in steps:
+        point = line_geom.interpolate(currentdistance)
         xp, yp = point.x, point.y
         tile_path = get_tile_path_for_point(extents, xp, yp)
         z = get_value_from_dem_tile(tile_path, xp, yp)
@@ -125,8 +122,9 @@ def terrain_p2p(dem_folder, line, current_crs):
             'geometry': mapping(point),
             'properties': {
                 'elevation': float(z),
-                }
-            })
+            }
+        })
+
 
     return elevation_profile, distance_km, points
 
@@ -163,20 +161,30 @@ def get_value_from_dem_tile(tile_path, x, y):
     return band[row, col]
 
 
-def determine_distance_increment(distance):
-    """
+def determine_num_samples(distance_m):
+    """Guarantee a number of samples between 2 and 600.
+
     Longley-Rice Irregular Terrain Model is limited to only 600
     elevation points, so this function ensures this number is not
     passed.
 
     """
-    if distance >= 60000:
-        return int(distance / 100)
-    elif distance >= 30000:
-        return int(distance / 50)
-    elif distance >= 10000:
-        return int(distance / 25)
-    elif distance >= 1000:
-        return int(distance / 10)
-    else:
-        return int(distance / 2)
+    # Online plot to get a feel for the function:
+    # https://www.wolframalpha.com/input/?i=plot+%28-1%2F%280.0001x%2B%281%2F598%29%29%29+%2B+600+from+0+to+100
+
+    # Limits:
+    # https://www.wolframalpha.com/input/?i=limit+%28-1%2F%280.0001x%2B%281%2F598%29%29%29+%2B+600
+
+    stretch = 1e-5
+    lower_limit = 2
+    upper_limit = 600
+    return round(
+        (
+            -1 /
+            (
+                (stretch * distance_m) +
+                (1 / (upper_limit - lower_limit))
+            )
+        ) +
+        upper_limit
+    )
