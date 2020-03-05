@@ -336,10 +336,9 @@ if __name__ == '__main__':
     #create new geojson for terrain path
     line = straight_line_from_points(transmitter, receiver)
 
-    current_crs = 'EPSG:4326'
-
     #run terrain module
-    measured_terrain_profile, distance_km, points = terrain_p2p(dem_folder, line, current_crs)
+    measured_terrain_profile, distance_km, points = terrain_p2p(
+        os.path.join(dem_folder, 'ASTGTM2_N51W001_dem.tif'), line)
     print('Distance is {}km'.format(distance_km))
 
     #check (out of interest) how many measurements are in each profile
@@ -397,10 +396,9 @@ if __name__ == '__main__':
     #create new geojson for terrain path
     line = straight_line_from_points(transmitter, receiver)
 
-    current_crs = 'EPSG:4326'
-
     #run terrain module
-    measured_terrain_profile, distance_km, points = terrain_p2p(dem_folder, line, current_crs)
+    measured_terrain_profile, distance_km, points = terrain_p2p(
+        os.path.join(dem_folder, 'S_AVE_DSM.vrt'), line)
 
     print("Profile [", measured_terrain_profile[0], ",  ... ,", measured_terrain_profile[-1], "]")
     print("Distance is {}km".format(distance_km))

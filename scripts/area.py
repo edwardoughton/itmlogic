@@ -202,28 +202,22 @@ if __name__ == '__main__':
     dem_path = BASE_PATH
     directory = DATA_PROCESSED
     directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
-
-    old_crs = 'EPSG:4326'
-    new_crs = 'EPSG:3857'
     cell_range = 20000
 
-    #create new geojson for Crystal Palace radio transmitter
-    transmitter = {
-        'type': 'Feature',
-        'geometry': {
-            'type': 'Point',
-            'coordinates': (-0.07491679518573545, 51.42413477117786)
-            },
-        'properties': {
-            'id': 'Crystal Palace radio transmitter'
-            }
-        }
-
     #Terrain Irregularity Parameter delta h (in meters)
-    tip = terrain_area(dem_path, transmitter, cell_range, old_crs)
+    tip = terrain_area(
+        os.path.join(dem_path, 'ASTGTM2_N51W001_dem.tif'),
+        -0.074916,
+        51.424134,
+        cell_range)
+    print('TIP for AST DEM', tip)
 
     print('Running itmlogic')
     output = itmlogic_area(tip)
 
-    print('Writing results to .csv')
+    print('Writing results to ', os.path.join(directory, 'uarea_output.csv'))
     csv_writer(output, directory, 'uarea_output.csv')
+
+    tip = terrain_area(os.path.join(dem_path, 'S_AVE_DSM.vrt'), 26.9976, -3.5409, cell_range)
+    print('TIP for ALOS DEM', tip)
+    output = itmlogic_area(tip)

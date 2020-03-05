@@ -1,0 +1,21 @@
+<VRTDataset rasterXSize="7200" rasterYSize="3600">
+  <SRS dataAxisToSRSAxisMapping="2,1">GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AXIS["Latitude",NORTH],AXIS["Longitude",EAST],AUTHORITY["EPSG","4326"]]</SRS>
+  <GeoTransform>  2.6000000000000000e+01,  2.7777777777777778e-04,  0.0000000000000000e+00, -3.0000000000000000e+00,  0.0000000000000000e+00, -2.7777777777777778e-04</GeoTransform>
+  <VRTRasterBand dataType="Int16" band="1">
+    <ColorInterp>Gray</ColorInterp>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">S004E026_AVE_DSM.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="3600" RasterYSize="3600" DataType="Int16" BlockXSize="3600" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="3600" ySize="3600" />
+      <DstRect xOff="0" yOff="0" xSize="3600" ySize="3600" />
+    </SimpleSource>
+    <SimpleSource>
+      <SourceFilename relativeToVRT="1">S004E027_AVE_DSM.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="3600" RasterYSize="3600" DataType="Int16" BlockXSize="3600" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="3600" ySize="3600" />
+      <DstRect xOff="3600" yOff="0" xSize="3600" ySize="3600" />
+    </SimpleSource>
+  </VRTRasterBand>
+</VRTDataset>
