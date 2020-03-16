@@ -35,20 +35,19 @@ bibliography: paper.bib
 
 # Summary
 
-Billions of people still do not have access to a reliable internet connection. One of the most effective ways to provide wide area access to a disperate user base is via wireless radio technologies, such as cellular 4G or 5G. This is because the costs of deployment are considerably lower, which is beneficial in areas with low per capita income or adoption.
+Billions of people still do not have access to a reliable internet connection. One of the most effective ways to provide wide area access to a disparate user base is via wireless radio technologies, such as cellular 4G or 5G. The costs of wireless deployment are considerably lower than fixed alternatives, which is beneficial in areas with low per-capita income or adoption.
 
-There is consensus that data science methods can help us to more accurately identify unconnected groups and help to design least-cost internet access strategies. However, many of the statistical tools in the field are written in Python and therefore there is a language conflict with classical propagation models which many not have yet been deployed in this programing language.
+Data science methods can help us to more accurately identify unconnected groups and help to design least-cost internet access strategies. However, many of the statistical tools in the field are written in Python and therefore there is a language conflict with classic propagation models which have not yet been made available in this programming language.
 
-The Longley Rice Irregular Terrain Model is a classic propagation model developed by the Central Radio Propagation Laboratory during the 1960s in Colorado, USA, by A.G. Longley and P.L. Rice. The model is still widely used throughout the cellular industry by Mobile Network Operators (MNOs) as it can predict long-term median transmission loss over irregular terrain. The original open-source model is available in Fortran or C. However, there is no current Python implementation.
+The Longley Rice Irregular Terrain Model is a classic propagation model developed by the Central Radio Propagation Laboratory during the 1960s in Colorado, USA, by A.G. Longley and P.L. Rice. The model is still widely used throughout the cellular industry by Mobile Network Operators (MNOs) as it can predict long-term median transmission loss over irregular terrain. The original open-source model is available in Fortran or C++ [@ITS:2007].
 
-The Longley Rice Irregular Terrain Model (``itmlogic``) implements the classic Longley-Rice model enabling the quantification of propagation loss over irregular terrain. ``itmlogic`` is capable of predicting the the statistics of propagation loss given input parameters such as transmitter and receiver heights, frequency, surface permittivity, climate zone, and terrain information.
+This paper describes the ``itmlogic`` package, which provides a Python implementation of the Longley Rice Irregular Terrain Model. It implements the classic model, enabling the quantification of propagation loss over irregular terrain. ``itmlogic`` is capable of predicting the the statistics of propagation loss given input parameters such as transmitter and receiver heights, frequency, surface permittivity, climate zone, and terrain information.
 
-##INSERT SLIDE ON STRUCTURE OF ITMLOGIC MODULES
 ![Longley-Rice Irregular Terrain Model Scripts, Routines and Functions](lritm_box_diagram.png)
 
 ## Statement of Need
 
-Smaller Mobile Network Operators may not have their own in-house engineering models. While other software packages are available, they need to be commerically licensed. Hence, this open-source package can help keep costs low for MNOs working to connect communities in rural and remote regions where costs are high and returns low.
+Smaller Mobile Network Operators may not have their own in-house engineering models. While other software packages are available, they need to be commercially licensed. Hence, this open-source package can help keep costs low for MNOs working to connect communities in rural and remote regions where costs are high and returns low.
 
 ## Uniqueness
 
@@ -60,13 +59,13 @@ Inputs to the model are in the MKS system of units, so that the transmitter and 
 
 ## The Longley-Rice Model
 
-The model's purpose is to predict properties of the propagation loss in a communications link between a transmitter and receiver. The predicted propagation loss is described using cumulative distributions given the stochastic nature of radiowave propagation. The model originally was created in the 1960s when television broadcasting and terrestrial radio were important systems that required better engineering [@Hufford:1982]. The model is based on empirical curve fits to an extensive set of propagation measurements peformed by the Institution for Telecommunication Sciences and other organizations.
+The model's purpose is to predict properties of the propagation loss in a communications link between a transmitter and receiver. The predicted propagation loss is described using cumulative distributions given the stochastic nature of radio wave propagation. The model originally was created in the 1960s when television broadcasting and terrestrial radio were important systems that required better engineering [@Hufford:1982]. The model is based on empirical curve fits to an extensive set of propagation measurements performed by the Institution for Telecommunication Sciences and other organizations.
 
-Two modes of prediction are available: "area prediction" and "point-to-point". Area prediction mode uses a terrain irregularity parameter based on the inter-decile range of terrain elevations (the range after removing the top 10% and bottom 10% of elevations). Point-to-point mode in contrast requires a quantiative description of the profile of the terrain between transmitter and receiver [@Hufford:1995].
+Two modes of prediction are available: "area prediction" and "point-to-point". Area prediction mode uses a terrain irregularity parameter based on the inter-decile range of terrain elevations (the range after removing the top 10% and bottom 10% of elevations). Point-to-point mode uses a sample of up to 600 points from the terrain profile of the straight line between transmitter and receiver [@Hufford:1995].
 
 ## Applications
 
-The median propagation loss estimates produced by ``itmlogic`` could be used with other link budget estimation software to assess the capacity, coverage and cost of 5G infrastructure. For example, this could include application via the path loss module of the Python Simulator for Integrated Modelling of 5G, ``pysim5G`` [@Oughton:2019b].
+The median propagation loss estimates produced by ``itmlogic`` can be used with other link budget estimation models to assess the capacity, coverage and cost of 5G infrastructure. For example, this could include application via the path loss module of the Python Simulator for Integrated Modelling of 5G, ``pysim5G`` [@Oughton:2019b].
 
 ## Acknowledgements
 
