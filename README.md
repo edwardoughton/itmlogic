@@ -100,7 +100,10 @@ Oxford](http://www.eci.ox.ac.uk) within the EPSRC-sponsored MISTRAL programme (	
 as part of the [Infrastructure Transition Research Consortium](http://www.itrc.org.uk/)
 
 ## Contributors
-Edward J. Oughton (University of Oxford)
-Tom Russell (University of Oxford)
+- Edward J. Oughton (University of Oxford)
+- Tom Russell (University of Oxford)
+- Joel Johnson (The Ohio State University)
+- Caglar Yardim (The Ohio State University)
+- Julius Kusuma (Facebook Research)
 
 If you find an error or have a question, please submit an issue.

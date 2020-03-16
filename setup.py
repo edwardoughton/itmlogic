@@ -18,8 +18,7 @@ def readme():
 
 setup(
     name='itmlogic',
-    # use_scm_version=True,
-    version=0.1,
+    use_scm_version=True,
     license='MIT License',
     description='Longley-Rice irregular terrain propagation model',
     long_description=readme(),
@@ -51,10 +50,6 @@ setup(
     install_requires=[
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
         'numpy',
-        'shapely',
-        'fiona',
-        'rasterio',
-        'pyproj',
     ],
     entry_points={
         'console_scripts': [
