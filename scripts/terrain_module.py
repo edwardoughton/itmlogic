@@ -67,11 +67,28 @@ def terrain_area(dem, lon, lat, cell_range):
 def geodesic_point_buffer(lon, lat, distance_m):
     """
     Calculate a buffer a specified number of metres around a lat/lon point.
-    
+
+    Parameters
+    ----------
+    lon : float
+        Longitude.
+    lat :  float
+        Latitude.
+    distance_m : int
+        Distance in meters.
+
+    Returns
+    -------
+    buffer : Shapely object
+        Buffered point.
+
     """
     # Azimuthal equidistant projection around lat/lon point
     aeqd = '+proj=aeqd +lat_0={lat} +lon_0={lon} +x_0=0 +y_0=0'
     crs = aeqd.format(lat=lat, lon=lon)
+
+    # To be transformed to WGS84 / EPSG:4326
+    transformer = pyproj.Transformer.from_crs(crs, "epsg:4326", always_xy=True)
 
     # Buffer origin by distance in metres
     buf = Point(0, 0).buffer(distance_m)
@@ -93,7 +110,7 @@ def interdecile_range(x):
     -------
     interdecile_range : int
         The terrain irregularity parameter.
-        
+
     """
     q90, q10 = np.percentile(x, [90, 10])
     return round(q90 - q10)
@@ -104,7 +121,9 @@ def interdecile_range(x):
 
 
 def all_data(x):
-    """Get all data points within mask, with values greater than zero
+    """
+    Get all data points within mask, with values greater than zero.
+
     """
     data = x.compressed()
     return data[data > 0]
@@ -141,18 +160,45 @@ def terrain_p2p(dem, line):
     distance_m = geod.geometry_length(line_geom)
     distance_km = distance_m / 1e3
 
-    # Sample elevation profile
-    elevation_profile = point_query(point_geoms, dem)
+    # Interpolate along line to get sampling points
+    num_samples = determine_num_samples(distance_m)
+    steps = np.interp(range(num_samples), [0,num_samples], [0, line_geom.length])
+    point_geoms = [line_geom.interpolate(currentdistance) for currentdistance in steps]
 
+    # Sample elevation profile
+    surface_profile = point_query(point_geoms, dem)
+
+    # Put together point features with raster values
+    points = [
+        {
+            'type': 'Feature',
+            'geometry': mapping(point),
+            'properties': {
+                'elevation': float(z),
+            }
+        }
+        for point, z in zip(point_geoms, surface_profile)
+    ]
     return surface_profile, distance_km, points
 
 
 def determine_num_samples(distance_m):
-    """Guarantee a number of samples between 2 and 600.
+    """
+    Guarantee a number of samples between 2 and 600.
 
     Longley-Rice Irregular Terrain Model is limited to only 600
     surface points, so this function ensures this number is not
     passed.
+
+    Parameters
+    ----------
+    distance_m : int
+        Distance between transmitter and receiver in meters.
+
+    Returns
+    -------
+    num_samples : int
+        Number of samples between 2 and 600.
 
     """
     # This is -1/x translated and rescaled:
@@ -168,6 +214,7 @@ def determine_num_samples(distance_m):
     stretch = 1e-5
     lower_limit = 2
     upper_limit = 600
+
     return round(
         (
             -1 /
