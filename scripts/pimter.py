@@ -29,6 +29,18 @@ def run_itmlogic(surface_profile_m, distance_km):
     """
     Run itmlogic in point to point (p2p) prediction mode.
 
+    Parameters
+    ----------
+    surface_profile_m : list
+        Contains surface profile measurements in meters.
+    distance_km : float
+        Distance between the transmitter and receiver.
+
+    Returns
+    -------
+    output : list of dicts
+        Contains model output results.
+
     """
     prop = {}
 

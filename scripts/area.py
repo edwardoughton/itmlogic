@@ -30,7 +30,20 @@ DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
 
 
 def itmlogic_area(tip):
+    """
+    Run itmlogic in area prediction mode.
 
+    Parameters
+    ----------
+    tip : float
+        Terrain irregularity parameter.
+
+    Returns
+    -------
+    output : list of dicts
+        Contains model output results.
+
+    """
     prop = {}
 
     #Antenna height 1 (m), Antenna height 2 (m)
@@ -150,6 +163,7 @@ def itmlogic_area(tip):
     DD = []
 
     output = []
+
     for JD in range(0, ND): #0-22
 
         prop['lvar'] = max(1, prop['lvar'])
@@ -182,6 +196,15 @@ def csv_writer(data, directory, filename):
     """
     Write data to a CSV file path.
 
+    Parameters
+    ----------
+    data : list of dicts
+        Data to be written.
+    directory : string
+        Folder to write the results to.
+    filename : string
+        Name of the file to write.
+
     """
     # Create path
     if not os.path.exists(directory):
@@ -204,6 +227,8 @@ if __name__ == '__main__':
     directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
     cell_range = 20000
 
+
+    print('Getting Terrain Irregularity Parameter (delta h) (in meters)')
     #Terrain Irregularity Parameter delta h (in meters)
     tip = terrain_area(
         os.path.join(dem_path, 'ASTGTM2_N51W001_dem.tif'),

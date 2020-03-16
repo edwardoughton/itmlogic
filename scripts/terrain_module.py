@@ -65,14 +65,13 @@ def terrain_area(dem, lon, lat, cell_range):
 
 
 def geodesic_point_buffer(lon, lat, distance_m):
-    """Calculate a buffer a specified number of metres around a lat/lon point
+    """
+    Calculate a buffer a specified number of metres around a lat/lon point.
+    
     """
     # Azimuthal equidistant projection around lat/lon point
     aeqd = '+proj=aeqd +lat_0={lat} +lon_0={lon} +x_0=0 +y_0=0'
     crs = aeqd.format(lat=lat, lon=lon)
-
-    # To be transformed to WGS84 / EPSG:4326
-    transformer = pyproj.Transformer.from_crs(crs, "epsg:4326", always_xy=True)
 
     # Buffer origin by distance in metres
     buf = Point(0, 0).buffer(distance_m)
@@ -82,10 +81,26 @@ def geodesic_point_buffer(lon, lat, distance_m):
 
 
 def interdecile_range(x):
-    """Get range between bottom 10% and top 10% of values.
+    """
+    Get range between bottom 10% and top 10% of values.
+
+    Parameters
+    ----------
+    x : list
+        Terrain profile values.
+
+    Returns
+    -------
+    interdecile_range : int
+        The terrain irregularity parameter.
+        
     """
     q90, q10 = np.percentile(x, [90, 10])
     return round(q90 - q10)
+
+    interdecile_range = int(round(q90 - q10, 0))
+
+    return interdecile_range
 
 
 def all_data(x):
@@ -98,12 +113,26 @@ def all_data(x):
 def terrain_p2p(dem, line):
     """
     This module takes a set of point coordinates and returns
-    the elevation profile.
+    the surface profile.
 
-    dem : str
-        Path to the available Digital Elevation Model as single raster file or vrt.
+    Parameters
+    ----------
+    dem_folder : string
+        Folder path to the available Digital Elevation Model tiles.
     line : dict
-        Geojson. Must be in WGS84 / EPSG: 4326
+        Geojson linestring. Must be in WGS84 / EPSG: 4326
+    current_crs : string
+        The current coordinate reference system.
+
+    Returns
+    -------
+    surface_profile :list
+        Contains the surface profile measurements in meters.
+    distance_km : float
+        Distance in kilometers between the antenna and receiver.
+    points : list of dicts
+        Location of geojson sampling points.
+
     """
     line_geom = LineString(line['geometry']['coordinates'])
 
@@ -112,35 +141,19 @@ def terrain_p2p(dem, line):
     distance_m = geod.geometry_length(line_geom)
     distance_km = distance_m / 1e3
 
-    # Interpolate along line to get sampling points
-    num_samples = determine_num_samples(distance_m)
-    steps = np.interp(range(num_samples), [0,num_samples], [0, line_geom.length])
-    point_geoms = [line_geom.interpolate(currentdistance) for currentdistance in steps]
-
     # Sample elevation profile
     elevation_profile = point_query(point_geoms, dem)
 
-    # Put together point features with raster values
-    points = [
-        {
-            'type': 'Feature',
-            'geometry': mapping(point),
-            'properties': {
-                'elevation': float(z),
-            }
-        }
-        for point, z in zip(point_geoms, elevation_profile)
-    ]
-
-    return elevation_profile, distance_km, points
+    return surface_profile, distance_km, points
 
 
 def determine_num_samples(distance_m):
     """Guarantee a number of samples between 2 and 600.
 
     Longley-Rice Irregular Terrain Model is limited to only 600
-    elevation points, so this function ensures this number is not
+    surface points, so this function ensures this number is not
     passed.
+
     """
     # This is -1/x translated and rescaled:
     # - to hit 2 at x=0
