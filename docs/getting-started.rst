@@ -81,7 +81,7 @@ The repo already includes a Digital Elevation Model tile for London (see the .ti
 data folder).
 
 For simplicity, this example specifies the coordinates of the ``transmitter`` as a point
-feature. This is a standatd `GeoJSON <https://geojson.org/>`_-like Python ``dict``, as you
+feature. This is a standard `GeoJSON <https://geojson.org/>`_-like Python ``dict``, as you
 would get from using `shapely
 <https://shapely.readthedocs.io/en/latest/manual.html#geometric-objects>`_ to read point
 features from a file:
@@ -119,7 +119,7 @@ function:
 
 As the ``itmlogic_area`` is used here to merely demonstrate the code functionality, a user will
 need to adapt parameters to their specific scenario. For example, the user will want to
-specify the specific antenna heights, frequency to be modeled and local atmospheric conditions.
+specify the specific antenna heights, frequency to be modelled and local atmospheric conditions.
 In the given scenario, the propagation loss across this terrain is estimated for a certain
 distance, at a specific confidence level, and returned as a list of dicts named ``output``:
 
@@ -213,7 +213,7 @@ The terrain path is then specified as a line feature:
 
 Using the ``terrain_p2p`` function from the ``terrain_module`` we can get the terrain
 profile, over a set distance, with each point across the terrain profile being returned as a
-geojson object.
+GeoJSON object.
 
 .. code-block:: python
 
