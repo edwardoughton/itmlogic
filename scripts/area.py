@@ -227,7 +227,6 @@ if __name__ == '__main__':
     directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
     cell_range = 20000
 
-
     print('Getting Terrain Irregularity Parameter (delta h) (in meters)')
     #Terrain Irregularity Parameter delta h (in meters)
     tip = terrain_area(
