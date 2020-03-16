@@ -8,6 +8,16 @@ def qlrpfl(prop):
     """
     Preparatory subroutine for point-to-point mode.
 
+    Parameters
+    ----------
+    prop : dict
+        Contains all input propagation parameters.
+
+    Returns
+    -------
+    prop : dict
+        Contains all input and output propagation parameters.
+
     """
     prop['dist'] = prop['pfl'][0] * prop['pfl'][1]
 
