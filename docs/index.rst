@@ -60,34 +60,34 @@ The recommended installation method is to use conda, which handles packages and 
 environments, along with the conda-forge channel which has a host of pre-built libraries
 and packages.
 
-Create a conda environment called ``itmlogic`` type:
+Create a conda environment called ``itmlogic`` type::
 
     conda create --name itmlogic python=3.7 gdal
 
-Activate it (run this each time you switch projects):
+Activate it (run this each time you switch projects)::
 
     conda activate itmlogic
 
-Install any optional packages:
+Install any optional packages::
 
     conda install numpy fiona shapely rtree rasterio pyproj tqdm pytest
 
-For development purposes, clone this repository and run:
+For development purposes, clone this repository and run::
 
     python setup.py develop
 
-Run the tests:
+Run the tests::
 
     python -m pytest
 
 Quick start
 ===========
 
-If you want to quickly generate results run using area prediction mode type:
+If you want to quickly generate results run using area prediction mode type::
 
     python scripts/area.py
 
-Or using point-to-point mode type:
+Or using point-to-point mode type::
 
     python scripts/p2p.py
 

@@ -26,7 +26,7 @@ dl            Horizon distances
 the           Horizon elevation angles
 ============= ============================
 
-Secondary parameters (computer in lrprop)
+Secondary parameters (computed in lrprop)
 -----------------------------------------
 
 =============== ============================
@@ -53,7 +53,8 @@ Output values    Description
 ================ ============================
 
 
-Figure 1 provides a macro personective on the program flow, subroutines, statistics etc.
+Figure 1 provides an overview of the program flow, subroutines and statistics.
+
 
 Longley-Rice Irregular Terrain Model Scripts, Routines and Functions
 --------------------------------------------------------------------
@@ -62,7 +63,8 @@ Longley-Rice Irregular Terrain Model Scripts, Routines and Functions
     :target: _static/lritm_box_diagram.png
 
 
-The various prediction modes will now covered.
+The model can run in one of two modes: 'area prediction mode' or 'point-to-point' prediction
+mode.
 
 
 Area Prediction Mode
@@ -78,8 +80,11 @@ Use the following to run the code:
 The repo already includes a Digital Elevation Model tile for London (see the .tif in the
 data folder).
 
-For simplicity, this example specifies the coordinates of the ``transmitter`` using the geojson
-format (WGS84 reference system - epsg: 4326):
+For simplicity, this example specifies the coordinates of the ``transmitter`` as a point
+feature. This is a standatd `GeoJSON <https://geojson.org/>`_-like Python ``dict``, as you
+would get from using `shapely
+<https://shapely.readthedocs.io/en/latest/manual.html#geometric-objects>`_ to read point
+features from a file:
 
 .. code-block:: python
 
@@ -91,8 +96,8 @@ format (WGS84 reference system - epsg: 4326):
             },
         'properties': {
             'id': 'Crystal Palace radio transmitter'
-            }
         }
+    }
 
 An estimated range (``cell_range``) is also provided as a maximum cell radius (in meters).
 
@@ -141,9 +146,9 @@ Point-to-Point Mode
 
 In contrast to the area prediction mode, the point-to-point mode focuses on a single path
 across an area of irregular terrain between a transmitter and receiver. To use the
-reproducible example for p2p
+reproducible example for p2p, run:
 
-.. code-block:: python
+.. code-block:: bash
 
     python scripts/p2p.py
 
@@ -152,7 +157,7 @@ the Crystal Palace radio transmitter in South London and a receiver in the small
 Mursley in Buckinghamshire, England. For consistency, ``itmlogic`` also uses this example,
 particularly for providing tests for the codebase, to guarantee reliability.
 
-The geojson transmitter is specified:
+The transmitter is specified as a point feature:
 
 .. code-block:: python
 
@@ -164,10 +169,10 @@ The geojson transmitter is specified:
             },
         'properties': {
             'id': 'Crystal Palace radio transmitter'
-            }
         }
+    }
 
-Along with the geojson receiver:
+Along with the receiver:
 
 .. code-block:: python
 
@@ -179,10 +184,10 @@ Along with the geojson receiver:
             },
         'properties': {
             'id': 'Mursley'
-            }
         }
+    }
 
-The terrain path is then specified as a geojson line:
+The terrain path is then specified as a line feature:
 
 .. code-block:: python
 
@@ -203,8 +208,8 @@ The terrain path is then specified as a geojson line:
             },
         'properties': {
             'id': 'terrain path'
-            }
         }
+    }
 
 Using the ``terrain_p2p`` function from the ``terrain_module`` we can get the terrain
 profile, over a set distance, with each point across the terrain profile being returned as a
@@ -214,7 +219,7 @@ geojson object.
 
     measured_terrain_profile, distance_km, points = terrain_p2p(
         dem_folder, line, current_crs
-        )
+    )
 
 A list of terrain elevation values (``measured_terrain_profile``) (in meters) is returned:
 
