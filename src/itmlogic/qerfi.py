@@ -8,12 +8,12 @@ def qerfi(q):
 
     Parameters
     ----------
-    q : list of floats(s)
+    q : list of float
         Confidence levels for predictions (e.g. [0.01, 0.1, 0.5, 0.9, 0.99])
 
-    Output
-    ------
-    qerfi1 : float
+    Returns
+    -------
+    qerfi1 : list of float
         Inverse of the standard normal complementary probability
 
     """

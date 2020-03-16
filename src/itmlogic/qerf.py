@@ -11,8 +11,8 @@ def qerf(z):
         Defined value to assess the probability of exceedance of a standardized normal random
         variable.
 
-    Output
-    ------
+    Returns
+    -------
     qerfi1 : float
         The standard normal complementary probability
 

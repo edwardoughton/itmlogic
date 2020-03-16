@@ -16,7 +16,7 @@ def h0f(r, et):
 
     Returns
     -------
-    h0f1 : ???
+    h0f1 : float
         Frequency gain value used for computing path loss.
 
     """
@@ -43,6 +43,6 @@ def h0f(r, et):
         h0f1 = (
             (1 - q) * h0f1 + q * 4.343 *
             np.log((a[it] * x + b[it]) * x + 1)
-            )
+        )
 
     return h0f1
