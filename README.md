@@ -62,11 +62,11 @@ Run the tests:
 Quick start
 -----------
 
-If you want to quickly generate results run using point-to-point mode:
+If you want to quickly generate results run using point-to-point mode run:
 
-    python scripts/qkpfl.py
+    python scripts/p2p.py
 
-Or using area prediction mode:
+Or using area prediction mode run:
 
     python scripts/uarea.py
 
