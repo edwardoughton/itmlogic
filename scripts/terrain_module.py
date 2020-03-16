@@ -113,7 +113,6 @@ def interdecile_range(x):
 
     """
     q90, q10 = np.percentile(x, [90, 10])
-    return round(q90 - q10)
 
     interdecile_range = int(round(q90 - q10, 0))
 
