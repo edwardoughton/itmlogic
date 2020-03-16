@@ -70,7 +70,7 @@ def terrain_area(dem_folder, transmitter, cell_range, current_crs):
 
     stats = zonal_stats([cell_area_unprojected],
                         os.path.join(BASE_PATH,'ASTGTM2_N51W001_dem.tif'),
-                        add_stats={'interdecile_range':interdecile_range})
+                        add_stats={'interdecile_range': interdecile_range})
 
     return stats[0]['interdecile_range']
 
@@ -79,19 +79,46 @@ def interdecile_range(x):
     """
     Get range between bottom 10% and top 10% of values.
 
+    Parameters
+    ----------
+    x : list
+        Terrain profile values.
+
+    Returns
+    -------
+    interdecile_range : int
+        The terrain irregularity parameter.
+
     """
     q90, q10 = np.percentile(x, [90, 10])
 
-    return int(round(q90 - q10, 0))
+    interdecile_range = int(round(q90 - q10, 0))
+
+    return interdecile_range
 
 
 def terrain_p2p(dem_folder, line, current_crs):
     """
     This module takes a set of point coordinates and returns
-    the elevation profile.
+    the surface profile.
 
-    Line : dict
-        Geojson. Must be in WGS84 / EPSG: 4326
+    Parameters
+    ----------
+    dem_folder : string
+        Folder path to the available Digital Elevation Model tiles.
+    line : dict
+        Geojson linestring. Must be in WGS84 / EPSG: 4326
+    current_crs : string
+        The current coordinate reference system.
+
+    Returns
+    -------
+    surface_profile :list
+        Contains the surface profile measurements in meters.
+    distance_km : float
+        Distance in kilometers between the antenna and receiver.
+    points : list of dicts
+        Location of geojson sampling points.
 
     """
     extents = load_extents(dem_folder)
@@ -108,7 +135,7 @@ def terrain_p2p(dem_folder, line, current_crs):
 
     distance_km = distance / 1e3
 
-    elevation_profile = []
+    surface_profile = []
 
     points = []
 
@@ -118,22 +145,32 @@ def terrain_p2p(dem_folder, line, current_crs):
         tile_path = get_tile_path_for_point(extents, xp, yp)
         z = get_value_from_dem_tile(tile_path, xp, yp)
 
-        elevation_profile.append(z)
+        surface_profile.append(z)
 
         points.append({
             'type': 'Feature',
             'geometry': mapping(point),
             'properties': {
-                'elevation': float(z),
+                'surface': float(z),
                 }
             })
 
-    return elevation_profile, distance_km, points
+    return surface_profile, distance_km, points
 
 
 def load_extents(dem_folder):
     """
     Check the extent of each DEM tile, save to dict for future reference.
+
+    Parameters
+    ----------
+    dem_folder : string
+        Folder path to the available Digital Elevation Model tiles.
+
+    Returns
+    -------
+    extents : dict
+        Contains tile boundary coordinates.
 
     """
     extents = {}
@@ -145,6 +182,24 @@ def load_extents(dem_folder):
 
 
 def get_tile_path_for_point(extents, x, y):
+    """
+    Function to locate the correct tile path.
+
+    Parameters
+    ----------
+    extents : dict
+        Contains tile boundary coordinates.
+    x : float
+        Longitude coordinate.
+    y : float
+        Latitude coordinate.
+
+    Returns
+    -------
+    path : string
+        Correct tile path.
+
+    """
     for (left, bottom, right, top), path in extents.items():
         if x >= left and x <= right and y <= top and y >= bottom:
             return path
@@ -155,19 +210,45 @@ def get_value_from_dem_tile(tile_path, x, y):
     """
     Read all tile extents, load value from relevant tile.
 
+    Parameters
+    ----------
+    tile_path : string
+        Correct Digital Elevation Model tile path.
+    x : float
+        Longitude coordinate.
+    y : float
+        Latitude coordinate.
+
+    Returns
+    -------
+    value : int
+        Elevation value in meters.
+
     """
     dataset = rasterio.open(tile_path)
     row, col = dataset.index(x, y)
     band = dataset.read(1)
     dataset.close()
-    return band[row, col]
+    value = band[row, col]
+
+    return value
 
 
 def determine_distance_increment(distance):
     """
     Longley-Rice Irregular Terrain Model is limited to only 600
-    elevation points, so this function ensures this number is not
+    surface points, so this function ensures this number is not
     passed.
+
+    Parameters
+    ----------
+    distance : int
+        Distance between the transmitter and receiver.
+
+    Returns
+    -------
+    increment : int
+        Distance increment between each sampling point (in meters).
 
     """
     if distance >= 60000:
