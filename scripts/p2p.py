@@ -38,6 +38,18 @@ def itmlogic_p2p(surface_profile_m, distance_km):
     """
     Run itmlogic in point to point (p2p) prediction mode.
 
+    Parameters
+    ----------
+    surface_profile_m : list
+        Contains surface profile measurements in meters.
+    distance_km : float
+        Distance between the transmitter and receiver.
+
+    Returns
+    -------
+    output : list of dicts
+        Contains model output results.
+
     """
     prop = {}
 
@@ -189,29 +201,18 @@ def itmlogic_p2p(surface_profile_m, distance_km):
     return output
 
 
-def convert_shape_to_projected_crs(line, old_crs, new_crs):
-    """
-    Existing elevation path needs to be converted from WGS84 to projected
-    coordinates.
-
-    """
-    transformer = Transformer.from_crs(old_crs, new_crs, always_xy=True)
-
-    new_geom = LineString(transformer.transform(
-        line['geometry']['coordinates'][1], line['geometry']['coordinates'][0]))
-
-    output = {
-        'type': 'Feature',
-        'geometry': mapping(new_geom),
-        'properties': line['properties']
-        }
-
-    return output
-
-
 def csv_writer(data, directory, filename):
     """
     Write data to a CSV file path.
+
+    Parameters
+    ----------
+    data : list of dicts
+        Data to be written.
+    directory : string
+        Folder to write the results to.
+    filename : string
+        Name of the file to write.
 
     """
     # Create path
@@ -231,6 +232,17 @@ def csv_writer(data, directory, filename):
 def write_shapefile(data, directory, filename, crs):
     """
     Write geojson data to shapefile.
+
+    Parameters
+    ----------
+    data : list of dicts
+        Data to be written.
+    directory : string
+        Folder to write the results to.
+    filename : string
+        Name of the file to write.
+    crs : string
+        Defines the coordinate reference system.
 
     """
     prop_schema = []
