@@ -4,6 +4,7 @@ tags:
   - python
   - mobile telecommunications
   - propagation
+  - longley-rice
 authors:
   - name: Edward J Oughton
     orcid: 0000-0002-2766-008X
@@ -65,7 +66,7 @@ Two modes of prediction are available: "area prediction" and "point-to-point". A
 
 ## Applications
 
-The median propagation loss estimates produced by ``itmlogic`` can be used with other link budget estimation models to assess the capacity, coverage and cost of 5G infrastructure. For example, this could include application via the path loss module of the Python Simulator for Integrated Modelling of 5G, ``pysim5G`` [@Oughton:2019b].
+The median propagation loss estimates produced by ``itmlogic`` can be used with other link budget estimation models to assess the capacity, coverage and cost of 5G infrastructure [@Oughton:2019a]. For example, this could include application via the path loss module of the Python Simulator for Integrated Modelling of 5G, ``pysim5G`` [@Oughton:2019b].
 
 ## Acknowledgements
 
