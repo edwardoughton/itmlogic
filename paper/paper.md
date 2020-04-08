@@ -13,13 +13,10 @@ authors:
     orcid: 0000-0002-0081-400X
     affiliation: 1
   - name: Joel Johnson
-    orcid:
     affiliation: 3
   - name: Caglar Yardim
-    orcid:
     affiliation: 3
   - name: Julius Kusuma
-    orcid:
     affiliation: 4
 affiliations:
   - name: Environmental Change Institute, University of Oxford
