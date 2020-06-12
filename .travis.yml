@@ -23,8 +23,6 @@ notifications:
 deploy:
   provider: pypi
   user: edwardoughton
-  password:
-    secure: iAS10g1yXav9r/Zddv/ngxiyz5F5dl00fk1zOTSCeWtlMS93QzaeID9SkVt3Id40O7w7C/BDagcDyhM08gfXbomGjZ6RFwDD833dC8fcYNeknQF6Y2BryjpLupefeb7qUiBkUByPdpMg2Iz6z7EL7ah0ehnSgmN8sOmHO4goALhvKqLkQd1XaOOWvLxQHbfTIuHSxaWMwzCoW+0F1x79xBBvJ5QXzkjNu1QQoBxYIVsFqTyhPIzGjmA3fGRCfDJV1421C2pMcgGxxIfR3k5F8o0NfIXoiNRDM1PYXzkY/HYDFzgzd40nyDLzpUZ3rpCMUVXnvr2Ut0I9oKcNgzTlaEoD4dEsViVMMhDxrqjlQ+iZBrwU1MFDqu8H26j59JB0PndZnaqYQtcLvh4brBpbCV/Vtd9bQpdC/C+gZJZa50yN1w5aMF/nWvgvCTa35+BpvO1b1dcYpDHUYlBBY1IgBkQbPethCd+aTT9MlScMAJFvk+1nhVblEcINk6q3NQJXkPNYx4hGWaxgvk9+fZ+MiUdhM8elhyByNIwGjQPQ2+F4HfXYFXFNNdCT3ybRpPtdUtZ/HmYtO4gqfQ46cGGZCZ4hXp8mqSQzkhIDXcpf9iLOiUEzj39BNlkL34iLhCsHMLD5+8uy44+owCF3jbkZ1Gm5ZX3/2yiy/sY2HLULolc=
   on:
     tags: true
     branch: master
