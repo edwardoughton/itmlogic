@@ -1,5 +1,5 @@
 ---
-title: 'itmlogic: Irregular Terrain Model Longley Rice'
+title: 'itmlogic: The Irregular Terrain Model by Longley and Rice'
 tags:
   - python
   - mobile telecommunications
@@ -69,6 +69,6 @@ The median propagation loss estimates produced by ``itmlogic`` can be used with 
 
 ## Acknowledgements
 
-We would like to acknowledge the funding which has enabled development of itmlogic, from the EPSRC via (i) the Infrastructure Transitions Research Consortium Mistral project (EP/N017064/1) and (ii) Facebook Connectivity Lab's Rural Connectivity program.
+We would like to acknowledge two different funding sources which have enabled development of itmlogic. Firstly, Oughton and Russell were funded by the UK EPSRC via the Infrastructure Transitions Research Consortium Mistral project (EP/N017064/1). Secondly, Johnson and Yardim were funded by Facebook Connectivity Lab's Rural Connectivity program.
 
 # References
