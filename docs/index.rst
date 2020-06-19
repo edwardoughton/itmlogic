@@ -25,9 +25,9 @@ itmlogic - Longley-Rice Irregular Terrain Model
 
 Welcome to the documentation for itmlogic!
 
-These docs provide an overview of the python implementation of the classic Longley Rice
+These docs provide an overview of the python implementation of the classic Longley-Rice
 propagation model. For in-depth detail on the engineering model we advise you to refer to the
-original Longley Rice documents provided in the repo folder named `References`.
+original Longley-Rice documents provided in the repo folder named `References`.
 
 Description
 ===========
