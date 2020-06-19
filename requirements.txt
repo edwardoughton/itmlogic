@@ -5,3 +5,5 @@ rasterio
 pyproj
 tqdm
 pytest
+rasterstats
+simplejson
