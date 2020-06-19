@@ -101,7 +101,7 @@ text present in any copied or derivative works.
 ## Thanks for the support
 
 **itmlogic** was written and developed at the [Environmental Change Institute, University of
-Oxford](http://www.eci.ox.ac.uk) within the EPSRC-sponsored MISTRAL programme (	EP/N017064/1),
+Oxford](http://www.eci.ox.ac.uk) within the EPSRC-sponsored MISTRAL programme (EP/N017064/1),
 as part of the [Infrastructure Transition Research Consortium](http://www.itrc.org.uk/)
 
 ## Contributors
