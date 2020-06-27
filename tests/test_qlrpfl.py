@@ -9,7 +9,10 @@ def test_qlrpfl(
     setup_prop_to_test_qlrpfl_pimter_5,
     setup_final_prop_to_test_qlrpfl_pimter_5
     ):
+    """
+    Test the preparatory subroutine for point-to-point mode.
 
+    """
     actual_answer = qlrpfl(setup_prop_to_test_qlrpfl)
 
     expected_answer = setup_final_prop_to_test_qlrpfl

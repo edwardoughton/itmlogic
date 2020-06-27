@@ -2,7 +2,12 @@ import pytest
 from itmlogic.h0f import h0f
 
 def test_h0f():
+    """
+    Tests the routine for computing the H01 "frequency gain" function described in
+    Eqn (6.13) of "The ITS Irregular Terrain Model, version 1.2.2: The Algorithm"
+    and used in computing troposcatter attenuation.
 
+    """
     #test via area prediction mode
     r = 0.4727387221558643
     et = 2.5221451983881447

@@ -2,7 +2,13 @@ import pytest
 from itmlogic.hzns import hzns
 
 def test_hzns(setup_prop_test_hzns):
+    """
+    Tests the subroutine to finds horizon parameters.
 
+    The imported setup parameters are imported from tests/conftest.py via the fixture
+    setup_prop_test_hzns.
+
+    """
     answer1, answer2 = hzns(
         setup_prop_test_hzns['pfl'], 77800,
         setup_prop_test_hzns['hg'],

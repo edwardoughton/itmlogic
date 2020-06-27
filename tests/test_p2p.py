@@ -13,7 +13,10 @@ from itmlogic.avar import avar
 
 def test_itmlogic_p2p(setup_surface_profile_m, setup_distance_km):
     """
-    Run itmlogic in point to point (p2p) prediction mode.
+    Test itmlogic in point to point (p2p) prediction mode.
+
+    The test is derived from the original test for Longley-Rice between for Crystal
+    Palace (South London) to Mursley, England.
 
     """
     prop = {}
