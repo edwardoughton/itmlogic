@@ -3,6 +3,10 @@ import pytest
 from itmlogic.qlrps import qlrps
 
 def test_qlrps():
+    """
+    Test the general preparatory subroutine.
+
+    """
     fmhz = 1
     zsys = 1
     en0 = 1

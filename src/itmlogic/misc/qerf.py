@@ -13,7 +13,7 @@ def qerf(z):
 
     Returns
     -------
-    qerfi1 : float
+    qerf1 : float
         The standard normal complementary probability
 
     """

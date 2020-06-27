@@ -3,7 +3,7 @@ import math
 
 def qlrps(fmhz, zsys, en0, ipol, eps, sgm):
     """
-    Preparatory subroutine.
+    General preparatory subroutine.
 
     Parameters
     ----------

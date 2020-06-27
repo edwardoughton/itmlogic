@@ -8,7 +8,14 @@ def test_lrprop(
     setup_prop_to_test_lrprop_uarea,
     setup_expected_prop_to_test_lrprop_uarea
     ):
+    """
+    Test the basic Longley-Rice propagation program which returns the reference
+    attenuation (aref).
 
+    The test variants are derived from the original test for Longley-Rice between
+    for Crystal Palace (South London) to Mursley, England.
+
+    """
     actual_prop = lrprop(0, setup_prop_to_test_lrprop)
 
     expected_prop = setup_expected_prop_to_test_lrprop

@@ -13,7 +13,10 @@ from itmlogic.avar import avar
 
 
 def test_itmlogic_area():
+    """
+    Test the model in area prediction mode.
 
+    """
     prop = {}
 
     #Antenna height 1 (m), Antenna height 2 (m)

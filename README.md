@@ -112,3 +112,43 @@ as part of the [Infrastructure Transition Research Consortium](http://www.itrc.o
 - Julius Kusuma (Facebook Research)
 
 If you find an error or have a question, please submit an issue.
+
+## Folder structure
+
+The folder structure for the ``itmlogic`` package is summarized as follows, and matches the
+box diagram highlighted in both the JOSS paper and the documentation:
+
+    +---src
+    |   +---itmlogic
+    |   |   |   lrprop.py
+    |   |   |   __init__.py
+    |   |   |
+    |   |   +---diffraction_attenuation
+    |   |   |       adiff.py
+    |   |   |       aknfe.py
+    |   |   |       fht.py
+    |   |   |
+    |   |   +---los_attenuation
+    |   |   |       alos.py
+    |   |   |
+    |   |   +---misc
+    |   |   |       qerf.py
+    |   |   |       qerfi.py
+    |   |   |       qtile.py
+    |   |   |
+    |   |   +---preparatory_subroutines
+    |   |   |       dlthx.py
+    |   |   |       hzns.py
+    |   |   |       qlra.py
+    |   |   |       qlrpfl.py
+    |   |   |       qlrps.py
+    |   |   |       zlsq1.py
+    |   |   |
+    |   |   +---scatter_attenuation
+    |   |   |       ahd.py
+    |   |   |       ascat.py
+    |   |   |       h0f.py
+    |   |   |
+    |   |   +---statistics
+    |   |   |       avar.py
+    |   |   |       curv.py
