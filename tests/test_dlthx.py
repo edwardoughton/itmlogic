@@ -10,7 +10,7 @@ def test_dlthx(setup_pfl1):
     setup_pfl1.
 
     The test is derived from the original test for Longley-Rice between for Crystal
-    Palace (South London) to Mursley, England.
+    Palace (South London) to Mursley, England (See Stark, 1967).
 
     """
     assert round(dlthx(setup_pfl1, 2158.5, 77672.5), 4) == 89.2126

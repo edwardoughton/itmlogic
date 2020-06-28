@@ -13,7 +13,7 @@ def test_lrprop(
     attenuation (aref).
 
     The test variants are derived from the original test for Longley-Rice between
-    for Crystal Palace (South London) to Mursley, England.
+    for Crystal Palace (South London) to Mursley, England (See Stark, 1967).
 
     """
     actual_prop = lrprop(0, setup_prop_to_test_lrprop)
