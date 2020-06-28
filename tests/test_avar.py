@@ -12,7 +12,7 @@ def test_avar(
     setup_prop_to_test_avar.
 
     The first test is derived from the original test for Longley-Rice between for Crystal
-    Palace (South London) to Mursley, England.
+    Palace (South London) to Mursley, England (See Stark, 1967).
 
     The 'actual_answer' variable is the avar1 metric which corresponds to the additional
     attenuation from the median given user defined quantiles in time, location, and

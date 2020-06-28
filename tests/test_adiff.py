@@ -13,9 +13,8 @@ def test_adiff(
     tests/conftest.py via the fixtures setup_prop_to_test_adiff and
     setup_expected_answer_for_adiff respectively.
 
-    Both the imported setup parameters and the expected parameter answers have been taken
-    from the original test for Longley-Rice between for Crystal Palace (South London) to
-    Mursley, England.
+    The inputs and expected answers are based on an original test for Longley-Rice between
+    for Crystal Palace (South London) to Mursley, England (See Stark, 1967).
 
     """
     q, actual_answer = adiff(0, setup_prop_to_test_adiff)
