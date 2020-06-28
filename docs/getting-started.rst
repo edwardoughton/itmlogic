@@ -30,16 +30,16 @@ Secondary parameters (computed in lrprop)
 -----------------------------------------
 
 =============== ============================
- Parameters     Description
+Parameters      Description
 =============== ============================
- dlsa           Line-of-sight distance
- dx             Scatter distance
- ael, ak1, ak2  Line-of-sight coefficients
- aed, emd       Diffraction coefficients
- aes, ems       Scatter coefficients
- dls            Smooth earth horizon distances
- dla            Total horizon distance
- tha            Total bending angle
+dlsa            Line-of-sight distance
+dx              Scatter distance
+ael, ak1, ak2   Line-of-sight coefficients
+aed, emd        Diffraction coefficients
+aes, ems        Scatter coefficients
+dls             Smooth earth horizon distances
+dla             Total horizon distance
+tha             Total bending angle
 =============== ============================
 
 Output values
