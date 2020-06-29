@@ -3,7 +3,7 @@ python:
 - "3.7"
 
 install:
-  - pip install pytest>=4.6 pytest-cov coveralls
+  - pip install 'pytest>=4.6' pytest-cov coveralls
   - python setup.py develop
   - pip freeze
 
