@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.avar import avar
+from itmlogic.statistics.avar import avar
 
 def test_avar(
     setup_prop_to_test_avar,

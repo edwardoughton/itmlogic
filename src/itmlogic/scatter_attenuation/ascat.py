@@ -1,7 +1,7 @@
 import math
 import numpy as np
-from itmlogic.h0f import h0f
-from itmlogic.ahd import ahd
+from itmlogic.scatter_attenuation.h0f import h0f
+from itmlogic.scatter_attenuation.ahd import ahd
 
 def ascat(d, prop):
     """

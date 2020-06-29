@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.ahd import ahd
+from itmlogic.scatter_attenuation.ahd import ahd
 
 def test_ahd():
     """

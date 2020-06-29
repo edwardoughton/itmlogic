@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-from itmlogic.curv import curv
+from itmlogic.statistics.curv import curv
 
 def avar(zzt, zzl, zzc, prop):
     """

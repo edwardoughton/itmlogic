@@ -1,8 +1,8 @@
 import math
 import numpy as np
 
-from itmlogic.aknfe import aknfe
-from itmlogic.fht import fht
+from itmlogic.diffraction_attenuation.aknfe import aknfe
+from itmlogic.diffraction_attenuation.fht import fht
 
 def adiff(d, prop):
     """

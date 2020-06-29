@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.qerf import qerf
+from itmlogic.misc.qerf import qerf
 
 def test_qerf():
     """

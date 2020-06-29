@@ -6,9 +6,9 @@ import pytest
 import math
 import numpy as np
 
-from itmlogic.qerfi import qerfi
-from itmlogic.qlrpfl import qlrpfl
-from itmlogic.avar import avar
+from itmlogic.misc.qerfi import qerfi
+from itmlogic.preparatory_subroutines.qlrpfl import qlrpfl
+from itmlogic.statistics.avar import avar
 
 
 def test_itmlogic_p2p(setup_surface_profile_m, setup_distance_km):

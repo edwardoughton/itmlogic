@@ -1,7 +1,7 @@
 import math
-from itmlogic.hzns import hzns
-from itmlogic.dlthx import dlthx
-from itmlogic.zlsq1 import zlsq1
+from itmlogic.preparatory_subroutines.hzns import hzns
+from itmlogic.preparatory_subroutines.dlthx import dlthx
+from itmlogic.preparatory_subroutines.zlsq1 import zlsq1
 from itmlogic.lrprop import lrprop
 
 def qlrpfl(prop):

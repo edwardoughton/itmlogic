@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.qlrpfl import qlrpfl
+from itmlogic.preparatory_subroutines.qlrpfl import qlrpfl
 
 def test_qlrpfl(
     setup_prop_to_test_qlrpfl,

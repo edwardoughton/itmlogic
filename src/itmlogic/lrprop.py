@@ -1,9 +1,9 @@
 import math
 import numpy as np
 
-from itmlogic.adiff import adiff
-from itmlogic.alos import alos
-from itmlogic.ascat import ascat
+from itmlogic.diffraction_attenuation.adiff import adiff
+from itmlogic.los_attenuation.alos import alos
+from itmlogic.scatter_attenuation.ascat import ascat
 
 def lrprop(d, prop):
     """

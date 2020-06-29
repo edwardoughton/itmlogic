@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.alos import alos
+from itmlogic.los_attenuation.alos import alos
 
 def test_alos(setup_prop_to_test_alos):
     """

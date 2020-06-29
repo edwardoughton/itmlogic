@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.adiff import adiff
+from itmlogic.diffraction_attenuation.adiff import adiff
 
 def test_adiff(
     setup_prop_to_test_adiff,

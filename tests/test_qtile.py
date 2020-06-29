@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.qtile import qtile
+from itmlogic.misc.qtile import qtile
 
 def test_qtile(setup_a):
     """
