@@ -10,7 +10,8 @@ def test_lrprop(
     ):
     """
     Test the basic Longley-Rice propagation program which returns the reference
-    attenuation (aref).
+    attenuation (aref) as in Eqn 4.1 of "The ITS Irregular Terrain Model,
+    version 1.2.2: The Algorithm".
 
     The test variants are derived from the original test for Longley-Rice between
     for Crystal Palace (South London) to Mursley, England (See Stark, 1967).

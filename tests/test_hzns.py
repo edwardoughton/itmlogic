@@ -3,7 +3,8 @@ from itmlogic.hzns import hzns
 
 def test_hzns(setup_prop_test_hzns):
     """
-    Tests the subroutine to finds horizon parameters.
+    Tests the subroutine to find horizon parameters as described in Section 48 by
+    Hufford (see references/itm.pdf).
 
     The imported setup parameters are imported from tests/conftest.py via the fixture
     setup_prop_test_hzns.
