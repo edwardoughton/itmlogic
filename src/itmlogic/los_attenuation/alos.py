@@ -3,11 +3,9 @@ import numpy as np
 
 def alos(d, prop):
     """
-    Find the 'line-of-sight attenuation' at the distance d.
-
-    Uses a convex combination of plane earth fields and directed fields.
-
-    A call with d = 0 sets up initial constants.
+    Find the 'line-of-sight attenuation' at the distance d using a combination of plane
+    earth fields and directed fields (Eqn 4.44 of "The ITS Irregular Terrain Model,
+    version 1.2.2: The Algorithm"). A call with d = 0 sets up initial constants.
 
     Parameters
     ----------

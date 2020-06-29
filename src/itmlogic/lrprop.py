@@ -7,12 +7,14 @@ from itmlogic.ascat import ascat
 
 def lrprop(d, prop):
     """
-    The basic Longley-Rice propagation program which returns the reference attenuation (aref).
+    The basic Longley-Rice propagation program which returns the reference attenuation (aref)
+    as in Eqn 4.1 of "The ITS Irregular Terrain Model, version 1.2.2: The Algorithm".
 
     The value of mdp controls some of the program flow. When it equals -1 we are in
     point-to-point mode, when 1 we are in the beginning of the area mode, and when in 0 we
     are continuing the area mode. The assumption is that when one uses the area mode, one will
     want a sequence of results for varying distances.
+
 
     Parameters
     ----------

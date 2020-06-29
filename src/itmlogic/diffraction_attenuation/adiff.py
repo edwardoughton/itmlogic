@@ -12,8 +12,9 @@ def adiff(d, prop):
     scatter takes over. It is an essential region and associated coefficients must be computed.
 
     The function adiff finds the 'diffraction attenuation' at the distance d, using a convex
-    combination of smooth earth diffraction and double knife-edge diffraction. A call with
-    d = 0 sets up initial constants.
+    combination of smooth earth diffraction and double knife-edge diffraction (Eqn 4.11 of
+    "The ITS Irregular Terrain Model, version 1.2.2: The Algorithm"). A call with d = 0 sets
+    up initial constants.
 
     Parameters
     ----------
