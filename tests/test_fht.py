@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.fht import fht
+from itmlogic.diffraction_attenuation.fht import fht
 
 def test_fht():
     """

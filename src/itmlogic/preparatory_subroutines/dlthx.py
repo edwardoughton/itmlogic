@@ -1,6 +1,6 @@
 import math
-from itmlogic.qtile import qtile
-from itmlogic.zlsq1 import zlsq1
+from itmlogic.misc.qtile import qtile
+from itmlogic.preparatory_subroutines.zlsq1 import zlsq1
 
 def dlthx(pfl1, x1, x2):
     """

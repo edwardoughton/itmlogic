@@ -1,6 +1,6 @@
 import pytest
 
-from itmlogic.qlrps import qlrps
+from itmlogic.preparatory_subroutines.qlrps import qlrps
 
 def test_qlrps():
     """

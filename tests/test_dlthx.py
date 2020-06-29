@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.dlthx import dlthx
+from itmlogic.preparatory_subroutines.dlthx import dlthx
 
 def test_dlthx(setup_pfl1):
     """

@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.curv import curv
+from itmlogic.statistics.curv import curv
 
 def test_curv():
     """

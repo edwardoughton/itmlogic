@@ -15,10 +15,10 @@ import math
 import numpy as np
 from functools import partial
 
-from itmlogic.qerfi import qerfi
-from itmlogic.qlra import qlra
+from itmlogic.misc.qerfi import qerfi
+from itmlogic.preparatory_subroutines.qlra import qlra
 from itmlogic.lrprop import lrprop
-from itmlogic.avar import avar
+from itmlogic.statistics.avar import avar
 from terrain_module import terrain_area
 
 # #set up file paths

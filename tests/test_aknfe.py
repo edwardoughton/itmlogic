@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.aknfe import aknfe
+from itmlogic.diffraction_attenuation.aknfe import aknfe
 
 def test_aknfe():
     """

@@ -6,10 +6,10 @@ import pytest
 import math
 import numpy as np
 
-from itmlogic.qerfi import qerfi
-from itmlogic.qlra import qlra
+from itmlogic.misc.qerfi import qerfi
+from itmlogic.preparatory_subroutines.qlra import qlra
 from itmlogic.lrprop import lrprop
-from itmlogic.avar import avar
+from itmlogic.statistics.avar import avar
 
 
 def test_itmlogic_area():

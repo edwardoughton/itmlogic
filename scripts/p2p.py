@@ -22,9 +22,9 @@ from pyproj import Transformer
 from shapely.geometry import LineString, mapping
 from shapely.ops import transform
 
-from itmlogic.qerfi import qerfi
-from itmlogic.qlrpfl import qlrpfl
-from itmlogic.avar import avar
+from itmlogic.misc.qerfi import qerfi
+from itmlogic.preparatory_subroutines.qlrpfl import qlrpfl
+from itmlogic.statistics.avar import avar
 from terrain_module import terrain_p2p
 
 # #set up file paths

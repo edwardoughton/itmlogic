@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.h0f import h0f
+from itmlogic.scatter_attenuation.h0f import h0f
 
 def test_h0f():
     """

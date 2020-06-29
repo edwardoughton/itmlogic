@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.hzns import hzns
+from itmlogic.preparatory_subroutines.hzns import hzns
 
 def test_hzns(setup_prop_test_hzns):
     """

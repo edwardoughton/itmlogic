@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.ascat import ascat
+from itmlogic.scatter_attenuation.ascat import ascat
 
 def test_ascat(setup_prop_to_test_ascat):
     """

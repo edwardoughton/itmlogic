@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.qerfi import qerfi
+from itmlogic.misc.qerfi import qerfi
 
 def test_qerfi():
     """

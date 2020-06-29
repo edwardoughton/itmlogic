@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.zlsq1 import zlsq1
+from itmlogic.preparatory_subroutines.zlsq1 import zlsq1
 
 def test_zlsq1(setup_z):
     """

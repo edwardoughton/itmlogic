@@ -15,9 +15,9 @@ import numpy as np
 from functools import partial
 from collections import OrderedDict
 
-from itmlogic.qerfi import qerfi
-from itmlogic.qlrpfl import qlrpfl
-from itmlogic.avar import avar
+from itmlogic.misc.qerfi import qerfi
+from itmlogic.preparatory_subroutines.qlrpfl import qlrpfl
+from itmlogic.statistics.avar import avar
 
 CONFIG = configparser.ConfigParser()
 CONFIG.read(os.path.join(os.path.dirname(__file__), 'script_config.ini'))

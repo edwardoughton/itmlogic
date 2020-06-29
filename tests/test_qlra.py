@@ -1,5 +1,5 @@
 import pytest
-from itmlogic.qlra import qlra
+from itmlogic.preparatory_subroutines.qlra import qlra
 
 def test_qlra(
     setup_prop_to_test_qlra,
