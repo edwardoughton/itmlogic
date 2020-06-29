@@ -4,6 +4,6 @@ fiona
 rasterio
 pyproj
 tqdm
-pytest
+pytest >= 4.6
 rasterstats
 simplejson
