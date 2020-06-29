@@ -5,7 +5,8 @@ from itmlogic.curv import curv
 
 def avar(zzt, zzl, zzc, prop):
     """
-    Finds the quantiles of attenuation using the output from lrprop.
+    Finds the quantiles of attenuation using the output from lrprop (Section V of "The ITS
+    Irregular Terrain Model, version 1.2.2: The Algorithm").
 
     When in area prediction mode we need a threefold quantile of attenuation corresponding
     to time, locations and situations. For efficiency, avar is written as a function of the
@@ -26,7 +27,7 @@ def avar(zzt, zzl, zzc, prop):
     -------
     avar1 : float
         Additional attenuation from the median corresponding to the user defined quantiles
-        in time, location, and situation (Section 5 of "The ITS Irregular Terrain Model,
+        in time, location, and situation (Section V of "The ITS Irregular Terrain Model,
         version 1.2.2: The Algorithm").
     prop : dict
         Contains all input and output propagation parameters.

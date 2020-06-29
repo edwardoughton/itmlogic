@@ -4,7 +4,8 @@ from itmlogic.qlrps import qlrps
 
 def test_qlrps():
     """
-    Test the general preparatory subroutine.
+    Test the general preparatory subroutine as in Section 41 by Hufford
+    (see references/itm.pdf).
 
     """
     fmhz = 1

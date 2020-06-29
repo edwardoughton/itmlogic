@@ -1,6 +1,7 @@
 def hzns(pfl, dist, hg, gme):
     """
-    Subroutine to finds horizon parameters.
+    Subroutine to find horizon parameters as described in Section 48 by Hufford
+    (see references/itm.pdf).
 
     Parameters
     ----------

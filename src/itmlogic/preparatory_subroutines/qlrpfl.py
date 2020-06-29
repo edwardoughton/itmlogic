@@ -6,7 +6,8 @@ from itmlogic.lrprop import lrprop
 
 def qlrpfl(prop):
     """
-    Preparatory subroutine for point-to-point mode.
+    Preparatory subroutine for point-to-point mode, as in Section 43 by Hufford
+    (see references/itm.pdf).
 
     Parameters
     ----------

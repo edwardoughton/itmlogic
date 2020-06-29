@@ -6,7 +6,8 @@ def test_avar(
     setup_prop_to_test_avar_uarea,
     ):
     """
-    Test the statistics generating function avar which finds the quantiles of attenuation.
+    Test the statistics generating function avar which finds the quantiles of attenuation
+    (Section V of "The ITS Irregular Terrain Model, version 1.2.2: The Algorithm").
 
     The imported setup parameters are imported from tests/conftest.py via the fixture
     setup_prop_to_test_avar.
@@ -16,7 +17,7 @@ def test_avar(
 
     The 'actual_answer' variable is the avar1 metric which corresponds to the additional
     attenuation from the median given user defined quantiles in time, location, and
-    situation (Section 5 of "The ITS Irregular Terrain Model, version 1.2.2: The Algorithm").
+    situation.
 
     """
     actual_answer, actual_prop = avar(

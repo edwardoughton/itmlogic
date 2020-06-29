@@ -4,7 +4,8 @@ from itmlogic.alos import alos
 def test_alos(setup_prop_to_test_alos):
     """
     Test the 'line-of-sight attenuation' at the distance d using a combination of plane
-    earth fields and directed fields.
+    earth fields and directed fields (Eqn 4.44 of "The ITS Irregular Terrain Model,
+    version 1.2.2: The Algorithm").
 
     The setup parameters are imported from tests/conftest.py via the fixture
     setup_prop_to_test_alos.
