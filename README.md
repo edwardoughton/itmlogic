@@ -48,7 +48,7 @@ Activate it (run this each time you switch projects):
 
 First, install optional packages:
 
-    conda install numpy fiona shapely rtree rasterio pyproj tqdm pytest rasterstats
+    conda install numpy fiona shapely rtree rasterio pyproj tqdm pytest rasterstats pandas matplotlib
 
 To install ``itmlogic``, clone this repository and run:
 
@@ -68,7 +68,12 @@ If you want to quickly generate results run using point-to-point mode run:
 
 Or using area prediction mode run:
 
-    python scripts/uarea.py
+    python scripts/area.py
+
+Results can then be visualized using:
+
+    python vis/vis.py
+
 
 Documentation
 -------------
