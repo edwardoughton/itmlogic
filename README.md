@@ -50,11 +50,15 @@ First, install optional packages:
 
     conda install numpy fiona shapely rtree rasterio pyproj tqdm pytest rasterstats pandas matplotlib
 
-To install ``itmlogic``, clone this repository and run:
+Once in the new environment, to install ``itmlogic`` clone this repository and either run:
 
     python setup.py install
 
-Run the tests:
+Or:
+
+    python setup.py develop
+
+You can first run the tests to make sure everything is working correctly:
 
     python -m pytest
 
@@ -73,6 +77,16 @@ Or using area prediction mode run:
 Results can then be visualized using:
 
     python vis/vis.py
+
+
+Example Point-to-Point Results
+------------------------------
+![Example](/docs/_static/p2p_results.png)
+
+
+Example Area Results
+--------------------
+![Example](/docs/_static/area_results.png)
 
 
 Documentation

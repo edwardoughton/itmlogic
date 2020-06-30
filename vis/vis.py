@@ -72,6 +72,11 @@ def plot_p2p_results(path):
 
 if __name__ == '__main__':
 
+    output_path = os.path.join(BASE_PATH, '..', 'vis', 'figures')
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
     path = os.path.join(RESULTS, 'area_results.csv')
 
     if os.path.exists(path):
