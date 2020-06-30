@@ -33,7 +33,7 @@ CONFIG.read(os.path.join(os.path.dirname(__file__), 'script_config.ini'))
 BASE_PATH = CONFIG['file_locations']['base_path']
 
 DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
-
+RESULTS = os.path.join(BASE_PATH, '..', 'results')
 
 def itmlogic_p2p(surface_profile_m, distance_km):
     """
@@ -425,7 +425,7 @@ if __name__ == '__main__':
     receiver_y = receiver['geometry']['coordinates'][1]
 
     #write results to .csv
-    csv_writer(output, DATA_PROCESSED, 'p2p_results.csv')
+    csv_writer(output, RESULTS, 'p2p_results.csv')
 
     transmitter_shape = []
     transmitter_shape.append(transmitter)
