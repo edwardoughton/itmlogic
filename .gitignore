@@ -57,7 +57,8 @@ src/smif/sample_project/results/*
 data/processed/*
 data/intermediate/*
 data/raw/*
-vis/*
+vis/figures/*
+results/*
 
 # Other files
 *.ipynb
