@@ -79,13 +79,13 @@ Results can then be visualized using:
     python vis/vis.py
 
 
-Example Point-to-Point Results
-------------------------------
+Example Results - Point-to-Point Mode
+-------------------------------------
 ![Example](/docs/_static/p2p_results.png)
 
 
-Example Area Results
---------------------
+Example Results - Area Mode
+---------------------------
 ![Example](/docs/_static/area_results.png)
 
 
