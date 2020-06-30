@@ -35,7 +35,7 @@ def plot_area_results(path):
     ax.set_xlabel("Distance (km)")
     ax.set_ylabel("Propagation Loss (dB)")
     ax.legend(["10% Confidence", "50% Confidence", "90% Confidence"])
-    plt.title('Estimated Propagation Loss')
+    plt.title('Estimated Area Propagation Loss')
     path_output = os.path.join(BASE_PATH, '..', 'vis', 'figures', 'area_results.png')
     plt.savefig(path_output)
 
