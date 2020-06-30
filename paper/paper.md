@@ -68,6 +68,6 @@ terrain for static [@Oughton:2018b] or moving users [@Oughton:2020].
 
 ## Acknowledgements
 
-We would like to acknowledge two different funding sources which have enabled development of itmlogic. Firstly, Oughton and Russell were funded by the UK EPSRC via the Infrastructure Transitions Research Consortium Mistral project (EP/N017064/1). Secondly, Johnson and Yardim were funded by Facebook Connectivity Lab's Rural Connectivity program.
+We would like to acknowledge two different funding sources which have enabled development of ``itmlogic``. Firstly, Oughton and Russell were funded by the UK EPSRC via the Infrastructure Transitions Research Consortium Mistral project (EP/N017064/1). Secondly, Johnson and Yardim were funded by Facebook Connectivity Lab's Rural Connectivity program.
 
 # References
