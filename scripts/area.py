@@ -27,6 +27,7 @@ CONFIG.read(os.path.join(os.path.dirname(__file__), 'script_config.ini'))
 BASE_PATH = CONFIG['file_locations']['base_path']
 
 DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
+RESULTS = os.path.join(BASE_PATH, '..', 'results')
 
 
 def itmlogic_area(tip):
@@ -262,7 +263,6 @@ def csv_writer(data, directory, filename):
 if __name__ == '__main__':
 
     dem_path = BASE_PATH
-    directory = DATA_PROCESSED
     directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
     cell_range = 20000
 
@@ -278,8 +278,8 @@ if __name__ == '__main__':
     print('Running itmlogic')
     output = itmlogic_area(tip)
 
-    print('Writing results to ', os.path.join(directory, 'uarea_output.csv'))
-    csv_writer(output, directory, 'uarea_output.csv')
+    print('Writing results to ', os.path.join(RESULTS, 'area_results.csv'))
+    csv_writer(output, RESULTS, 'area_results.csv')
 
     tip = terrain_area(os.path.join(dem_path, 'S_AVE_DSM.vrt'), 26.9976, -3.5409, cell_range)
     print('TIP for ALOS DEM', tip)
