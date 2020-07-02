@@ -1,11 +1,9 @@
 """
-Point to Point prediction mode runner.
+Testing a point to point path over two DEM tiles.
 
-Referred to as qkpfl in the original Fortran codebase.
+Written by Tom Russell and Ed Oughton
 
-Written by Ed Oughton
-
-June 2019
+May 2020
 
 """
 import configparser
@@ -349,7 +347,7 @@ if __name__ == '__main__':
 
     #set coordinate reference systems
     old_crs = 'EPSG:4326'
-    # new_crs = 'EPSG:3857'
+    new_crs = 'EPSG:3857'
 
     #DEFINE MAIN USER PARAMETERS
     #define an empty dict for user defined parameters
@@ -383,27 +381,26 @@ if __name__ == '__main__':
         137, 140, 144, 147, 150, 152, 159
     ]
 
-    #create new geojson for Crystal Palace radio transmitter
+    print('Start two-tile test')
     transmitter = {
         'type': 'Feature',
         'geometry': {
             'type': 'Point',
-            'coordinates': (-0.07491679518573545, 51.42413477117786)
+            'coordinates': (26.676,-3.513)
         },
         'properties': {
-            'id': 'Crystal Palace radio transmitter'
+            'id': 'A'
         }
     }
 
-    #create new geojson for Mursley
     receiver = {
         'type': 'Feature',
         'geometry': {
             'type': 'Point',
-            'coordinates': (-0.8119433954872186, 51.94972494521946)
+            'coordinates': (27.594,-3.514)
         },
         'properties': {
-            'id': 'Mursley'
+            'id': 'B'
         }
     }
 
@@ -412,33 +409,33 @@ if __name__ == '__main__':
 
     #run terrain module
     measured_terrain_profile, distance_km, points = terrain_p2p(
-        os.path.join(dem_folder, 'ASTGTM2_N51W001_dem.tif'), line)
-    print('Distance is {}km'.format(distance_km))
+        os.path.join(dem_folder, 'S_AVE_DSM.vrt'), line)
 
-    #check (out of interest) how many measurements are in each profile
-    print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
-    print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
+    print("Profile [",
+        measured_terrain_profile[0],
+        ",  ... ,",
+        measured_terrain_profile[-1],
+        "]")
+    print("Distance is {}km".format(distance_km))
+    print("Sampled", len(points), "points")
+
+    schema = {
+        'geometry': 'Point',
+        'properties': {'elevation': 'float'}
+    }
+
+    crs = from_epsg(4326)
+    with fiona.open('data/processed/shapes/p2p_2tiles.shp',
+                    'w',
+                    driver='ESRI Shapefile',
+                    crs=crs,
+                    schema=schema) as fh:
+        for point in points:
+            fh.write(point)
+    print("Wrote two-tile profile to data/processed/shapes/p2p_2tiles.shp")
 
     #run model and get output
     output = itmlogic_p2p(main_user_defined_parameters, original_surface_profile_m)
 
-    #grab coordinates for transmitter and receiver for writing to .csv
-    transmitter_x = transmitter['geometry']['coordinates'][0]
-    transmitter_y = transmitter['geometry']['coordinates'][1]
-    receiver_x = receiver['geometry']['coordinates'][0]
-    receiver_y = receiver['geometry']['coordinates'][1]
-
-    transmitter_shape = []
-    transmitter_shape.append(transmitter)
-    write_shapefile(transmitter_shape, directory_shapes, 'transmitter.shp', old_crs)
-
-    receiver_shape = []
-    receiver_shape.append(receiver)
-    write_shapefile(receiver_shape, directory_shapes, 'receiver.shp', old_crs)
-
-    write_shapefile(points, directory_shapes, 'points.shp', old_crs)
-
     #write results to .csv
-    csv_writer(output, RESULTS, 'p2p_results.csv')
-
-    print('Completed run')
+    csv_writer(output, RESULTS, 'p2p_results_2tiles.csv')

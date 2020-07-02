@@ -1,7 +1,7 @@
 """
-Area prediction mode runner.
+Testing a area prediction mode over two DEM tiles.
 
-Written by Ed Oughton
+Written by Tom Russell and Ed Oughton
 
 November 2019
 
@@ -47,6 +47,7 @@ def itmlogic_area(main_user_defined_parameters):
     """
     prop = main_user_defined_parameters
 
+    #DEFINE ENVIRONMENTAL PARAMETERS
     #Surface refractivity (N-units)
     prop['ens0'] = 301
 
@@ -253,26 +254,24 @@ if __name__ == '__main__':
 
     dem_path = BASE_PATH
     directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
+    cell_range = 20000
 
-    #Define transmitter as geojson object
+    #Define example transmitter as geojson object
     transmitter = {
         'type': 'Feature',
         'geometry': {
             'type': 'Point',
-            'coordinates': (-0.07491679518573545, 51.42413477117786)
+            'coordinates': (26.9976, -3.5409)
             },
         'properties': {
-            'id': 'Crystal Palace radio transmitter'
+            'id': 'Example radio transmitter'
         }
     }
-
-    #Define cell range
-    cell_range = 20000
 
     print('Getting Terrain Irregularity Parameter (delta h) (in meters)')
     #Terrain Irregularity Parameter delta h (in meters)
     tip = terrain_area(
-        os.path.join(dem_path, 'ASTGTM2_N51W001_dem.tif'),
+        os.path.join(dem_path, 'S_AVE_DSM.vrt'),
         transmitter['geometry']['coordinates'][0],
         transmitter['geometry']['coordinates'][1],
         cell_range)
@@ -297,5 +296,5 @@ if __name__ == '__main__':
     print('Running itmlogic')
     output = itmlogic_area(main_user_defined_parameters)
 
-    print('Writing results to ', os.path.join(RESULTS, 'area_results.csv'))
-    csv_writer(output, RESULTS, 'area_results.csv')
+    print('Writing results to ', os.path.join(RESULTS, 'area_results_2tiles.csv'))
+    csv_writer(output, RESULTS, 'area_results_2tiles.csv')

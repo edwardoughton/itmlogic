@@ -70,15 +70,14 @@ mode.
 Area Prediction Mode
 --------------------
 
-A reproducible example for the Crystal Palace radio transmitter (South London) is provided.
-Use the following to run the code:
+A reproducible example for the Crystal Palace radio transmitter (South London) is provided
+using a single Digital Elevation Model (DEM) tile. Use the following to run the code:
 
 .. code-block:: python
 
     python scripts/area.py
 
-The repo already includes a Digital Elevation Model tile for London (see the .tif in the
-data folder).
+The repo already includes a DEM tile for London (see the .tif in the data folder).
 
 For simplicity, this example specifies the coordinates of the ``transmitter`` as a point
 feature. This is a standard `GeoJSON <https://geojson.org/>`_-like Python ``dict``, as you
@@ -107,7 +106,7 @@ To assess landscape elevation the ``terrain_area`` function is imported from the
 
 .. code-block:: python
 
-    tip = terrain_area(dem_path, transmitter, 20000, old_crs)
+    tip = terrain_area(dem_path, tx_coordinate_0, tx_coordinate_1, cell_range)
 
 The ``tip`` is the inter-decile range for all elevation values (the range between the top
 10% and bottom 10% of values). This parameter can then be passed to the ``itmlogic_area``
@@ -120,6 +119,10 @@ function:
 As the ``itmlogic_area`` is used here to merely demonstrate the code functionality, a user will
 need to adapt parameters to their specific scenario. For example, the user will want to
 specify the specific antenna heights, frequency to be modelled and local atmospheric conditions.
+The main user defined parameters can be set via the ``main_user_defined_parameters`` dict,
+but environmental and statistical paramters will need to be adjusted by the user in the
+``itmlogic_area`` function.
+
 In the given scenario, the propagation loss across this terrain is estimated for a certain
 distance, at a specific confidence level, and returned as a list of dicts named ``output``:
 
@@ -141,6 +144,13 @@ distance, at a specific confidence level, and returned as a list of dicts named 
 
 The results are then written to a csv file in the processed data folder ('uarea_output.csv).
 
+We also provide an example which spans more than one coverage tile, as defined in:
+
+.. code-block:: python
+
+    python scripts/area_2tiles.py
+
+
 Point-to-Point Mode
 -------------------
 
@@ -157,7 +167,14 @@ the Crystal Palace radio transmitter in South London and a receiver in the small
 Mursley in Buckinghamshire, England. For consistency, ``itmlogic`` also uses this example,
 particularly for providing tests for the codebase, to guarantee reliability.
 
-The transmitter is specified as a point feature:
+Like the area prediction function, the ``itmlogic_p2p`` is used here to merely demonstrate the
+code functionality, so a user will need to adapt parameters to their specific scenario. For
+example, the user will want to specify the specific antenna heights, frequency to be modelled
+and local atmospheric conditions. The main user defined parameters can be set via the
+``main_user_defined_parameters`` dict, but environmental and statistical paramters will need
+to be adjusted by the user in the ``itmlogic_p2p`` function.
+
+To begin, the transmitter is specified as a point feature:
 
 .. code-block:: python
 
@@ -218,7 +235,7 @@ GeoJSON object.
 .. code-block:: python
 
     measured_terrain_profile, distance_km, points = terrain_p2p(
-        dem_folder, line, current_crs
+        dem_folder, line
     )
 
 A list of terrain elevation values (``measured_terrain_profile``) (in meters) is returned:
@@ -256,3 +273,9 @@ the link distance given certain reliability and confidence levels.
         },
         ...
     ]
+
+We also provide an example which spans more than one coverage tile, as defined in:
+
+.. code-block:: python
+
+    python scripts/p2p_2tiles.py
