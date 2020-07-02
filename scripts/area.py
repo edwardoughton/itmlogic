@@ -30,14 +30,14 @@ DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
 RESULTS = os.path.join(BASE_PATH, '..', 'results')
 
 
-def itmlogic_area(tip):
+def itmlogic_area(main_user_defined_parameters):
     """
     Run itmlogic in area prediction mode.
 
     Parameters
     ----------
-    tip : float
-        Terrain irregularity parameter.
+    main_user_defined_parameters : dict
+        User defined parameters.
 
     Returns
     -------
@@ -45,16 +45,7 @@ def itmlogic_area(tip):
         Contains model output results.
 
     """
-    prop = {}
-
-    #Antenna height 1 (m), Antenna height 2 (m)
-    prop['hg'] = [3.3, 1.3]
-
-    #Frequency (MHz)
-    prop['fmhz'] = 20
-
-    #Terrain irregularity parameter dh (m)
-    prop['dh'] = tip
+    prop = main_user_defined_parameters
 
     #Surface refractivity (N-units)
     prop['ens0'] = 301
@@ -70,12 +61,10 @@ def itmlogic_area(tip):
     # 7=maritime temperate, oversea (5 is the default)
     prop['klimx'] = 5
 
-    #0 = horizontal polarization, 1 = vertical
-    prop['ipol'] = 1
-
     #Mode of variability: Single Message=0, Accidental=1, Mobile=2, Broadcast=3
     prop['mdvarx'] = 3
 
+    #DEFINE STATISTICAL PARAMETERS
     #Percent of time requested for computation
     QT = [50]
 
@@ -264,23 +253,49 @@ if __name__ == '__main__':
 
     dem_path = BASE_PATH
     directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
+
+    #Define transmitter as geojson object
+    transmitter = {
+        'type': 'Feature',
+        'geometry': {
+            'type': 'Point',
+            'coordinates': (-0.07491679518573545, 51.42413477117786)
+            },
+        'properties': {
+            'id': 'Crystal Palace radio transmitter'
+        }
+    }
+
+    #Define cell range
     cell_range = 20000
 
     print('Getting Terrain Irregularity Parameter (delta h) (in meters)')
     #Terrain Irregularity Parameter delta h (in meters)
     tip = terrain_area(
         os.path.join(dem_path, 'ASTGTM2_N51W001_dem.tif'),
-        -0.074916,
-        51.424134,
+        transmitter['geometry']['coordinates'][0],
+        transmitter['geometry']['coordinates'][1],
         cell_range)
     print('TIP for AST DEM', tip)
 
+    #DEFINE MAIN USER PARAMETERS
+    #define an empty dict for user defined parameters
+    main_user_defined_parameters = {}
+
+    #Antenna height 1 (m), Antenna height 2 (m)
+    main_user_defined_parameters['hg'] = [3.3, 1.3]
+
+    #Frequency (MHz)
+    main_user_defined_parameters['fmhz'] = 20
+
+    #Terrain irregularity parameter dh (m)
+    main_user_defined_parameters['dh'] = tip
+
+    #polarization selection (0=horizontal, 1=vertical)
+    main_user_defined_parameters['ipol'] = 0
+
     print('Running itmlogic')
-    output = itmlogic_area(tip)
+    output = itmlogic_area(main_user_defined_parameters)
 
     print('Writing results to ', os.path.join(RESULTS, 'area_results.csv'))
     csv_writer(output, RESULTS, 'area_results.csv')
-
-    tip = terrain_area(os.path.join(dem_path, 'S_AVE_DSM.vrt'), 26.9976, -3.5409, cell_range)
-    print('TIP for ALOS DEM', tip)
-    output = itmlogic_area(tip)
