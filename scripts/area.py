@@ -279,7 +279,7 @@ if __name__ == '__main__':
     print('TIP for AST DEM', tip)
 
     #DEFINE MAIN USER PARAMETERS
-    #define an empty dict for user defined parameters
+    #Define an empty dict for user defined parameters
     main_user_defined_parameters = {}
 
     #Antenna height 1 (m), Antenna height 2 (m)
@@ -291,7 +291,7 @@ if __name__ == '__main__':
     #Terrain irregularity parameter dh (m)
     main_user_defined_parameters['dh'] = tip
 
-    #polarization selection (0=horizontal, 1=vertical)
+    #Polarization selection (0=horizontal, 1=vertical)
     main_user_defined_parameters['ipol'] = 0
 
     print('Running itmlogic')
