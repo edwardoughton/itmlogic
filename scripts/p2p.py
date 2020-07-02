@@ -35,16 +35,17 @@ BASE_PATH = CONFIG['file_locations']['base_path']
 DATA_PROCESSED = os.path.join(BASE_PATH, 'processed')
 RESULTS = os.path.join(BASE_PATH, '..', 'results')
 
-def itmlogic_p2p(surface_profile_m, distance_km):
+
+def itmlogic_p2p(main_user_defined_parameters, surface_profile_m):
     """
     Run itmlogic in point to point (p2p) prediction mode.
 
     Parameters
     ----------
+    main_user_defined_parameters : dict
+        User defined parameters.
     surface_profile_m : list
         Contains surface profile measurements in meters.
-    distance_km : float
-        Distance between the transmitter and receiver.
 
     Returns
     -------
@@ -52,25 +53,14 @@ def itmlogic_p2p(surface_profile_m, distance_km):
         Contains model output results.
 
     """
-    prop = {}
+    prop = main_user_defined_parameters
 
+    #DEFINE ENVIRONMENTAL PARAMETERS
     # Terrain relative permittivity
     prop['eps'] = 15
 
     # Terrain conductivity (S/m)
     prop['sgm']   = 0.005
-
-    # Polarization selection (0=horizontal, 1=vertical)
-    prop['ipol'] = 0
-
-    # Operating frequency (MHz) % Second qkpfl.for test case
-    prop['fmhz'] = 573.3
-
-    # Antenna 1 height (m) # Antenna 2 height (m)
-    prop['hg'] = [143.9, 8.5]
-
-    # Operating frequency (MHz) % First qkpfl.for test case
-    prop['fmhz']  =  41.5
 
     # Climate selection (1=equatorial,
     # 2=continental subtropical, 3=maritime subtropical,
@@ -82,14 +72,12 @@ def itmlogic_p2p(surface_profile_m, distance_km):
     # Surface refractivity (N-units): also controls effective Earth radius
     prop['ens0']  =   314
 
+    #DEFINE STATISTICAL PARAMETERS
     # Confidence  levels for predictions
     qc = [50, 90, 10]
 
     # Reliability levels for predictions
     qr = [1, 10, 50, 90, 99]
-
-    # Length of profile
-    prop['d'] = distance_km
 
     # Number of points describing profile -1
     pfl = []
@@ -355,14 +343,30 @@ def straight_line_from_points(a, b):
 
 if __name__ == '__main__':
 
+    #setup data folder paths
     dem_folder = os.path.join(BASE_PATH)
     directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
 
+    #set coordinate reference systems
     old_crs = 'EPSG:4326'
-    new_crs = 'EPSG:3857'
+    # new_crs = 'EPSG:3857'
 
-    #original distance in km from Longley Rice docs
-    original_distance = 77.8
+    #DEFINE MAIN USER PARAMETERS
+    #define an empty dict for user defined parameters
+    main_user_defined_parameters = {}
+
+    #define radio operating frequency (MHz)
+    # main_user_defined_parameters['fmhz'] = 573.3
+    main_user_defined_parameters['fmhz']  =  41.5
+
+    #define distance between terminals in km (from Longley Rice docs)
+    main_user_defined_parameters['d'] = 77.8
+
+    #define antenna heights - Antenna 1 height (m) # Antenna 2 height (m)
+    main_user_defined_parameters['hg'] = [143.9, 8.5]
+
+    #polarization selection (0=horizontal, 1=vertical)
+    main_user_defined_parameters['ipol'] = 0
 
     #original surface profile from Longley Rice docs
     original_surface_profile_m = [
@@ -416,16 +420,13 @@ if __name__ == '__main__':
     print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
 
     #run model and get output
-    output = itmlogic_p2p(original_surface_profile_m, original_distance)
+    output = itmlogic_p2p(main_user_defined_parameters, original_surface_profile_m)
 
     #grab coordinates for transmitter and receiver for writing to .csv
     transmitter_x = transmitter['geometry']['coordinates'][0]
     transmitter_y = transmitter['geometry']['coordinates'][1]
     receiver_x = receiver['geometry']['coordinates'][0]
     receiver_y = receiver['geometry']['coordinates'][1]
-
-    #write results to .csv
-    csv_writer(output, RESULTS, 'p2p_results.csv')
 
     transmitter_shape = []
     transmitter_shape.append(transmitter)
@@ -435,55 +436,9 @@ if __name__ == '__main__':
     receiver_shape.append(receiver)
     write_shapefile(receiver_shape, directory_shapes, 'receiver.shp', old_crs)
 
-    write_shapefile(points, directory_shapes, 'points.shp', new_crs)
+    write_shapefile(points, directory_shapes, 'points.shp', old_crs)
+
+    #write results to .csv
+    csv_writer(output, RESULTS, 'p2p_results.csv')
 
     print('Completed run')
-
-
-    print('Start two-tile test')
-    transmitter = {
-        'type': 'Feature',
-        'geometry': {
-            'type': 'Point',
-            'coordinates': (26.676,-3.513)
-        },
-        'properties': {
-            'id': 'A'
-        }
-    }
-
-    receiver = {
-        'type': 'Feature',
-        'geometry': {
-            'type': 'Point',
-            'coordinates': (27.594,-3.514)
-        },
-        'properties': {
-            'id': 'B'
-        }
-    }
-
-    #create new geojson for terrain path
-    line = straight_line_from_points(transmitter, receiver)
-
-    #run terrain module
-    measured_terrain_profile, distance_km, points = terrain_p2p(
-        os.path.join(dem_folder, 'S_AVE_DSM.vrt'), line)
-
-    print("Profile [", measured_terrain_profile[0], ",  ... ,", measured_terrain_profile[-1], "]")
-    print("Distance is {}km".format(distance_km))
-    print("Sampled", len(points), "points")
-
-    schema = {
-        'geometry': 'Point',
-        'properties': {'elevation': 'float'}
-    }
-    crs = from_epsg(4326)
-    with fiona.open('data/processed/shapes/two_tile_points.shp',
-                    'w',
-                    driver='ESRI Shapefile',
-                    crs=crs,
-                    schema=schema) as fh:
-        for point in points:
-            fh.write(point)
-    print("Wrote two-tile profile to data/processed/shapes/two_tile_points.shp")
