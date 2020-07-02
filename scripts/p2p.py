@@ -343,32 +343,32 @@ def straight_line_from_points(a, b):
 
 if __name__ == '__main__':
 
-    #setup data folder paths
+    #Setup data folder paths
     dem_folder = os.path.join(BASE_PATH)
     directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
 
-    #set coordinate reference systems
+    #Set coordinate reference systems
     old_crs = 'EPSG:4326'
     # new_crs = 'EPSG:3857'
 
     #DEFINE MAIN USER PARAMETERS
-    #define an empty dict for user defined parameters
+    #Define an empty dict for user defined parameters
     main_user_defined_parameters = {}
 
-    #define radio operating frequency (MHz)
+    #Define radio operating frequency (MHz)
     # main_user_defined_parameters['fmhz'] = 573.3
     main_user_defined_parameters['fmhz']  =  41.5
 
-    #define distance between terminals in km (from Longley Rice docs)
+    #Define distance between terminals in km (from Longley Rice docs)
     main_user_defined_parameters['d'] = 77.8
 
-    #define antenna heights - Antenna 1 height (m) # Antenna 2 height (m)
+    #Define antenna heights - Antenna 1 height (m) # Antenna 2 height (m)
     main_user_defined_parameters['hg'] = [143.9, 8.5]
 
-    #polarization selection (0=horizontal, 1=vertical)
+    #Polarization selection (0=horizontal, 1=vertical)
     main_user_defined_parameters['ipol'] = 0
 
-    #original surface profile from Longley Rice docs
+    #Original surface profile from Longley Rice docs
     original_surface_profile_m = [
         96,  84,  65,  46,  46,  46,  61,  41,  33,  27,  23,  19,  15,  15,  15,
         15,  15,  15,  15,  15,  15,  15,  15,  15,  17,  19,  21,  23,  25,  27,
@@ -383,7 +383,7 @@ if __name__ == '__main__':
         137, 140, 144, 147, 150, 152, 159
     ]
 
-    #create new geojson for Crystal Palace radio transmitter
+    #Create new geojson for Crystal Palace radio transmitter
     transmitter = {
         'type': 'Feature',
         'geometry': {
@@ -395,7 +395,7 @@ if __name__ == '__main__':
         }
     }
 
-    #create new geojson for Mursley
+    #Create new geojson for Mursley
     receiver = {
         'type': 'Feature',
         'geometry': {
@@ -407,22 +407,22 @@ if __name__ == '__main__':
         }
     }
 
-    #create new geojson for terrain path
+    #Create new geojson for terrain path
     line = straight_line_from_points(transmitter, receiver)
 
-    #run terrain module
+    #Run terrain module
     measured_terrain_profile, distance_km, points = terrain_p2p(
         os.path.join(dem_folder, 'ASTGTM2_N51W001_dem.tif'), line)
     print('Distance is {}km'.format(distance_km))
 
-    #check (out of interest) how many measurements are in each profile
+    #Check (out of interest) how many measurements are in each profile
     print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
     print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
 
-    #run model and get output
+    #Run model and get output
     output = itmlogic_p2p(main_user_defined_parameters, original_surface_profile_m)
 
-    #grab coordinates for transmitter and receiver for writing to .csv
+    #Grab coordinates for transmitter and receiver for writing to .csv
     transmitter_x = transmitter['geometry']['coordinates'][0]
     transmitter_y = transmitter['geometry']['coordinates'][1]
     receiver_x = receiver['geometry']['coordinates'][0]
@@ -438,7 +438,7 @@ if __name__ == '__main__':
 
     write_shapefile(points, directory_shapes, 'points.shp', old_crs)
 
-    #write results to .csv
+    #Write results to .csv
     csv_writer(output, RESULTS, 'p2p_results.csv')
 
     print('Completed run')

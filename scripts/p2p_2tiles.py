@@ -341,32 +341,32 @@ def straight_line_from_points(a, b):
 
 if __name__ == '__main__':
 
-    #setup data folder paths
+    #Setup data folder paths
     dem_folder = os.path.join(BASE_PATH)
     directory_shapes = os.path.join(DATA_PROCESSED, 'shapes')
 
-    #set coordinate reference systems
+    #Set coordinate reference systems
     old_crs = 'EPSG:4326'
     new_crs = 'EPSG:3857'
 
     #DEFINE MAIN USER PARAMETERS
-    #define an empty dict for user defined parameters
+    #Define an empty dict for user defined parameters
     main_user_defined_parameters = {}
 
-    #define radio operating frequency (MHz)
+    #Define radio operating frequency (MHz)
     # main_user_defined_parameters['fmhz'] = 573.3
     main_user_defined_parameters['fmhz']  =  41.5
 
-    #define distance between terminals in km (from Longley Rice docs)
+    #Define distance between terminals in km (from Longley Rice docs)
     main_user_defined_parameters['d'] = 77.8
 
-    #define antenna heights - Antenna 1 height (m) # Antenna 2 height (m)
+    #Define antenna heights - Antenna 1 height (m) # Antenna 2 height (m)
     main_user_defined_parameters['hg'] = [143.9, 8.5]
 
-    #polarization selection (0=horizontal, 1=vertical)
+    #Polarization selection (0=horizontal, 1=vertical)
     main_user_defined_parameters['ipol'] = 0
 
-    #original surface profile from Longley Rice docs
+    #Original surface profile from Longley Rice docs
     original_surface_profile_m = [
         96,  84,  65,  46,  46,  46,  61,  41,  33,  27,  23,  19,  15,  15,  15,
         15,  15,  15,  15,  15,  15,  15,  15,  15,  17,  19,  21,  23,  25,  27,
@@ -404,10 +404,10 @@ if __name__ == '__main__':
         }
     }
 
-    #create new geojson for terrain path
+    #Create new geojson for terrain path
     line = straight_line_from_points(transmitter, receiver)
 
-    #run terrain module
+    #Run terrain module
     measured_terrain_profile, distance_km, points = terrain_p2p(
         os.path.join(dem_folder, 'S_AVE_DSM.vrt'), line)
 
@@ -434,8 +434,8 @@ if __name__ == '__main__':
             fh.write(point)
     print("Wrote two-tile profile to data/processed/shapes/p2p_2tiles.shp")
 
-    #run model and get output
+    #Run model and get output
     output = itmlogic_p2p(main_user_defined_parameters, original_surface_profile_m)
 
-    #write results to .csv
+    #Write results to .csv
     csv_writer(output, RESULTS, 'p2p_results_2tiles.csv')
