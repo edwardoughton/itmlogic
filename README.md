@@ -18,6 +18,9 @@ Software Citation
   The Irregular Terrain Model by Longley and Rice. Journal of Open Source Software 5, 2266.
   https://doi.org/10.21105/joss.02266
 
+Software Purpose
+----------------
+
 This Python repo implements the model properties and algorithm defining it from:
 
 * Hufford, G. A., A. G. Longley, and W. A. Kissick (1982), A guide    to the use of the ITS
