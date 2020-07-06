@@ -14,9 +14,9 @@ and capable of estimating the signal propagation effects resulting from irregula
 Software Citation
 -----------------
 
-    Oughton, E.J., Russell, T., Johnson, J., Yardim, C., Kusuma, J., 2020. itmlogic:
-    The Irregular Terrain Model by Longley and Rice. Journal of Open Source Software 5, 2266.
-    [doi.org/10.21105/joss.02266](https://joss.theoj.org/papers/10.21105/joss.02266)
+    Oughton, E.J., Russell, T., Johnson, J., Yardim, C., Kusuma, J., 2020. [itmlogic:
+    The Irregular Terrain Model by Longley and Rice](https://joss.theoj.org/papers/10.21105/joss.02266). Journal of Open Source Software 5, 2266.
+    https://doi.org/10.21105/joss.02266
 
 This Python repo implements the model properties and algorithm defining it from:
 
