@@ -28,9 +28,11 @@ This Python repo implements the model properties and algorithm defining it from:
   PB82-217977)
 * Hufford, G. A. (1995) The ITS Irregular Terrain Model, version 1.2.2, the Algorithm.
 
-**itmlogic** enables you to account for the radio propagation impacts arising from irregular
-terrain. For example, the image below shows the terrain implications arising between the
-Crystal Palace (South London) transmitter and Mursley, Buckinghamshire, England.
+**itmlogic** enables you to account for the radio propagation impacts occuring from irregular
+terrain (hills, mountains etc.). For example, the image below shows the terrain undulation 
+between the Crystal Palace (South London) transmitter and Mursley, Buckinghamshire, England.
+Such estimates enable the engineering design of many types of wireless radio systems, including 
+4G and 5G Radio Access Networks and wireless backhaul connections. 
 
 Terrain profile slice: Crystal Palace (South London) to Mursley
 ---------------------------------------------------------------
