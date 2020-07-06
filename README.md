@@ -3,12 +3,20 @@
 [![Build Status](https://travis-ci.org/edwardoughton/itmlogic.svg?branch=master)](https://travis-ci.org/edwardoughton/itmlogic)
 [![Documentation Status](https://readthedocs.org/projects/itmlogic/badge/?version=latest)](https://itmlogic.readthedocs.io/en/latest/?badge=latest)
 [![Coverage Status](https://coveralls.io/repos/github/edwardoughton/itmlogic/badge.svg?branch=master)](https://coveralls.io/github/edwardoughton/itmlogic?branch=master)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.02266/status.svg)](https://doi.org/10.21105/joss.02266)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3931350.svg)](https://doi.org/10.5281/zenodo.3931350)
 
 Longley-Rice Irregular Terrain Model
 
 **itmlogic** is a Python implementation of the classic Longley-Rice propagation model (v1.2.2)
 and capable of estimating the signal propagation effects resulting from irregular terrain.
+
+Software Citation
+-----------------
+
+    Oughton, E.J., Russell, T., Johnson, J., Yardim, C., Kusuma, J., 2020. itmlogic:
+    The Irregular Terrain Model by Longley and Rice. Journal of Open Source Software 5, 2266.
+    https://doi.org/10.21105/joss.02266
 
 This Python repo implements the model properties and algorithm defining it from:
 
