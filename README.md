@@ -131,16 +131,16 @@ text present in any copied or derivative works.
 
 ## Thanks for the support
 
-**itmlogic** was written and developed at the [Environmental Change Institute, University of
+The software repository **itmlogic** was written and developed at the [Environmental Change Institute, University of
 Oxford](http://www.eci.ox.ac.uk) within the EPSRC-sponsored MISTRAL programme (EP/N017064/1),
 as part of the [Infrastructure Transition Research Consortium](http://www.itrc.org.uk/)
 
 ## Contributors
-- Edward J. Oughton (University of Oxford)
-- Tom Russell (University of Oxford)
-- Joel Johnson (The Ohio State University)
-- Caglar Yardim (The Ohio State University)
-- Julius Kusuma (Facebook Research)
+- Edward J. Oughton (University of Oxford) (Software Lead)
+- Tom Russell (University of Oxford) (Software)
+- Joel Johnson (The Ohio State University) (ITM Modeling Lead)
+- Caglar Yardim (The Ohio State University) (ITM Modeling)
+- Julius Kusuma (Facebook Research) (ITM Modeling)
 
 If you find an error or have a question, please submit an issue.
 
