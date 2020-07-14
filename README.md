@@ -19,7 +19,7 @@ Software citation
 Software purpose
 ----------------
 
-This Python repo implements the model properties and algorithm defining it from:
+This Python repo implements the model properties and algorithm defined in:
 
 * Hufford, G. A., A. G. Longley, and W. A. Kissick (1982), A guide    to the use of the ITS
   Irregular Terrain Model in the area prediction mode, NTIA Report 82-100. (NTIS Order No.
