@@ -136,8 +136,8 @@ Oxford](http://www.eci.ox.ac.uk) within the EPSRC-sponsored MISTRAL programme (E
 as part of the [Infrastructure Transition Research Consortium](http://www.itrc.org.uk/)
 
 ## Contributors
-- Edward J. Oughton (University of Oxford) (Software Lead)
-- Tom Russell (University of Oxford) (Software)
+- Edward J. Oughton (University of Oxford) (Software Engineering Lead)
+- Tom Russell (University of Oxford) (Software Engineering)
 - Joel Johnson (The Ohio State University) (ITM Modeling Lead)
 - Caglar Yardim (The Ohio State University) (ITM Modeling)
 - Julius Kusuma (Facebook Research) (ITM Modeling)
