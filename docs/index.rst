@@ -36,6 +36,7 @@ The Longley-Rice Irregular Terrain Model is one of the classic radio propagation
 model is still widely used, particularly in industry. In comparison with other radio models,
 Longley-Rice accounts for various physical effects that result from irregular terrain.
 
+
 Statement of Need
 =================
 
@@ -46,12 +47,14 @@ This open-source python package overcomes these limitations by providing an easy
 version. Given the popularity of Python, there is a need for an easy-to-use Python version of
 this model.
 
+
 Setup and configuration
 =======================
 
 All code for ``itmlogic`` is written in Python (Python>=3.7).
 
 See requirements.txt for a full list of dependencies.
+
 
 Conda
 =====
@@ -80,6 +83,7 @@ Run the tests::
 
     python -m pytest
 
+
 Quick start
 ===========
 
@@ -90,6 +94,7 @@ If you want to quickly generate results run using area prediction mode type::
 Or using point-to-point mode type::
 
     python scripts/p2p.py
+
 
 Contents
 ========
@@ -105,6 +110,7 @@ Contents
 
    License <license>
    Authors <authors>
+
 
 Make Contact
 ============
