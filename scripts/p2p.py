@@ -413,12 +413,9 @@ if __name__ == '__main__':
     #Run terrain module
     measured_terrain_profile, distance_km, points = terrain_p2p(
         os.path.join(dem_folder, 'ASTGTM2_N51W001_dem.tif'), line)
-    print('Distance is {}km'.format(distance_km))
-
-    #Check (out of interest) how many measurements are in each profile
-    print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
+    print("Original distance", main_user_defined_parameters['d'])
     print('len(original_surface_profile_m) {}'.format(len(original_surface_profile_m)))
-
+    print(original_surface_profile_m)
     #Run model and get output
     output = itmlogic_p2p(main_user_defined_parameters, original_surface_profile_m)
 
@@ -441,4 +438,13 @@ if __name__ == '__main__':
     #Write results to .csv
     csv_writer(output, RESULTS, 'p2p_results.csv')
 
+    print("")
+    print("Running with measured distance and profile")
+
+    print('Measured Distance is {}km'.format(distance_km))
+    print('len(measured_terrain_profile) {}'.format(len(measured_terrain_profile)))
+    print([int(m) for m in measured_terrain_profile])
+    main_user_defined_parameters['d'] = distance_km
+    output = itmlogic_p2p(main_user_defined_parameters, measured_terrain_profile)
+    csv_writer(output, RESULTS, 'p2p_results_measured.csv')
     print('Completed run')
