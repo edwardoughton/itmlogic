@@ -62,7 +62,7 @@ def dlthx(pfl1, x1, x2):
             s[j+2] = s[j + 2] - xa
             xa = xa + xb
 
-        dlthx1 = qtile(s[2:-1], ka-1) - qtile(s[2:-1], kb-2)
+        dlthx1 = qtile(s[2:], ka-1) - qtile(s[2:], kb-1)
 
         dlthx1 = dlthx1 / (1 - 0.8 * math.exp(-(x2 - x1) / 50e3))
 
