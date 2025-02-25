@@ -1,6 +1,5 @@
 # itmlogic – Longley-Rice Irregular Terrain Model
 
-[![Documentation Status](https://readthedocs.org/projects/itmlogic/badge/?version=latest)](https://itmlogic.readthedocs.io/en/latest/?badge=latest)
 [![Coverage Status](https://coveralls.io/repos/github/edwardoughton/itmlogic/badge.svg?branch=master)](https://coveralls.io/github/edwardoughton/itmlogic?branch=master)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02266/status.svg)](https://doi.org/10.21105/joss.02266)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3931350.svg)](https://doi.org/10.5281/zenodo.3931350)
