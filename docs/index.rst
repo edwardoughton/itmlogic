@@ -6,14 +6,6 @@
 itmlogic - Longley-Rice Irregular Terrain Model
 =======================================================================
 
-.. image:: https://readthedocs.org/projects/itmlogic/badge/?version=latest
-    :target: https://itmlogic.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
-
-.. image:: https://travis-ci.com/edwardoughton/itmlogic.svg?branch=master
-    :target: https://travis-ci.org/edwardoughton/itmlogic
-    :alt: Build Status
-
 .. image:: https://coveralls.io/repos/github/edwardoughton/itmlogic/badge.svg?branch=master
     :target: https://coveralls.io/github/edwardoughton/itmlogic?branch=master
     :alt: Coverage Status
