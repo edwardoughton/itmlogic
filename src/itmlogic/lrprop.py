@@ -138,7 +138,7 @@ def lrprop(d, prop):
                     (d1 - d0) * q))
                     )
 
-                wq = ((prop['aed'] > 0), (prop['ak2'] > 0))
+                wq = ((prop['aed'] >= 0) or (prop['ak2'] > 0))
 
                 if wq:
                     prop['ak1'] = (a2 - a0 - prop['ak2'] * q) / (d2 - d0)

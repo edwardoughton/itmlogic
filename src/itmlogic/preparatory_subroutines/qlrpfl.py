@@ -42,7 +42,7 @@ def qlrpfl(prop):
         prop['he'].append(prop['hg'][0] + max(prop['pfl'][2] - za, 0))
         prop['he'].append(prop['hg'][1] + max(prop['pfl'][np+1] - zb, 0))
 
-        for j in range(1, 2):
+        for j in range(0, 2):
             prop['dl'][j] = (
                 math.sqrt(2 *prop['he'][j] / prop['gme']) *
                 math.exp(-0.07 * math.sqrt(prop['dh'] / max(prop['he'][j], 5)))
@@ -52,14 +52,14 @@ def qlrpfl(prop):
 
         if q <= prop['dist']:
             q = (prop['dist'] / q)**2
-            for j in range(1, 2):
+            for j in range(0, 2):
                 prop['he'][j] = prop['he'][j] * q
                 prop['dl'][j] = (
                     math.sqrt(2 * prop['he'][j] / prop['gme']) *
                     math.exp(-0.07 * math.sqrt(prop['dh'] / max(prop['he'][j], 5)))
                 )
 
-        for j in range(0,2):
+        for j in range(0, 2):
             q = math.sqrt(2 * prop['he'][j] / prop['gme'])
             prop['the'][j] = (
                 (0.65 * prop['dh'] * (q / prop['dl'][j] - 1) - 2 *
