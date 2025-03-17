@@ -1,5 +1,5 @@
-import pytest
 from itmlogic.diffraction_attenuation.fht import fht
+
 
 def test_fht():
     """
@@ -7,7 +7,6 @@ def test_fht():
     in the computation of diffractive attenuation, as described in equations (4.20) and
     (6.2)-(6.7) of "The ITS Irregular Terrain Model, version 1.2.2: The Algorithm" with
     inputs corresponding to the "x" and "K" parameters of these equations.
-
     """
     x = 372.8075813962142
     pk = 0.0015012964882592428

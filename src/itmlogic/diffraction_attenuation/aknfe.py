@@ -1,6 +1,7 @@
 import math
 import numpy as np
 
+
 def aknfe(v2):
     """
     Returns the attenuation due to a single knife edge - the Fresnel integral (in decibels,
@@ -19,8 +20,8 @@ def aknfe(v2):
 
     """
     if v2 < 5.76:
-        if v2 <= 0: ### addition to avoid logging v2 <= 0
-            v2 = 0.00001 ### addition to avoid logging v2 <= 0
+        if v2 <= 0:  # addition to avoid logging v2 <= 0
+            v2 = 0.00001  # addition to avoid logging v2 <= 0
         aknfe1 = 6.02 + 9.11 * math.sqrt(v2) - 1.27 * v2
 
     else:

@@ -1,6 +1,7 @@
 import numpy as np
 import math
 
+
 def qerfi(q):
     """
     The inverse of qerf - the solution for x to q = Q(x). The approximation
@@ -38,12 +39,9 @@ def qerfi(q):
     for entry in t:
         interim_result = math.sqrt(-2 * np.log(entry))
 
-        qerfi1 = (interim_result - (
-                (c2 * interim_result + c1) *
-                interim_result + c0) /
-                (((d3 * interim_result + d2) *
-                interim_result + d1) *
-                interim_result + 1 ))
+        qerfi1 = interim_result - ((c2 * interim_result + c1) * interim_result + c0) / (
+            ((d3 * interim_result + d2) * interim_result + d1) * interim_result + 1
+        )
 
         if x[index] < 0:
             qerfi1 = -qerfi1

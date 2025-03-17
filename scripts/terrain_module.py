@@ -6,6 +6,7 @@ Written by Ed Oughton and Tom Russell
 June 2019
 
 """
+
 import glob
 import math
 import os
@@ -50,16 +51,16 @@ def terrain_area(dem, lon, lat, cell_range):
     cell_area = geodesic_point_buffer(lon, lat, cell_range)
 
     # Calculate raster stats
-    stats = next(gen_zonal_stats(
-        [cell_area],
-        dem,
-        add_stats={
-            'interdecile_range': interdecile_range
-        },
-        nodata=-9999
-    ))
+    stats = next(
+        gen_zonal_stats(
+            [cell_area],
+            dem,
+            add_stats={"interdecile_range": interdecile_range},
+            nodata=-9999,
+        )
+    )
 
-    id_range = stats['interdecile_range']
+    id_range = stats["interdecile_range"]
 
     return id_range
 
@@ -84,7 +85,7 @@ def geodesic_point_buffer(lon, lat, distance_m):
 
     """
     # Azimuthal equidistant projection around lat/lon point
-    aeqd = '+proj=aeqd +lat_0={lat} +lon_0={lon} +x_0=0 +y_0=0'
+    aeqd = "+proj=aeqd +lat_0={lat} +lon_0={lon} +x_0=0 +y_0=0"
     crs = aeqd.format(lat=lat, lon=lon)
 
     # To be transformed to WGS84 / EPSG:4326
@@ -152,7 +153,7 @@ def terrain_p2p(dem, line):
         Location of geojson sampling points.
 
     """
-    line_geom = LineString(line['geometry']['coordinates'])
+    line_geom = LineString(line["geometry"]["coordinates"])
 
     # Geographic distance
     geod = pyproj.Geod(ellps="WGS84")
@@ -161,7 +162,7 @@ def terrain_p2p(dem, line):
 
     # Interpolate along line to get sampling points
     num_samples = determine_num_samples(distance_m)
-    steps = np.interp(range(num_samples), [0,num_samples], [0, line_geom.length])
+    steps = np.interp(range(num_samples), [0, num_samples], [0, line_geom.length])
     point_geoms = [line_geom.interpolate(currentdistance) for currentdistance in steps]
 
     # Sample elevation profile
@@ -170,11 +171,11 @@ def terrain_p2p(dem, line):
     # Put together point features with raster values
     points = [
         {
-            'type': 'Feature',
-            'geometry': mapping(point),
-            'properties': {
-                'elevation': float(z),
-            }
+            "type": "Feature",
+            "geometry": mapping(point),
+            "properties": {
+                "elevation": float(z),
+            },
         }
         for point, z in zip(point_geoms, surface_profile)
     ]
@@ -215,12 +216,6 @@ def determine_num_samples(distance_m):
     upper_limit = 600
 
     return round(
-        (
-            -1 /
-            (
-                (stretch * distance_m) +
-                (1 / (upper_limit - lower_limit))
-            )
-        ) +
-        upper_limit
+        (-1 / ((stretch * distance_m) + (1 / (upper_limit - lower_limit))))
+        + upper_limit
     )

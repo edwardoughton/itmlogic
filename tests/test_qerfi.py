@@ -1,14 +1,13 @@
-import pytest
 from itmlogic.misc.qerfi import qerfi
+
 
 def test_qerfi():
     """
     Test the qerfi function which is the inverse of qerf - the solution for x to q = Q(x).
     The approximation is due to Hastings, Jr. (1995). Both the area prediction and
     point to point prediction modes are tested.
-
     """
-    #test p2p
+    # test p2p
     q = [
         0.0100000000000000, 0.100000000000000,
         0.500000000000000, 0.900000000000000,
@@ -21,7 +20,7 @@ def test_qerfi():
 
     assert actual_answer == expected_answer
 
-    #test area prediction mode
+    # test area prediction mode
     q = [0.5000]
 
     actual_answer = qerfi(q)

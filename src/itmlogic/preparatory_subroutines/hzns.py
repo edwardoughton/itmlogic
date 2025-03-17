@@ -34,8 +34,8 @@ def hzns(pfl, dist, hg, gme):
     the[1] = (zb - za) / dist
     the[0] = the[1] - q
     the[1] = -the[1] - q
-    dl[0]  = dist
-    dl[1]  = dist
+    dl[0] = dist
+    dl[1] = dist
 
     if np >= 2:
         sa = 0
@@ -47,7 +47,7 @@ def hzns(pfl, dist, hg, gme):
             sa = sa + xi
             sb = sb - xi
 
-            q = pfl[i+1] - (qc * sa + the[0]) * sa - za
+            q = pfl[i + 1] - (qc * sa + the[0]) * sa - za
 
             if q > 0:
                 the[0] = the[0] + q / sa

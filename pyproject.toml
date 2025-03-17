@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "itmlogic"
+dynamic = ["version"]
+description = "Longley-Rice irregular terrain propagation model"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Ed Oughton", email = "edward.oughton@gmail.com" }]
+keywords = ["Longley-Rice", "irregular terrain model", "propagation model"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Utilities",
+]
+dependencies = ["numpy"]
+
+[project.scripts]
+
+[project.urls]
+Homepage = "https://github.com/edwardoughton/itmlogic"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/itmlogic/_version.py"
+
+[tool.hatch.build.targets.sdist]
+include = ["/src"]

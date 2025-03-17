@@ -1,5 +1,5 @@
-import pytest
 from itmlogic.scatter_attenuation.ascat import ascat
+
 
 def test_ascat(setup_prop_to_test_ascat):
     """
@@ -11,7 +11,6 @@ def test_ascat(setup_prop_to_test_ascat):
 
     The inputs and expected answer are based on an original test for Longley-Rice between
     for Crystal Palace (South London) to Mursley, England (See Stark, 1967).
-
     """
     actual_prop = ascat(418934.4081874959, setup_prop_to_test_ascat)
 

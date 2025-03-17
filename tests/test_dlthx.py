@@ -1,5 +1,5 @@
-import pytest
 from itmlogic.preparatory_subroutines.dlthx import dlthx
+
 
 def test_dlthx(setup_pfl1):
     """
@@ -12,6 +12,5 @@ def test_dlthx(setup_pfl1):
 
     The test is derived from the original test for Longley-Rice between for Crystal
     Palace (South London) to Mursley, England (See Stark, 1967).
-
     """
     assert round(dlthx(setup_pfl1, 2158.5, 77672.5), 4) == 89.2126

@@ -1,14 +1,14 @@
-import pytest
 from itmlogic.preparatory_subroutines.qlrpfl import qlrpfl
 
+
 def test_qlrpfl(
-    setup_prop_to_test_qlrpfl,
-    setup_final_prop_to_test_qlrpfl,
-    setup_prop_to_test_qlrpfl_pimter,
-    setup_final_prop_to_test_qlrpfl_pimter,
-    setup_prop_to_test_qlrpfl_pimter_5,
-    setup_final_prop_to_test_qlrpfl_pimter_5
-    ):
+        setup_prop_to_test_qlrpfl,
+        setup_final_prop_to_test_qlrpfl,
+        setup_prop_to_test_qlrpfl_pimter,
+        setup_final_prop_to_test_qlrpfl_pimter,
+        setup_prop_to_test_qlrpfl_pimter_5,
+        setup_final_prop_to_test_qlrpfl_pimter_5
+        ):
     """
     Test the preparatory subroutine for point-to-point mode, as in Section 43 by Hufford
     (see references/itm.pdf).

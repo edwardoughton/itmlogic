@@ -1,3 +1,4 @@
 # Add your pinned requirements for building docs (exclude any packages which can safely be
 # mocked in docs/conf.py
+numpy
 sphinx

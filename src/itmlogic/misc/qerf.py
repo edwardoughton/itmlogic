@@ -1,5 +1,6 @@
 import math
 
+
 def qerf(z):
     """
     The standard normal complementary probability - see function in
@@ -38,9 +39,11 @@ def qerf(z):
         t = rp / (t + rp)
 
         qerf1 = (
-            math.exp(-0.5 * x**2) * rrt2pi *
-            ((((b5 * t + b4) * t + b3) * t + b2) * t + b1) * t
-            )
+            math.exp(-0.5 * x**2)
+            * rrt2pi
+            * ((((b5 * t + b4) * t + b3) * t + b2) * t + b1)
+            * t
+        )
 
     if x < 0:
         qerf1 = 1 - qerf1
