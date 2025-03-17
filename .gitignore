@@ -27,6 +27,7 @@ venv
 *.eggs/
 .installed.cfg
 *.egg-info
+src/itmlogic/_version.py
 
 # Unittest and coverage
 htmlcov/*
