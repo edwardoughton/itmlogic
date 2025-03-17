@@ -1,10 +1,10 @@
-import pytest
 from itmlogic.statistics.avar import avar
 
+
 def test_avar(
-    setup_prop_to_test_avar,
-    setup_prop_to_test_avar_uarea,
-    ):
+        setup_prop_to_test_avar,
+        setup_prop_to_test_avar_uarea,
+        ):
     """
     Test the statistics generating function avar which finds the quantiles of attenuation
     (Section V of "The ITS Irregular Terrain Model, version 1.2.2: The Algorithm").
@@ -18,21 +18,20 @@ def test_avar(
     The 'actual_answer' variable is the avar1 metric which corresponds to the additional
     attenuation from the median given user defined quantiles in time, location, and
     situation.
-
     """
-    actual_answer, actual_prop = avar(
+    actual_answer, _ = avar(
         1.2817, 0, 1.2817,
         setup_prop_to_test_avar
-        )
+    )
 
     expected_answer = 20.877472366318642
 
     assert actual_answer == expected_answer
 
-    actual_answer, actual_prop = avar(
+    actual_answer, _ = avar(
         0, 0, 0,
         setup_prop_to_test_avar_uarea
-        )
+    )
 
     expected_answer = 33.44778607772954
 

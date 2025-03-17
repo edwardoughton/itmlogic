@@ -1,5 +1,5 @@
-import pytest
 from itmlogic.scatter_attenuation.h0f import h0f
+
 
 def test_h0f():
     """
@@ -8,7 +8,7 @@ def test_h0f():
     and used in computing troposcatter attenuation.
 
     """
-    #test via area prediction mode
+    # test via area prediction mode
     r = 0.4727387221558643
     et = 2.5221451983881447
 

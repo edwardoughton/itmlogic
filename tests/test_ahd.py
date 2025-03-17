@@ -1,5 +1,5 @@
-import pytest
 from itmlogic.scatter_attenuation.ahd import ahd
+
 
 def test_ahd():
     """
@@ -9,15 +9,14 @@ def test_ahd():
 
     The inputs and expected answer are based on an original test for Longley-Rice between
     for Crystal Palace (South London) to Mursley, England (See Stark, 1967).
-
     """
-    #td input in meters
+    # td input in meters
     td = 5643.8
 
-    #test function
+    # test function
     actual_answer = ahd(td)
 
-    #expected answer in dB
+    # expected answer in dB
     expected_answer = 97.7575
 
     assert round(actual_answer, 4) == expected_answer
