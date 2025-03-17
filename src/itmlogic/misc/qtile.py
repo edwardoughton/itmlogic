@@ -1,5 +1,3 @@
-import numpy as np
-
 def qtile(a, ir):
     """
     This routine returns the ith entry of vector after sorting in

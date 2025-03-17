@@ -1,5 +1,4 @@
-
-def curv(c1,c2,x1,x2,x3,de):
+def curv(c1, c2, x1, x2, x3, de):
     """
     Evaluates empirical curve fits used in the computation of the Vmd, sigma_T-, and sigma_T+
     for estimating time variability effects as a function of the climatic region, as described
@@ -8,8 +7,9 @@ def curv(c1,c2,x1,x2,x3,de):
 
     """
     cout = (
-        (c1 + c2 / (1 + ((de - x2) / x3)**2)) *
-        ((de / x1)**2) / (1 + ((de / x1) ** 2))
-        )
+        (c1 + c2 / (1 + ((de - x2) / x3) ** 2))
+        * ((de / x1) ** 2)
+        / (1 + ((de / x1) ** 2))
+    )
 
     return cout

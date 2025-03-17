@@ -1,7 +1,8 @@
 import math
 import numpy as np
 
-def fht(x,pk):
+
+def fht(x, pk):
     """
     Supporting function for the height gain in the "three radii method" used in the
     computation of diffractive attenuation, as described in equations (4.20) and (6.2)-(6.7)
@@ -26,7 +27,7 @@ def fht(x,pk):
     if x < 200:
         w = -np.log(pk)
 
-        if pk < 1e-5 or (x*w**3) > 5495:
+        if pk < 1e-5 or (x * w**3) > 5495:
             fht1 = -117
             if x > 1:
                 fht1 = 17.372 * np.log(x) + fht1

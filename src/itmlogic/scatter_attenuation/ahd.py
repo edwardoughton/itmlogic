@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def ahd(td):
     """
     Returns the function F0(D) (Eqn 6.9 of "The ITS Irregular Terrain Model, version 1.2.2:

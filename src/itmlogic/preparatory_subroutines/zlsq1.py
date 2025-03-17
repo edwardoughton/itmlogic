@@ -1,5 +1,3 @@
-
-
 def zlsq1(z, x1, x2):
     """
     A linear least squares fit between x1 and x2, to the function described
@@ -28,10 +26,10 @@ def zlsq1(z, x1, x2):
         Interpolated height.
 
     """
-    xn  = z[0]
+    xn = z[0]
 
-    xa  = int(max(x1 / z[1], 0))
-    xb  = xn - int(max(xn - x2 / z[1], 0))
+    xa = int(max(x1 / z[1], 0))
+    xb = xn - int(max(xn - x2 / z[1], 0))
 
     if xb <= xa:
         xa = max(xa - 1, 0)
@@ -39,19 +37,19 @@ def zlsq1(z, x1, x2):
 
     ja = xa
     jb = xb
-    n  = jb - ja
+    n = jb - ja
     xa = xb - xa
-    x  = -0.5 * xa
+    x = -0.5 * xa
     xb = xb + x
 
-    a  = 0.5 * (z[(ja + 2)] + z[jb + 2])
-    b  = 0.5 * (z[ja + 2] - z[jb + 2]) * x
+    a = 0.5 * (z[(ja + 2)] + z[jb + 2])
+    b = 0.5 * (z[ja + 2] - z[jb + 2]) * x
 
-    for i in range(2, n+1):
+    for i in range(2, n + 1):
         ja = ja + 1
-        x  = x + 1
-        a  = a + z[ja + 2]
-        b  = b + z[ja + 2] * x
+        x = x + 1
+        a = a + z[ja + 2]
+        b = b + z[ja + 2] * x
 
     a = avoid_zero_division(a, xa)
     b = b * 12 / ((xa * xa + 2) * xa)
@@ -60,6 +58,7 @@ def zlsq1(z, x1, x2):
     zn = a + (b * (xn - xb))
 
     return z0, zn
+
 
 def avoid_zero_division(n, d):
     return n / d if d else 0
