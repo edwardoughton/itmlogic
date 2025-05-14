@@ -24,7 +24,7 @@ setup(
     long_description=readme(),
     long_description_content_type="text/markdown",
     author='Ed Oughton',
-    author_email='edward.oughton@gmail.com',
+    author_email='',
     url='https://github.com/edwardoughton/itmlogic',
     packages=find_packages('src'),
     package_dir={'': 'src'},
