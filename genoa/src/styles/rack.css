@@ -1,0 +1,323 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================
+   Genoa rack-terminal — 1982 broadcast engineering room.
+   Warm navy + amber/gold. Dense like Bloomberg.
+   ============================================================= */
+
+@layer base {
+  :root {
+    --grad-room:
+      radial-gradient(60% 38% at 22% 8%,  rgba(255,200,87,.10), transparent 62%),
+      radial-gradient(48% 32% at 88% 100%, rgba(196,116,90,.18), transparent 65%),
+      linear-gradient(168deg, #06111a 0%, #0a1a2c 28%, #0d1f2e 56%, #2a1a23 110%);
+    --grad-sun:
+      radial-gradient(circle at 50% 50%, #f3c86d 0%, #d6a36a 30%, rgba(214,163,106,0) 70%);
+  }
+  html, body, #root { height: 100%; }
+  body {
+    margin: 0;
+    font-family: theme('fontFamily.body');
+    color: theme('colors.text');
+    background: var(--grad-room) fixed;
+    background-color: theme('colors.bg');
+    letter-spacing: .005em;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Big soft sun behind the studio room */
+  body::before {
+    content: ''; position: fixed; pointer-events: none; z-index: 0;
+    width: 880px; height: 880px;
+    right: -240px; top: -320px;
+    background: var(--grad-sun);
+    opacity: .35; filter: blur(10px);
+  }
+  /* Subtle film-grain + scanline overlay (very low) */
+  body::after {
+    content: ''; position: fixed; inset: 0; z-index: 0;
+    pointer-events: none; mix-blend-mode: overlay; opacity: .35;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.06) 0 1px, transparent 1px 3px),
+      repeating-radial-gradient(circle at 30% 10%, rgba(255,255,255,.018) 0 1px, transparent 1px 4px);
+  }
+}
+
+@layer components {
+  /* ----- Rack panel: recessed metal with warm rule line ----- */
+  .rack-panel {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(0,0,0,0.04) 100%),
+      theme('colors.panel');
+    border: 1px solid theme('colors.panelEdge');
+    border-radius: 8px;
+    box-shadow: theme('boxShadow.rack');
+    position: relative;
+  }
+  .rack-panel-deep {
+    background: theme('colors.panelDeep');
+    border: 1px solid theme('colors.panelEdge');
+    border-radius: 8px;
+    box-shadow: theme('boxShadow.rackDeep');
+    position: relative;
+  }
+  .rack-panel.tone-amber::before,
+  .rack-panel.tone-cyan::before,
+  .rack-panel.tone-danger::before {
+    content: ''; position: absolute; left: 0; top: 14px; bottom: 14px; width: 2px;
+    border-radius: 2px;
+  }
+  .rack-panel.tone-amber::before  { background: linear-gradient(180deg, theme('colors.goldSoft'), theme('colors.amber'), theme('colors.sunset')); }
+  .rack-panel.tone-cyan::before   { background: linear-gradient(180deg, theme('colors.cyan'),     theme('colors.cyanDim')); }
+  .rack-panel.tone-danger::before { background: linear-gradient(180deg, theme('colors.red'),      theme('colors.sunset')); }
+
+  /* Rack title bar (eyebrow + title) */
+  .rack-eyebrow {
+    font-family: theme('fontFamily.mono');
+    font-size: 10px;
+    letter-spacing: theme('letterSpacing.tag');
+    text-transform: uppercase;
+    color: theme('colors.gold');
+  }
+  .rack-title {
+    font-family: theme('fontFamily.mono');
+    font-size: 11px;
+    letter-spacing: theme('letterSpacing.rack');
+    text-transform: uppercase;
+    color: theme('colors.cream');
+  }
+  .rack-italic {
+    font-family: theme('fontFamily.display');
+    font-style: italic;
+    font-weight: 500;
+    color: theme('colors.goldSoft');
+  }
+
+  /* ----- Hardware button: tactile, pressed feel ----- */
+  .hw-btn {
+    font-family: theme('fontFamily.mono');
+    font-size: 11px;
+    letter-spacing: theme('letterSpacing.rack');
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: 1px solid theme('colors.panelEdge');
+    background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.18) 100%), theme('colors.panel');
+    color: theme('colors.text');
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.08),
+      inset 0 -1px 0 rgba(0,0,0,0.6),
+      0 1px 0 rgba(0,0,0,0.45);
+    transition: filter .15s, transform .05s, box-shadow .12s;
+    cursor: pointer;
+  }
+  .hw-btn:hover { filter: brightness(1.08); }
+  .hw-btn:active {
+    transform: translateY(1px);
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.55),
+      inset 0 -1px 0 rgba(255,255,255,0.05);
+  }
+  .hw-btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
+
+  .hw-btn--primary {
+    background:
+      linear-gradient(180deg, #ffd889 0%, #ffb347 50%, #c89352 100%);
+    color: #2a1606;
+    border-color: rgba(180,120,42,0.7);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.4),
+      inset 0 -1px 0 rgba(0,0,0,0.45),
+      0 0 14px rgba(255,179,71,0.18);
+  }
+  .hw-btn--cyan {
+    color: #cdebf7;
+    border-color: rgba(111,211,255,0.32);
+    background: linear-gradient(180deg, rgba(111,211,255,0.10), rgba(111,211,255,0.02));
+    box-shadow: inset 0 1px 0 rgba(111,211,255,0.18), 0 0 10px rgba(111,211,255,0.10);
+  }
+  .hw-btn--danger {
+    color: #ffe4e4;
+    border-color: rgba(255,90,90,0.4);
+    background: linear-gradient(180deg, rgba(255,90,90,0.18), rgba(255,90,90,0.04));
+  }
+  .hw-btn--ghost {
+    background: transparent;
+    color: theme('colors.gold');
+    border-color: theme('colors.rule');
+    box-shadow: none;
+  }
+  .hw-btn--ghost:hover { background: rgba(214,163,106,0.06); }
+
+  /* ----- Rack input: dark, mono, recessed ----- */
+  .rack-input {
+    width: 100%;
+    background: rgba(0,0,0,0.42);
+    border: 1px solid theme('colors.panelEdge');
+    color: theme('colors.cream');
+    font-family: theme('fontFamily.mono');
+    font-size: 12.5px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 0 rgba(0,0,0,0.5), inset 0 -1px 0 rgba(255,255,255,0.04);
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .rack-input:focus {
+    outline: none;
+    border-color: theme('colors.gold');
+    box-shadow:
+      inset 0 1px 0 rgba(0,0,0,0.5),
+      0 0 0 2px rgba(214,163,106,0.18),
+      0 0 6px rgba(255,179,71,0.18);
+  }
+  .rack-label {
+    font-family: theme('fontFamily.mono');
+    font-size: 10px;
+    letter-spacing: theme('letterSpacing.rack');
+    text-transform: uppercase;
+    color: theme('colors.textDim');
+    display: block;
+    margin: 8px 0 4px;
+  }
+
+  /* ----- Scope: oscilloscope-grid bezel for the map ----- */
+  .scope-bezel {
+    background: theme('colors.panelDeep');
+    border: 1px solid theme('colors.panelEdge');
+    border-radius: 10px;
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.03),
+      inset 0 0 32px rgba(0,0,0,0.8),
+      0 18px 48px -22px rgba(0,0,0,0.8);
+    padding: 10px;
+    position: relative;
+  }
+  .scope-grid {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  /* Subtle cyan grid overlay over the map.  pointer-events: none so the
+     map below still receives clicks. */
+  .scope-grid::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(to right,  rgba(111,211,255,0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(111,211,255,0.06) 1px, transparent 1px),
+      linear-gradient(to right,  rgba(255,179,71,0.04)  1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,179,71,0.04)  1px, transparent 1px);
+    background-size: 56px 56px, 56px 56px, 14px 14px, 14px 14px;
+    mix-blend-mode: screen;
+    opacity: .55;
+    border-radius: 6px;
+  }
+  .scanline {
+    position: absolute; inset: 0; pointer-events: none; mix-blend-mode: overlay;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.04) 0 1px,
+      transparent 1px 3px
+    );
+    opacity: .55;
+    border-radius: 6px;
+  }
+
+  /* ----- LED dot ----- */
+  .led-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.45);
+  }
+  .led-amber { background: theme('colors.amber'); box-shadow: 0 0 0 1px rgba(0,0,0,0.45), theme('boxShadow.ledAmber'); }
+  .led-cyan  { background: theme('colors.cyan');  box-shadow: 0 0 0 1px rgba(0,0,0,0.45), theme('boxShadow.ledCyan'); }
+  .led-red   { background: theme('colors.red');   box-shadow: 0 0 0 1px rgba(0,0,0,0.45), theme('boxShadow.ledRed'); }
+  .led-green { background: theme('colors.green'); box-shadow: 0 0 0 1px rgba(0,0,0,0.45), theme('boxShadow.ledGreen'); }
+  .led-off   { background: #2a3640; }
+
+  @keyframes led-blink {
+    0%, 60% { opacity: 1; }
+    70%, 100% { opacity: 0.35; }
+  }
+  .led-blink { animation: led-blink 1.6s ease-in-out infinite; }
+
+  /* ----- Console-style monospaced output (warning console) ----- */
+  .console-frame {
+    background: rgba(0,0,0,0.42);
+    border: 1px solid theme('colors.panelEdge');
+    border-radius: 6px;
+    font-family: theme('fontFamily.mono');
+    font-size: 12px;
+    line-height: 1.55;
+    padding: 12px 14px;
+    color: theme('colors.text');
+    box-shadow: inset 0 1px 0 rgba(0,0,0,0.6);
+  }
+  .console-line { display: block; }
+  .console-line .gt { color: theme('colors.gold'); margin-right: 6px; }
+
+  /* ----- Logo sail (CSS-only) -----
+     The sail mark is rendered as an inline SVG in <LogoMark/>; this
+     class adds a soft drop shadow to keep it warm. */
+  .logo-sail svg { display: block; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5)); }
+
+  /* ----- Tab strip ----- */
+  .tab-strip {
+    display: flex; gap: 0; border-bottom: 1px solid theme('colors.rule');
+    background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0));
+  }
+  .tab-strip .tab {
+    font-family: theme('fontFamily.mono');
+    font-size: 10.5px;
+    letter-spacing: theme('letterSpacing.rack');
+    text-transform: uppercase;
+    color: theme('colors.textDim');
+    padding: 10px 14px;
+    border: none; border-bottom: 2px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    transition: color .2s, border-color .2s, background .2s;
+  }
+  .tab-strip .tab:hover { color: theme('colors.cyan'); }
+  .tab-strip .tab.active {
+    color: theme('colors.amber');
+    border-bottom-color: theme('colors.amber');
+    background: linear-gradient(180deg, rgba(255,179,71,0.06), transparent 80%);
+  }
+
+  /* ----- Telemetry table (Bloomberg-style) ----- */
+  .telemetry {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: theme('fontFamily.mono');
+    font-size: 12px;
+    color: theme('colors.text');
+  }
+  .telemetry td, .telemetry th {
+    padding: 6px 10px;
+    border-bottom: 1px solid rgba(214,163,106,0.10);
+  }
+  .telemetry th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: theme('letterSpacing.rack');
+    text-transform: uppercase;
+    color: theme('colors.gold');
+  }
+
+  /* Leaflet integration — soften the dark tiles and warm the grid bezel */
+  .leaflet-container { background: #07151d !important; }
+  .leaflet-control-zoom a {
+    background: theme('colors.panel') !important;
+    color: theme('colors.gold')  !important;
+    border: 1px solid theme('colors.rule') !important;
+  }
+  .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+    background: theme('colors.panel') !important;
+    color: theme('colors.cream') !important;
+    border: 1px solid theme('colors.rule') !important;
+    border-radius: 6px !important;
+  }
+}

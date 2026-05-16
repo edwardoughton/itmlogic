@@ -1,0 +1,6 @@
+{
+  "type": "commonjs",
+  "name": "@genoa/curves-fcc-vendored",
+  "private": true,
+  "description": "Genoa-vendored fcc/contours-api-node/controllers/tvfm_curves.js. Keeps the FCC source byte-faithful so the vendored sha256 matches upstream. The parent package.json declares \"type\":\"module\" so this directory needs its own \"type\":\"commonjs\" override for the FCC CJS file to load."
+}

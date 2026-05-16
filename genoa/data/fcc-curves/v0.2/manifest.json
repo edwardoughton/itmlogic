@@ -1,0 +1,9 @@
+{
+  "version": "0.2",
+  "meta_sha256": "e277dce510717ad6e5c492278a5b3ca4139f39120e860d7889584c51bb171b84",
+  "datasets": {
+    "f5050": "b90e7163cbba73ca00221112bb0973cfa50aebdb83a80696f0ecdf61c5f11c68",
+    "f5010": "72a1d874756cb24f0c50d7ba8dfa77ac93346e07816befcad20715a43b2915a9",
+    "am_groundwave": "55d3890cb6ad8bf8acde281266e340ffbab5a8dbb219a07e70d4fed51e5c0b4b"
+  }
+}

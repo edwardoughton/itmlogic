@@ -1,0 +1,47 @@
+{
+  "name": "genoa",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Genoa — FCC Propagation Studio. Deterministic AM / FM / LPFM / FM-translator contour engine with three-layer UX (Official FCC method, Scientific evidence, AI narrative).",
+  "type": "module",
+  "main": "src/api/server.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node src/api/server.js",
+    "start:api": "node src/api/server.js",
+    "start:worker": "node src/workers/index.js",
+    "start:sidecar:terrain": "node src/sidecars/terrain/server.js",
+    "start:sidecar:measurement": "node src/sidecars/measurement/server.js",
+    "start:sidecar:identity": "node src/sidecars/identity/server.js",
+    "dev": "node --watch src/api/server.js",
+    "build": "vite build",
+    "build:ui": "vite build",
+    "preview": "vite preview",
+    "migrate": "node src/db/migrate.js",
+    "test": "node --test src/tests/*.test.js",
+    "validate:engine": "node scripts/validate-engine.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1030.0",
+    "@aws-sdk/s3-request-presigner": "^3.1030.0",
+    "@pdfme/common": "^6.1.1",
+    "@pdfme/generator": "^6.1.1",
+    "express": "^4.21.1",
+    "geographiclib-geodesic": "^2.2.0",
+    "mathjs": "^15.2.0",
+    "multer": "^1.4.5-lts.1",
+    "pdfkit": "^0.18.0",
+    "pg": "^8.13.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "vite": "^5.4.11"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id":               "kslx_fm_demo",
+  "label":            "KSLX-FM (demo preset, Scottsdale / Phoenix AZ)",
+  "purpose":          "demo / API & UI seed station — NOT a filing-ready validation reference",
+  "inputs": {
+    "call":            "KSLX-FM",
+    "facility_id":     "11282",
+    "service":         "FM",
+    "fcc_class":       "C",
+    "frequency":       100.7,
+    "erp_kw":          100,
+    "haat_m":          561,
+    "lat":             null,
+    "lon":             null,
+    "pattern_table":   null,
+    "radial_step_deg": 10
+  },
+  "city_of_license":  "Scottsdale, Arizona",
+  "market":           "Phoenix metropolitan area",
+  "transmitter_area": "South Mountain Park area",
+  "authoritative":    false,
+  "use_for":          ["demo", "smoke", "ui_seed"],
+  "source_note":      "Seed metadata derived from public station / FCC profile references. Treat as demo only until coordinates are pulled from FCC LMS and contour distances are independently verified.",
+  "do_not": [
+    "do not invent latitude / longitude",
+    "do not claim FCC validation",
+    "do not promote into authoritative reference cases without independent verification"
+  ]
+}

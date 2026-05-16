@@ -1,0 +1,17 @@
+{
+  "id":      "fcc.am.groundwave",
+  "version": "0.2",
+  "method":  "47 CFR §73.184 Figures M3 — AM groundwave attenuation curves",
+  "axes": {
+    "p_grid":  "Norton numerical distance p = π·d·f / (σ·λ²) — dimensionless. Subsumes ground conductivity σ, distance d, and frequency f, so a single A(p) curve is sufficient for the FCC band.",
+    "value":   "Sommerfeld attenuation factor A (unitless), multiplies the unattenuated reference field 100·sqrt(P_kW) mV/m at 1 km."
+  },
+  "p_grid":           [0.001,    0.003,    0.01,     0.03,    0.1,     0.3,     1.0,     3.0,     10.0,    30.0,    100.0,   300.0,   1000.0],
+  "A_factor":         [0.99965,  0.99895,  0.99650,  0.98911, 0.96394, 0.88827, 0.63889, 0.27885, 0.06944, 0.01923, 0.00524, 0.00169, 0.000503],
+  "fcc_sigma_grid_mS_m": [30, 15, 10, 8, 6, 4, 2, 1, 0.5, 0.1, 0.01],
+  "scaling": {
+    "computation": "Compute p = (π·d·f) / (σ·λ²) with d in m, f in Hz, σ in S/m, λ in m.",
+    "field":       "E(d) = (E_ref / d_km) · A(p) where E_ref = 100·sqrt(ERP_kW) mV/m, evaluated at d=1 km."
+  },
+  "provenance": "Sommerfeld–Norton attenuation factor A(p) per Norton (1941) and §73.184. Numeric values at the listed p evaluated using A(p) ≈ (2 + 0.3p) / (2 + p + 0.6p²), the FCC's first-order approximation. fcc_sigma_grid_mS_m enumerates the conductivities the FCC publishes pre-tabulated curves for; the engine handles all conductivities via the dimensionless p. Replace with FCC tabulated A(d, f, σ) for filing-grade AM exhibits — the schema does not change."
+}

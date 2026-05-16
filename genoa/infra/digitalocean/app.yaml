@@ -1,0 +1,216 @@
+# DigitalOcean App Platform spec for Genoa.
+# Copy to .do/app.yaml at the repo root + `doctl apps create --spec` to bootstrap,
+# or import in the DO console.  This is a reference spec; the live app is
+# expected to be configured in the console for ongoing operation (see
+# https://docs.digitalocean.com/products/app-platform/).
+#
+# Always-on components in this app:
+#   genoa-api         (public)     — Express API + static UI
+#   genoa-worker      (worker)     — async job processor
+#   genoa-nec         (internal)   — NEC2++ antenna-modeling sidecar (port 8085)
+#   genoa-terrain     (internal)   — terrain HAAT sidecar (port 8081)
+#   genoa-identity    (internal)   — RadioDNS / EAS identity sidecar (port 8083)
+#
+# Out-of-app (separately deployed):
+#   chelstein/splat   (https://github.com/chelstein/splat) — its own
+#                     DO app `genoa-splat-sidecar`.  Reach it via
+#                     SPLAT_SIDECAR_URL.
+
+name: genoa
+region: sfo
+
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+
+features:
+  - buildpack-stack=ubuntu-22
+
+databases:
+  - name: db
+    engine: PG
+    production: true
+    version: "16"
+
+ingress:
+  rules:
+    - component: { name: genoa-api }
+      match: { path: { prefix: / } }
+
+services:
+
+  # ---- API + UI (single component, serves /api and / static UI) ----
+  - name: genoa-api
+    dockerfile_path: infra/docker/api.Dockerfile
+    source_dir: .
+    github:
+      repo: chelstein/itmlogic
+      branch: master
+      deploy_on_push: true
+    instance_size_slug: apps-s-1vcpu-1gb
+    instance_count: 1
+    http_port: 8080
+    health_check:
+      http_path: /healthz
+      initial_delay_seconds: 15
+      period_seconds: 30
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 5
+    envs:
+      - { key: NODE_ENV,                    scope: RUN_TIME, value: production }
+      - { key: PORT,                        scope: RUN_TIME, value: "8080" }
+      - { key: PG_SSL,                      scope: RUN_TIME, value: "true" }
+      - { key: PG_SSL_REJECT,               scope: RUN_TIME, value: "false" }
+      # DATABASE_URL is provisioned automatically when component is bound to ${db.DATABASE_URL}.
+      - { key: DATABASE_URL,                scope: RUN_TIME, value: "${db.DATABASE_URL}" }
+      # Spaces — set as encrypted SECRET in the console, not in this file.
+      - { key: SPACES_ENDPOINT,             scope: RUN_TIME, value: "https://sfo3.digitaloceanspaces.com" }
+      - { key: SPACES_BUCKET,               scope: RUN_TIME, value: "genoa-exhibits" }
+      # Always-on internal sidecars (see service definitions below).
+      - { key: TERRAIN_SIDECAR_URL,         scope: RUN_TIME, value: "http://genoa-terrain:8081" }
+      - { key: MEASUREMENT_SIDECAR_URL,     scope: RUN_TIME, value: "" }
+      - { key: IDENTITY_SIDECAR_URL,        scope: RUN_TIME, value: "http://genoa-identity:8083" }
+      - { key: NEC_SIDECAR_URL,             scope: RUN_TIME, value: "http://genoa-nec:8085" }
+      # External upstreams — leave blank for first deploy; the engine still
+      # produces an FM exhibit without them and emits SIDECAR_UNAVAILABLE.
+      - { key: ZERO_TRUST_RADIO_READONLY_URL, scope: RUN_TIME, value: "" }
+      - { key: RADIODNS_RESOLVER_URL,       scope: RUN_TIME, value: "" }
+      # SPLAT sidecar — separately deployed DO app.  Operator wires up
+      # the URL + bearer token (see chelstein/splat#9) post-deploy.
+      - { key: SPLAT_SIDECAR_URL,           scope: RUN_TIME, value: "" }
+      - { key: SPLAT_API_TOKEN,             scope: RUN_TIME, type: SECRET, value: "" }
+
+  # ---- NEC2++ / PyNEC antenna-modeling sidecar (GPL-isolated) ----
+  #
+  # NEC2++ (https://github.com/tmolteno/necpp) is GPL v2.  Genoa's main
+  # API does NOT link or import it; this is a separate App Platform
+  # internal service that the API talks to over HTTP.  The sidecar's
+  # /health and /model/* endpoints are NOT exposed publicly — leave
+  # `internal_ports` set and `routes` empty so the ingress doesn't
+  # publish it.  The API reaches it at http://genoa-nec:8085 inside
+  # the app's internal network.
+  - name: genoa-nec
+    dockerfile_path: src/sidecars/nec/Dockerfile
+    source_dir: src/sidecars/nec
+    github:
+      repo: chelstein/itmlogic
+      branch: master
+      deploy_on_push: true
+    instance_size_slug: apps-s-1vcpu-1gb        # PyNEC + numpy memory + MoM solve
+    instance_count: 1
+    internal_ports:
+      - 8085
+    health_check:
+      http_path: /health
+      initial_delay_seconds: 30                  # PyNEC import on cold start
+      period_seconds: 30
+      timeout_seconds: 10
+      success_threshold: 1
+      failure_threshold: 3
+    envs:
+      - { key: SIDECAR_PORT,        scope: RUN_TIME, value: "8085" }
+      - { key: BRIDGE_TIMEOUT_MS,   scope: RUN_TIME, value: "60000" }
+      - { key: PYNEC_PYTHON_BIN,    scope: RUN_TIME, value: "python3" }
+
+  # ---- Terrain HAAT sidecar (always-on internal service) ----
+  #
+  # Implements §73.313 per-radial HAAT via public DEM APIs (USGS 3DEP
+  # EPQS + Open-Meteo Copernicus DEM + OpenTopoData SRTM-30m,
+  # cross-validated).  No upstream binary required; the multi-source
+  # backend works out of the box.  When chelstein/splat or
+  # chelstein/itmlogic become available locally, flip TERRAIN_BACKEND
+  # accordingly and provision DEM tiles.
+  #
+  # Reachable internally at http://genoa-terrain:8081; not exposed to
+  # the ingress (no `routes:` block, only `internal_ports:`).
+  - name: genoa-terrain
+    dockerfile_path: infra/docker/sidecar-terrain.Dockerfile
+    source_dir: .
+    github:
+      repo: chelstein/itmlogic
+      branch: master
+      deploy_on_push: true
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    instance_count: 1
+    internal_ports:
+      - 8081
+    health_check:
+      http_path: /health
+      initial_delay_seconds: 15
+      period_seconds: 30
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+    envs:
+      - { key: SIDECAR_PORT,    scope: RUN_TIME, value: "8081" }
+      - { key: TERRAIN_BACKEND, scope: RUN_TIME, value: "multi" }   # USGS + Open-Meteo + OpenTopoData
+
+  # ---- Identity sidecar (always-on internal service) ----
+  #
+  # Thin adapter that resolves station identity by calling upstream
+  # chelstein/* tools (massdns for RadioDNS, EAS-Tools for EAS/SAME,
+  # zerotrustradio R/O for facility metadata).  The sidecar runs
+  # regardless of whether those URLs are configured; when they're
+  # not, individual sources return status: 'unavailable' instead of
+  # silently faking a result.
+  #
+  # Reachable internally at http://genoa-identity:8083; not exposed
+  # to the ingress.  Wire upstream URLs (RADIODNS_RESOLVER_URL,
+  # MASSDNS_RESOLVER_URL, EAS_TOOLS_URL, ZERO_TRUST_RADIO_READONLY_URL)
+  # in the DO console as those upstream apps come online.
+  - name: genoa-identity
+    dockerfile_path: infra/docker/sidecar-identity.Dockerfile
+    source_dir: .
+    github:
+      repo: chelstein/itmlogic
+      branch: master
+      deploy_on_push: true
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    instance_count: 1
+    internal_ports:
+      - 8083
+    health_check:
+      http_path: /health
+      initial_delay_seconds: 15
+      period_seconds: 30
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+    envs:
+      - { key: SIDECAR_PORT,                 scope: RUN_TIME, value: "8083" }
+      - { key: RADIODNS_RESOLVER_URL,        scope: RUN_TIME, value: "" }
+      - { key: MASSDNS_RESOLVER_URL,         scope: RUN_TIME, value: "" }
+      - { key: EAS_TOOLS_URL,                scope: RUN_TIME, value: "" }
+      - { key: ZERO_TRUST_RADIO_READONLY_URL, scope: RUN_TIME, value: "" }
+
+# ---- Worker (App Platform 'workers' component, no HTTP) ----
+workers:
+  - name: genoa-worker
+    dockerfile_path: infra/docker/worker.Dockerfile
+    source_dir: .
+    github:
+      repo: chelstein/itmlogic
+      branch: master
+      deploy_on_push: true
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    instance_count: 1
+    envs:
+      - { key: NODE_ENV,    scope: RUN_TIME, value: production }
+      - { key: DATABASE_URL, scope: RUN_TIME, value: "${db.DATABASE_URL}" }
+      - { key: PG_SSL,       scope: RUN_TIME, value: "true" }
+      - { key: PG_SSL_REJECT, scope: RUN_TIME, value: "false" }
+      - { key: WORKER_POLL_MS, scope: RUN_TIME, value: "5000" }
+
+# Notes on what's NOT in this spec:
+#
+# - genoa-measurement-sidecar (SigMF parser adapter, src/sidecars/measurement/)
+#   is intentionally omitted.  It's a thin pure-JS adapter that operates on
+#   client-supplied SigMF JSON; the Genoa engine consumes the same SigMF
+#   parser directly via src/evidence/measurements/sigmf.js, so a deployed
+#   sidecar adds little until SDR-capture upload becomes a first-class API
+#   route.  Add it when measurement upload moves out of "manual paste" mode.
+#
+# - chelstein/splat is its own DO app (genoa-splat-sidecar, see chelstein/splat
+#   repo's .do-app.yaml).  Wire SPLAT_SIDECAR_URL + SPLAT_API_TOKEN in the
+#   genoa-api envs above to consume it.

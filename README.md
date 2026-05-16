@@ -1,183 +1,246 @@
-# itmlogic – Longley-Rice Irregular Terrain Model
+Genoa – Deterministic RF Propagation & Computational Compliance Infrastructure
 
-[![Coverage Status](https://coveralls.io/repos/github/edwardoughton/itmlogic/badge.svg?branch=master)](https://coveralls.io/github/edwardoughton/itmlogic?branch=master)
-[![DOI](https://joss.theoj.org/papers/10.21105/joss.02266/status.svg)](https://doi.org/10.21105/joss.02266)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3931350.svg)](https://doi.org/10.5281/zenodo.3931350)
+Genoa is a deterministic RF propagation and engineering compliance platform designed for reproducible broadcast, telecom, and spectrum-analysis workflows. Unlike traditional engineering-study software that primarily generates static outputs, Genoa focuses on computational provenance, replayability, validation, and engineering auditability across propagation studies, terrain analysis, and regulatory workflows.
 
-**itmlogic** is a Python implementation of the classic Longley-Rice propagation model (v1.2.2)
-and capable of estimating the signal propagation effects resulting from irregular terrain.
+Core Purpose
 
-Software citation
------------------
+Genoa exists to solve a foundational problem in RF engineering:
 
-- Oughton, E.J., Russell, T., Johnson, J., Yardim, C., Kusuma, J., 2020. itmlogic:
-  The Irregular Terrain Model by Longley and Rice. Journal of Open Source Software 5, 2266.
-  https://doi.org/10.21105/joss.02266
+Most propagation studies are difficult to computationally reproduce, independently validate, or cryptographically attest.
 
-Software purpose
-----------------
+Traditional workflows often produce:
 
-This Python repo implements the model properties and algorithm defined in:
+static PDFs
+opaque assumptions
+non-deterministic workflows
+difficult-to-audit engineering chains
 
-* Hufford, G. A., A. G. Longley, and W. A. Kissick (1982), A guide    to the use of the ITS
-  Irregular Terrain Model in the area prediction mode, NTIA Report 82-100. (NTIS Order No.
-  PB82-217977)
-* Hufford, G. A. (1995) The ITS Irregular Terrain Model, version 1.2.2, the Algorithm.
+Genoa instead treats RF studies as:
 
-**itmlogic** enables you to account for the radio propagation impacts occuring from irregular
-terrain (hills, mountains etc.). For example, the image below shows the terrain undulation 
-between the Crystal Palace (South London) transmitter and Mursley, Buckinghamshire, England.
-Such estimates enable the engineering design of many types of wireless radio systems, including 
-4G and 5G Radio Access Networks and wireless backhaul connections. 
+reproducible computational evidence systems.
+Platform Philosophy
 
-Terrain profile slice: Crystal Palace (South London) to Mursley
----------------------------------------------------------------
-![Example](/docs/_static/terrain_profile.png)
+Genoa is built around three architectural layers:
 
+1. Deterministic Compute Core
 
-## Setup and configuration
+Physics and standards-driven propagation computation:
 
-All code for ``itmlogic`` is written in Python (Python>=3.7).
+Longley-Rice / ITM modeling
+terrain-aware diffraction
+horizon geometry
+line-of-sight analysis
+troposcatter modeling
+variability statistics
+directional-array synthesis
+optimization sweeps
+2. Evidence & Provenance Layer
 
-See requirements.txt for a full list of dependencies.
+Engineering traceability and replayability:
 
+build attestation
+replay tokens
+terrain provenance
+deterministic serialization
+module lineage
+validation metadata
+evidence bundles
+SDR measurement integration
+engineering confidence scoring
+3. Narrative & Filing Layer
 
-## Conda
+Human-readable regulatory and engineering workflows:
 
-The recommended installation method is to use conda, which handles packages and virtual
-environments, along with the conda-forge channel which has a host of pre-built libraries
-and packages.
+filing exhibits
+engineering statements
+LMS-ready exports
+workflow readiness scoring
+regulatory citations
+compliance dashboards
+structured advisory analysis
+Propagation Engine
 
-Create a conda environment called ``itmlogic``:
+Genoa is implementing a deterministic JavaScript port of:
 
-    conda create --name itmlogic python=3.7 gdal
+NTIA Longley-Rice ITM v1.2.2
+ITWOM-derived terrain logic
+diffraction and scatter attenuation systems
 
-Activate it (run this each time you switch projects):
+Including:
 
-    conda activate itmlogic
+lrprop
+avar
+ascat
+alos
+hzns
+qlrps
+terrain irregularity extraction
+percentile terrain analysis
+propagation orchestration
+line-of-sight geometry
+reflection-point computation
 
-First, install optional packages:
+The implementation preserves:
 
-    conda install numpy fiona shapely rtree rasterio pyproj tqdm pytest rasterstats pandas matplotlib
+source parity
+deterministic indexing
+line-by-line auditability
+reproducible numerical behavior
 
-Once in the new environment, to install ``itmlogic`` clone this repository and either run:
+The architecture explicitly supports:
 
-    python setup.py install
+replay validation
+parity harnesses
+terrain reproducibility
+regression testing
+SDR residual comparison
+Engineering Workflow System
 
-Or:
+Genoa is not solely a propagation engine.
 
-    python setup.py develop
+The platform includes:
 
-You can first run the tests to make sure everything is working correctly:
+FCC filing workflow orchestration
+engineering-readiness scoring
+evidence-gap tracking
+optimization sweeps
+contour-protection analysis
+directional-array synthesis
+OET-65 workflows
+terrain orchestration
+infrastructure telemetry
 
-    python -m pytest
+The system is designed to support:
 
+broadcast engineering
+infrastructure planning
+spectrum coordination
+RF compliance validation
+engineering reproducibility
+Deterministic Provenance Architecture
 
-Quick start
------------
+One of Genoa’s defining characteristics is:
 
-If you want to quickly generate results run using point-to-point mode run:
+replayable engineering evidence.
 
-    python scripts/p2p.py
+Every computational artifact may include:
 
-Or using area prediction mode run:
+build SHA
+module fingerprinting
+replay token
+terrain provenance
+deterministic inputs
+validation lineage
+reproducibility metadata
 
-    python scripts/area.py
+This enables:
 
-Results can then be visualized using:
+engineering auditability
+computational replay
+evidence integrity
+infrastructure trust
+long-term reproducibility
 
-    python vis/vis.py
+The system philosophy is:
 
+Same inputs → same outputs.
 
-Example results - Point-to-point mode
--------------------------------------
-![Example](/docs/_static/p2p_results.png)
+Terrain & Computational Infrastructure
 
+Genoa includes:
 
-Example results - Area mode
----------------------------
-![Example](/docs/_static/area_results.png)
+DEM orchestration
+SRTM ingestion
+terrain-profile generation
+propagation geometry computation
+distributed compute coordination
+sidecar-based architecture
+telemetry-aware orchestration
 
+The platform is designed for:
 
-Documentation
--------------
+scalable RF analysis
+terrain-aware optimization
+distributed engineering computation
+reproducible terrain studies
+Validation & Scientific Discipline
 
-For more information, see the ``itmlogic`` [readthedocs documentation](https://itmlogic.readthedocs.io/en/latest/?badge=latest).
+The platform is evolving toward:
 
+canonical test vectors
+parity validation
+regression harnesses
+physical-consistency testing
+deterministic replay suites
+SDR residual analysis
 
-## Background
+Synthetic profile testing already validates:
 
-The model was developed by the Institute for Telecommunication Sciences (ITS) for frequencies
-between 20 MHz and 20 GHz (named for Anita Longley & Phil Rice, 1968), and as a general
-purpose model can be applied to a large variety of engineering problems. Based on
-both electromagnetic theory and empirical statistical analyses of both terrain features and
-radio measurements, the Longley-Rice Irregular Terrain Model predicts the median attenuation
-of a radio signal as a function of distance and the variability of signal in time and in space.
+terrain-induced diffraction loss
+line-of-sight behavior
+propagation-mode transitions
+physically consistent attenuation responses
 
-The original NTIA disclaimer states:
+The long-term goal is:
 
-> The ITM software was developed by NTIA. NTIA does not make any warranty of any kind, express,
-implied or statutory, including, without limitation, the implied warranty of merchantability,
-fitness for a particular purpose, non-infringement and data accuracy. NTIA does not warrant or
-make any representations regarding the use of the software or the results thereof, including
-but not limited to the correctness, accuracy, reliability or usefulness of the software or the
-results. You can use, copy, modify, and redistribute the NTIA-developed software upon your
-acceptance of these terms and conditions and upon your express agreement to provide appropriate
-acknowledgments of NTIA's ownership of and development of the software by keeping this exact
-text present in any copied or derivative works.
+scientifically inspectable RF computation.
+Long-Term Vision
 
+Genoa is intended to evolve beyond:
 
-## Thanks for the support
+contour calculators
+static engineering studies
+filing-generation tools
 
-The software repository **itmlogic** was written and developed at the [Environmental Change Institute, University of
-Oxford](http://www.eci.ox.ac.uk) within the EPSRC-sponsored MISTRAL programme (EP/N017064/1),
-as part of the [Infrastructure Transition Research Consortium](http://www.itrc.org.uk/)
+toward:
 
-## Contributors
-- Edward J. Oughton (University of Oxford) (Software Engineering Lead)
-- Tom Russell (University of Oxford) (Software Engineering)
-- Joel Johnson (The Ohio State University) (ITM Modeling Lead)
-- Caglar Yardim (The Ohio State University) (ITM Modeling)
-- Julius Kusuma (Facebook Research) (ITM Modeling)
+computational compliance infrastructure for physical RF systems.
 
-If you find an error or have a question, please submit an issue.
+Potential future applications include:
 
-## Folder structure
+broadcast engineering
+telecom planning
+SDR observability
+infrastructure compliance
+public-safety communications
+RF optimization
+engineering attestation
+spectrum intelligence
+Design Principles
 
-The folder structure for the ``itmlogic`` package is summarized as follows, and matches the
-box diagram highlighted in both the JOSS paper and the documentation:
+Genoa emphasizes:
 
-    +---src
-    |   +---itmlogic
-    |   |   |   lrprop.py
-    |   |   |   __init__.py
-    |   |   |
-    |   |   +---diffraction_attenuation
-    |   |   |       adiff.py
-    |   |   |       aknfe.py
-    |   |   |       fht.py
-    |   |   |
-    |   |   +---los_attenuation
-    |   |   |       alos.py
-    |   |   |
-    |   |   +---misc
-    |   |   |       qerf.py
-    |   |   |       qerfi.py
-    |   |   |       qtile.py
-    |   |   |
-    |   |   +---preparatory_subroutines
-    |   |   |       dlthx.py
-    |   |   |       hzns.py
-    |   |   |       qlra.py
-    |   |   |       qlrpfl.py
-    |   |   |       qlrps.py
-    |   |   |       zlsq1.py
-    |   |   |
-    |   |   +---scatter_attenuation
-    |   |   |       ahd.py
-    |   |   |       ascat.py
-    |   |   |       h0f.py
-    |   |   |
-    |   |   +---statistics
-    |   |   |       avar.py
-    |   |   |       curv.py
+deterministic computation
+explicit uncertainty handling
+engineering transparency
+reproducibility
+modular architecture
+provenance preservation
+operational auditability
+standards-aware computation
+
+The platform intentionally separates:
+
+deterministic outputs
+engineering interpretation
+legal interpretation
+advisory workflows
+Current Development Status
+
+Genoa is currently in active architectural development with:
+
+deterministic propagation primitives
+terrain orchestration
+workflow infrastructure
+optimization systems
+validation harnesses
+replay infrastructure
+engineering exhibit generation
+
+under continuous refinement.
+
+The project is evolving toward:
+
+trusted engineering infrastructure,
+
+rather than traditional engineering software alone.

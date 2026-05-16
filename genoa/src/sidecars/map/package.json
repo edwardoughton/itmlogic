@@ -1,0 +1,21 @@
+{
+  "name": "genoa-map-sidecar",
+  "version": "0.2.1",
+  "private": true,
+  "type": "module",
+  "description": "Headless Chromium contour-map renderer for Genoa engineering exhibits.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "puppeteer-core": "^23.5.0",
+    "leaflet": "^1.9.4",
+    "topojson-client": "^3.1.0",
+    "us-atlas": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

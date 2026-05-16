@@ -1,0 +1,11 @@
+{
+  "name":    "genoa-faa-airports-sidecar",
+  "version": "0.1.0",
+  "type":    "module",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "express":   "^4.19.2",
+    "pg":        "^8.11.5"
+  }
+}
