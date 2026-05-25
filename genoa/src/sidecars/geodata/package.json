@@ -1,0 +1,11 @@
+{
+  "name": "genoa-geodata-sidecar",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Genoa geodata sidecar — wraps /opt/genoa rasters with gdallocationinfo over HTTP.",
+  "type": "module",
+  "main": "server.js",
+  "engines": { "node": ">=20.0.0" },
+  "scripts": { "start": "node server.js" },
+  "dependencies": { "express": "^4.21.1" }
+}

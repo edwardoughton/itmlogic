@@ -1,0 +1,25 @@
+{
+  "agent": "fixture-valid-agent",
+  "timestamp_utc": "2026-05-21T18:00:00Z",
+  "head_sha": "0000000000000000000000000000000000000000",
+  "branch": "test-fixture",
+  "summary": "Synthetic fixture: valid canonical findings document.",
+  "deploy_recommendation": "WARN",
+  "readiness_score": 72,
+  "findings": [
+    {
+      "finding_id": "FIX-001",
+      "title": "Sample finding for fixture validation",
+      "severity": "WARNING",
+      "confidence": 0.8,
+      "category": "fixture",
+      "affected_files": ["genoa/src/example.js"],
+      "regulatory_scope": ["47 CFR §73.215"],
+      "recommended_fix": "Replace placeholder with real implementation.",
+      "tests_required": ["genoa/src/tests/example.test.js"],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Run validator against this file; expect OK."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "name": "genoa",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Genoa — FCC Propagation Studio. Deterministic AM / FM / LPFM / FM-translator contour engine with three-layer UX (Official FCC method, Scientific evidence, AI narrative).",
+  "type": "module",
+  "main": "src/api/server.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node src/api/server.js",
+    "start:api": "node src/api/server.js",
+    "start:worker": "node src/workers/index.js",
+    "start:sidecar:identity": "node src/sidecars/identity/server.js",
+    "dev": "node --watch src/api/server.js",
+    "build": "vite build",
+    "build:ui": "vite build",
+    "preview": "vite preview",
+    "migrate": "node src/db/migrate.js",
+    "test": "node --test src/tests/*.test.js",
+    "validate:engine": "node scripts/validate-engine.js",
+    "agents:audit":          "../agents/scripts/run-all-agents.sh",
+    "agents:rf":             "../agents/scripts/run-agent.sh principal-rf-engineer",
+    "agents:fcc":            "../agents/scripts/run-agent.sh fcc-auditor",
+    "agents:pmp":            "../agents/scripts/run-agent.sh technical-pmp",
+    "agents:loop":           "../agents/scripts/run-loop.sh",
+    "agents:validate":       "node ../agents/scripts/validate-findings-json.js ../agents/*/last-findings.json",
+    "agents:issues:dry-run": "../agents/scripts/create-issues-from-findings.sh --dry-run",
+    "agents:test":           "../agents/scripts/tests/test-create-issues.sh && ../agents/scripts/tests/test-run-agent-postcondition.sh && ../agents/scripts/tests/test-migrations-have-rollback.sh",
+    "agents:deploy":         "../agents/scripts/safe-deploy-digitalocean.sh",
+    "agents:rollback":       "../agents/scripts/rollback-digitalocean.sh",
+    "agents:lock-prod":      "../agents/scripts/lock-prod.sh",
+    "agents:unlock-prod":    "../agents/scripts/unlock-prod.sh",
+    "agents:smoke":          "../agents/scripts/post-deploy-smoke-test.sh",
+    "agents:check-lock":     "../agents/scripts/check-production-lock.sh --verbose",
+    "agents:regulatory":     "../agents/scripts/regulatory-regression-test.sh",
+    "agents:golden":         "../agents/scripts/golden-output-compare.sh",
+    "agents:queue":          "../agents/scripts/queue-manager.sh",
+    "agents:spawn-worker":   "../agents/scripts/spawn-worker.sh"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1030.0",
+    "@aws-sdk/s3-request-presigner": "^3.1030.0",
+    "@pdfme/common": "^6.1.1",
+    "@pdfme/generator": "^6.1.1",
+    "express": "^4.21.1",
+    "geographiclib-geodesic": "^2.2.0",
+    "mathjs": "^15.2.0",
+    "pdfkit": "^0.18.0",
+    "pg": "^8.13.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "vite": "^5.4.11"
+  }
+}

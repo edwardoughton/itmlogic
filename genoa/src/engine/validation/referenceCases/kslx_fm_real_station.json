@@ -1,0 +1,25 @@
+{
+  "id":               "kslx_fm_1007_scottsdale_az",
+  "label":            "KSLX-FM 100.7 Scottsdale/Phoenix AZ",
+  "service":          "FM",
+  "call":             "KSLX-FM",
+  "facility_id":      "11282",
+  "frequency_mhz":    100.7,
+  "fcc_class":        "C",
+  "erp_kw":           100,
+  "haat_m":           561,
+  "lat":              null,
+  "lon":              null,
+  "pattern":          "UNKNOWN",
+  "radial_step_deg":  10,
+  "expected_contours": [],
+  "authoritative":    false,
+  "use_for":          ["demo", "smoke", "future_validation_candidate"],
+  "source_note":      "KSLX-FM public/FCC profile seed: 100.7 MHz, ERP 100 kW, HAAT about 561 m, Class C, Facility ID 11282, Scottsdale AZ (Phoenix metro), transmitter near South Mountain Park. Do not treat as authoritative contour validation until FCC LMS / facility coordinates and FCC / FCC-equivalent contour distances are independently verified.",
+  "warnings_expected": [
+    "REFERENCE_CASE_NOT_AUTHORITATIVE",
+    "REFERENCE_EXPECTED_CONTOURS_MISSING",
+    "FACILITY_COORDINATES_MISSING",
+    "CURVE_VALIDATION_MISSING"
+  ]
+}

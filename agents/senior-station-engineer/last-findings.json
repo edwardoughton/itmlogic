@@ -1,0 +1,72 @@
+{
+  "agent": "senior-station-engineer",
+  "timestamp_utc": "2026-05-22T19:17:44Z",
+  "head_sha": "50ff5fcae2dbe1455032b95257d3586e0b80128d",
+  "branch": "genoa-audit-remediation-phase2",
+  "summary": "Four new SOFT operator-experience findings scoped to this run's read_paths (facilityParameters, towerStudy, engineeringConsiderations, lightingRules + airportProximity). Engine math (§17.7 cascade, FAA chapter-code collapse, 2000 ft boundary) is sound — no engine-side findings. Earlier SSE-001..004 (executiveSummary / inputValidator / appendices / jobMonitor) are outside this run's read_paths and remain tracked in the PR-DOC cluster.",
+  "deploy_recommendation": "WARN",
+  "readiness_score": null,
+  "findings": [
+    {
+      "finding_id": "SSE-005",
+      "title": "facilityParameters prints ERP/TPO verbatim with no §73.211 class-envelope sanity note (e.g., 10 kW on Class A renders cleanly)",
+      "severity": "SOFT",
+      "confidence": 0.7,
+      "category": "operational",
+      "affected_files": ["genoa/src/exports/engineeringReport/sections/facilityParameters.js"],
+      "regulatory_scope": ["47 CFR §73.211"],
+      "recommended_fix": "Add a class-envelope sanity check when fcc_class + erp_kw both known. If the input ERP exceeds the §73.211 class maximum (Class A: 6 kW, B1: 25 kW, B: 50 kW, C3: 25 kW, C2: 50 kW, C1: 100 kW, C0: 100 kW, C: 100 kW reference HAATs apply), prepend a soft 'ERP exceeds §73.211 max for ${class}' note in the row. Soft advisory only — engine-side §73.211 check already exists; this is operator-eye-catching surface only.",
+      "tests_required": [],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "facilityParameters.js renders ERP/TPO with no class-envelope context; a typo like 10 kW on Class A renders without visible warning."
+    },
+    {
+      "finding_id": "SSE-006",
+      "title": "towerStudy AGL / AMSL / ground-elevation rendered as three independent rows; no AGL + ground ≈ AMSL triangle check",
+      "severity": "SOFT",
+      "confidence": 0.7,
+      "category": "operational",
+      "affected_files": ["genoa/src/exports/engineeringReport/sections/towerStudy.js"],
+      "regulatory_scope": ["47 CFR §17.4"],
+      "recommended_fix": "Add an inline (|agl + ground − amsl| > 1 m) check when all three heights known. compareToAsr already uses 1 m tolerance for height; reuse the same constant. When the triangle fails, emit a SOFT 'height inputs inconsistent (|AGL + ground − AMSL| = X m, tolerance 1 m)' note adjacent to the rendered rows. Catches data-entry errors before filing.",
+      "tests_required": [],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "towerStudy.js renders AGL / AMSL / ground rows but doesn't cross-check them. Pattern matches existing compareToAsr 1 m tolerance."
+    },
+    {
+      "finding_id": "SSE-007",
+      "title": "engineeringConsiderations PREFACE hardcodes FM/TV vocabulary ('FCC propagation curves') even for AM exhibits where §73.184 Figure M3 groundwave applies",
+      "severity": "SOFT",
+      "confidence": 0.65,
+      "category": "operational",
+      "affected_files": ["genoa/src/exports/engineeringReport/sections/engineeringConsiderations.js"],
+      "regulatory_scope": ["47 CFR §73.184", "47 CFR §73.333"],
+      "recommended_fix": "Branch the PREFACE wording on station_inputs.service: FM/FX/LPFM keeps 'FCC propagation curves per §73.333'; AM gets 'FCC groundwave field strength graphs per §73.184 (Figure M3 conductivity per §73.190)'. Same template, service-aware vocab — keeps narratives accurate for AM exhibits.",
+      "tests_required": [],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Render any AM exhibit and read the engineeringConsiderations PREFACE — currently quotes FM curves regardless of service."
+    },
+    {
+      "finding_id": "SSE-008",
+      "title": "near_airport=true operator attestation silently dropped when empty airports_nearby array is also passed (array beats boolean unconditionally)",
+      "severity": "SOFT",
+      "confidence": 0.8,
+      "category": "operational",
+      "affected_files": [
+        "genoa/src/engine/regulatory/lightingRules.js",
+        "genoa/src/engine/regulatory/airportProximity.js"
+      ],
+      "regulatory_scope": ["47 CFR §17.4", "47 CFR Part 17"],
+      "recommended_fix": "lightingRules.js:145-147 currently lets airports_nearby (array) win unconditionally — an empty array overrides the operator's near_airport=true attestation. Treat near_airport=true as a fallback when airports_nearby is empty (instead of replaced). Conservative behavior: if EITHER signal indicates proximity, apply the §17.4 lighting / marking review.",
+      "tests_required": [
+        "test/engine/regulatory/lightingRules.test.js — assert near_airport=true + airports_nearby=[] yields proximity_concern=true"
+      ],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "lightingRules.js:145-147 lets array.length check decide; empty array short-circuits before falling through to near_airport flag."
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json.org/draft-07/schema",
+  "title": "Genoa FCC curve datasets",
+  "version": "0.2",
+  "license": "Public domain (47 CFR \u00a7\u00a7 73.333, 73.184)",
+  "generated": "2026-05-02",
+  "datasets": {
+    "f5050": {
+      "file": "f5050.json",
+      "method": "47 CFR \u00a773.333 Figure 1 \u2014 F(50,50) for the FM band (88\u2013108 MHz)",
+      "axes": {
+        "haat_m": "Antenna height above average terrain, meters",
+        "f_dBu": "Field strength in dBu (dB above 1 \u00b5V/m)",
+        "value": "Distance in km to that field strength at 1 kW ERP"
+      },
+      "haat_grid_m": [
+        30,
+        50,
+        75,
+        100,
+        150,
+        200,
+        300,
+        600,
+        1200
+      ],
+      "field_grid_dBu": [
+        100,
+        90,
+        80,
+        74,
+        70,
+        66,
+        60,
+        57,
+        54,
+        50,
+        45,
+        40,
+        36,
+        34,
+        30,
+        25,
+        20,
+        15,
+        10,
+        5
+      ],
+      "scaling": {
+        "erp_kW": "field strength shifts by 10\u00b7log10(ERP_kW); apply BEFORE distance lookup",
+        "out_of_range_haat": "below 30 m or above 1200 m \u2014 caller MUST dispatch to itmlogic for ITM-grade answer"
+      },
+      "provenance": "Polynomial fit to \u00a773.333 Fig. 1 published curves; reference HAAT=300 m row matches the FCC tabulation. Other HAATs scaled per \u00a773.333 Note 4. Replace with verbatim TVStudy curve export for filing-grade accuracy.",
+      "sha256": "b90e7163cbba73ca00221112bb0973cfa50aebdb83a80696f0ecdf61c5f11c68"
+    },
+    "f5010": {
+      "file": "f5010.json",
+      "method": "47 CFR \u00a773.333 Figure 1a \u2014 F(50,10) interfering-contour curves",
+      "axes": "same as f5050",
+      "haat_grid_m": [
+        30,
+        50,
+        75,
+        100,
+        150,
+        200,
+        300,
+        600,
+        1200
+      ],
+      "field_grid_dBu": [
+        100,
+        90,
+        80,
+        74,
+        70,
+        66,
+        60,
+        57,
+        54,
+        50,
+        45,
+        40,
+        36,
+        34,
+        30,
+        25,
+        20,
+        15,
+        10,
+        5
+      ],
+      "provenance": "Derived from F(50,50) base curves with the \u00a773.333 Fig. 1a published F(50,10) \u2212 F(50,50) field-strength offset (~+5 dB at typical service distances), expressed as a distance ratio. Replace with verbatim TVStudy curve export for filing-grade accuracy.",
+      "sha256": "72a1d874756cb24f0c50d7ba8dfa77ac93346e07816befcad20715a43b2915a9"
+    },
+    "am_groundwave": {
+      "file": "am_groundwave.json",
+      "method": "47 CFR \u00a773.184 Figures M3 (groundwave conductivity attenuation curves)",
+      "axes": {
+        "sigma_mS_m": "Ground conductivity in mS/m",
+        "p_numerical": "Norton numerical distance p = \u03c0\u00b7d\u00b7f / (\u03c3\u00b7\u03bb\u00b2)",
+        "value": "Sommerfeld attenuation factor A (unitless, multiplies the unattenuated 100\u00b7sqrt(P_kW) mV/m at 1 km reference)"
+      },
+      "sigma_grid_mS_m": [
+        0.5,
+        1,
+        2,
+        3,
+        4,
+        6,
+        8,
+        10,
+        15,
+        30
+      ],
+      "p_grid": [
+        0.001,
+        0.003,
+        0.01,
+        0.03,
+        0.1,
+        0.3,
+        1,
+        3,
+        10,
+        30,
+        100,
+        300,
+        1000
+      ],
+      "provenance": "Norton 1941 Sommerfeld attenuation factor evaluated at the FCC \u00a773.184 conductivity grid. Conductivity-dependent shape adjustments applied to match the published Fig. M3 curves at the standard distances. Replace with FCC tabulated A(d, f, \u03c3) for filing-grade AM exhibits.",
+      "sha256": "55d3890cb6ad8bf8acde281266e340ffbab5a8dbb219a07e70d4fed51e5c0b4b"
+    }
+  },
+  "_notes": [
+    "Each curve dataset is published as a separate JSON file with its own sha256. The exhibit reproducibility package cites the meta.json hash AND the per-dataset hashes, so any later edit to the curve data invalidates a prior exhibit's signature.",
+    "Tier-1 milestone: replace these polynomial-fit values with the FCC TVStudy curve files (study_files/curve_data) for filing-grade accuracy. The schema and lookup code do not change."
+  ]
+}

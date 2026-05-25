@@ -1,0 +1,20 @@
+{
+  "locked": false,
+  "locked_at": null,
+  "locked_by": null,
+  "locked_reason": null,
+  "audit_log": [
+    {
+      "action": "LOCK",
+      "at": "2026-05-21T14:01:23Z",
+      "by": "unknown@vm",
+      "reason": "dry-run test lock"
+    },
+    {
+      "action": "UNLOCK",
+      "at": "2026-05-21T14:01:23Z",
+      "by": "unknown@vm",
+      "reason": "dry-run test unlock"
+    }
+  ]
+}

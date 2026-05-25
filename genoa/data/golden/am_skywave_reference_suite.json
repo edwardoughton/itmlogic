@@ -1,0 +1,39 @@
+{
+  "_": "Reference cases for the FCCAM (AM skywave) sidecar.",
+  "_sourcing": [
+    "Each case is a (transmitter, receiver, expected 50% skywave field) tuple drawn",
+    "from FCC-published nighttime allocation data — the same source consulting firms",
+    "(H&D, du Treil-Lundin-Rackley, Cohen Dippell) cite when filing §73.182 exhibits.",
+    "Suggested sources, in order of preference:",
+    "  1) FCC's published nighttime contour data for Class I-A clear-channel stations",
+    "     (WLW 700, WSM 650, WBZ 1030 — well-documented historical NIF radii).",
+    "  2) FCC Allocations Tables in §73.183 Figure 1 reproductions.",
+    "  3) Cross-validation against FCC's own AM Query online tool nighttime field",
+    "     calculator (https://www.fcc.gov/media/radio/am-query).",
+    "Each `expected_field_uv_m` should be the value FCCAM produces on the FCC's own",
+    "build of the same Fccam.for source.  Do NOT use V-Soft AM-Pro or H&D's internal",
+    "tools as the reference — those are downstream consumers of the same FORTRAN.",
+    "",
+    "Until the sidecar is up + at least 5 of these cases pass, AM nighttime exhibits",
+    "MUST NOT be marked filing-ready."
+  ],
+  "tolerance_uv_m": 5.0,
+  "tolerance_basis": "FCCAM's stated output precision is ~1 µV/m; we tolerate 5 to absorb great-circle distance + midpoint-lat rounding at the Genoa side without spurious mismatches.",
+  "schema": {
+    "id":                  "human-readable case identifier (e.g. 'wlw-700-mid-atlantic')",
+    "tx_call":             "transmitter call sign",
+    "tx_lat":              "transmitter latitude (deg)",
+    "tx_lon":              "transmitter longitude (deg)",
+    "freq_khz":            "carrier frequency in kHz, on the 10-kHz US AM grid",
+    "erp_kw":              "unattenuated ERP in kW",
+    "rx_lat":              "receiver latitude (deg) — picks a path that exercises a particular skywave-curve regime",
+    "rx_lon":              "receiver longitude (deg)",
+    "distance_km":         "great-circle distance (deg); operator pre-computes",
+    "midpoint_lat":        "(optional) great-circle midpoint latitude; client computes if omitted",
+    "percent_time":        "10 or 50 (default 50)",
+    "expected_field_uv_m": "expected 50% skywave field strength at the receiver from FCC published data",
+    "expected_source":     "URL / citation for the expected value (FCC document, AM Query screenshot, etc.)",
+    "notes":               "(optional) free-form notes for the reviewer"
+  },
+  "cases": []
+}

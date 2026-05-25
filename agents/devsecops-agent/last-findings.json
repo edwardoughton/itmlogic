@@ -1,0 +1,92 @@
+{
+  "agent": "devsecops-agent",
+  "timestamp_utc": "2026-05-22T19:25:22Z",
+  "head_sha": "50ff5fcae2dbe1455032b95257d3586e0b80128d",
+  "branch": "genoa-audit-remediation-phase2",
+  "summary": "Real devsec audit (replaces empty-audit placeholder DSO-001). Secret scan + .env leakage checks PASS. Two confirmed issues: all four DB migrations lack rollback files/comments (DSO-002), and the reference DO app spec has dockerfile_path values that don't resolve from its declared source_dir (DSO-003). Four checklist items (npm audit, sidecar deploy status, sidecar DNS probe, 1h crash-loop log scan) are UNVERIFIABLE from the local audit context and rolled up into DSO-004 — they need to run from the CI runner with the DigitalOcean PAT before safe_prod_write can be re-evaluated. Persistence to last-findings.json was again blocked by the harness Write allowlist (DSO-005, the recurrence of last cycle's DSO-001).",
+  "deploy_recommendation": "BLOCK",
+  "readiness_score": null,
+  "findings": [
+    {
+      "finding_id": "DSO-002",
+      "title": "All four DB migrations lack `_down.sql` or `-- ROLLBACK:` comment block",
+      "severity": "MEDIUM",
+      "confidence": 1.0,
+      "category": "devsec",
+      "affected_files": [
+        "genoa/src/db/migrations/001_init.sql",
+        "genoa/src/db/migrations/002_terrain_cache.sql",
+        "genoa/src/db/migrations/003_engineering_export_jobs.sql",
+        "genoa/src/db/migrations/004_engineering_export_jobs_artifact.sql"
+      ],
+      "regulatory_scope": [],
+      "recommended_fix": "Add a `-- ROLLBACK:` comment block to each migration documenting the inverse statement (e.g. `DROP TABLE genoa_exhibit;` for 001, `ALTER TABLE engineering_export_jobs DROP COLUMN artifact_body, DROP COLUMN artifact_content_type, DROP COLUMN artifact_filename;` for 004), OR add paired `*_down.sql` files. Migrations 001-003 are CREATE IF NOT EXISTS / additive-only so the practical blast radius of a rollback is low, but agent.md checklist item 6 is unambiguous: every migration MUST have a rollback. Without it, an emergency revert has to be reconstructed under pressure.",
+      "tests_required": [
+        "ls genoa/src/db/migrations/*_down.sql # OR",
+        "grep -l '^-- ROLLBACK:' genoa/src/db/migrations/*.sql # must list all 4 files"
+      ],
+      "deployment_risk": "medium",
+      "human_review_required": false,
+      "reproducibility_notes": "grep -lE '^-- ?ROLLBACK' genoa/src/db/migrations/*.sql returns nothing; ls genoa/src/db/migrations/*_down.sql exits 2 (no matches). All four migrations apply on every boot via migrate.js without a paired down path."
+    },
+    {
+      "finding_id": "DSO-003",
+      "title": "DO app spec `dockerfile_path` values don't resolve under declared `source_dir: .`",
+      "severity": "MEDIUM",
+      "confidence": 0.9,
+      "category": "devsec",
+      "affected_files": ["genoa/infra/digitalocean/app.yaml"],
+      "regulatory_scope": [],
+      "recommended_fix": "Either (a) set `source_dir: genoa` on every service/worker so the relative dockerfile_path values resolve, OR (b) prefix every dockerfile_path with `genoa/` (e.g. `genoa/infra/docker/api.Dockerfile`, `genoa/infra/docker/worker.Dockerfile`, `genoa/src/sidecars/nec/Dockerfile`, `genoa/infra/docker/sidecar-terrain.Dockerfile`, `genoa/infra/docker/sidecar-identity.Dockerfile`). Also reconcile with `genoa/Dockerfile` (the three-stage SHA-baking image the header comment says is the canonical DO build) — the reference spec points at `infra/docker/api.Dockerfile` which does NOT bake the build SHA, contradicting the engine/signature.js immutable-build-identity contract. The header notes the spec is a reference and the live app is console-configured, so this is not a deploy blocker today; it WILL be one for anyone who tries to bootstrap a fresh DO app from this spec.",
+      "tests_required": [
+        "doctl apps spec validate genoa/infra/digitalocean/app.yaml",
+        "test -f infra/docker/api.Dockerfile # currently FAILS — file is at genoa/infra/docker/api.Dockerfile"
+      ],
+      "deployment_risk": "medium",
+      "human_review_required": true,
+      "reproducibility_notes": "ls /opt/itmlogic/infra → directory does not exist. ls /opt/itmlogic/genoa/infra/docker → 5 Dockerfiles present. app.yaml declares `source_dir: .` with `dockerfile_path: infra/docker/api.Dockerfile` (and 3 sibling services with similar paths) — none resolve relative to the repo root. genoa-nec declares `source_dir: src/sidecars/nec` and `dockerfile_path: src/sidecars/nec/Dockerfile` — the path is duplicated AND neither variant exists under repo root."
+    },
+    {
+      "finding_id": "DSO-004",
+      "title": "Four devsecops checklist items UNVERIFIABLE from local audit context (npm audit, sidecar deploy status, sidecar DNS probe, 1h crash-loop log scan)",
+      "severity": "WARNING",
+      "confidence": 1.0,
+      "category": "devsec",
+      "affected_files": [
+        "agents/devsecops-agent/agent.md",
+        ".github/workflows/agent-safe-prod-write.yml"
+      ],
+      "regulatory_scope": [],
+      "recommended_fix": "Run these four checks from the agent-safe-prod-write GitHub Actions runner where DIGITALOCEAN_ACCESS_TOKEN, DIGITALOCEAN_APP_ID, and outbound network egress are available: (1) `npm --prefix genoa audit --omit=dev --audit-level=high` and fail the run on any HIGH/CRITICAL prod CVE; (2) `doctl apps get-deployment ${DO_APP_ID}` and require every component status == HEALTHY; (3) inside a throwaway alpine container in the DO app's VPC, `getent hosts genoa-terrain genoa-identity genoa-nec` and require zero failures; (4) `doctl apps logs ${DO_APP_ID} --type run --since 1h` per component and reject runs where any sidecar shows restart_count > 3 inside a 5-min window. The local audit container has neither the DO PAT nor outbound DO API access, and the user declined the local `npm audit` run, so these gates cannot be satisfied here. Until they're added to the workflow, deploy_recommendation stays BLOCK regardless of code-level findings.",
+      "tests_required": [
+        ".github/workflows/agent-safe-prod-write.yml must add a step that runs `npm --prefix genoa audit --omit=dev --audit-level=high` and exits non-zero on findings",
+        ".github/workflows/agent-safe-prod-write.yml must add a step that calls `doctl apps get-deployment` and asserts every component is HEALTHY",
+        "post-deploy-smoke-test.sh OR a sibling script must probe sidecar DNS resolution from inside the VPC"
+      ],
+      "deployment_risk": "high",
+      "human_review_required": true,
+      "reproducibility_notes": "From the local audit context: `npm audit` requires user approval (denied this run); `doctl` not installed and DIGITALOCEAN_ACCESS_TOKEN not present in env; no Docker daemon to spin a probe container; no DO API egress. agent-safe-prod-write.yml already exports DIGITALOCEAN_ACCESS_TOKEN/DIGITALOCEAN_APP_ID/PRODUCTION_URL but does NOT currently run any of these four checks in a step that gates safe_deploy."
+    },
+    {
+      "finding_id": "DSO-005",
+      "title": "Recurrence of DSO-001 — Edit/Write to agents/devsecops-agent/last-findings.json blocked by harness this cycle as well",
+      "severity": "BLOCKER",
+      "confidence": 1.0,
+      "category": "devsec",
+      "affected_files": [
+        "agents/settings.json",
+        "agents/devsecops-agent/last-findings.json",
+        "agents/devsecops-agent/last-report.md"
+      ],
+      "regulatory_scope": [],
+      "recommended_fix": "PD-003 was supposed to widen the agents/settings.json Write allowlist for the devsecops-agent path, but Write AND Edit calls to agents/devsecops-agent/last-findings.json and agents/devsecops-agent/last-report.md still trigger interactive permission prompts that the run-loop harness cannot satisfy. Until the allowlist actually includes `agents/devsecops-agent/**`, every devsecops run will leave a stale placeholder (last cycle's DSO-001) on disk while the populated audit content lives only in the agent's chat transcript. Fix: extend `agents/settings.json` (and any project-level .claude/settings.json) `permissions.allow` to cover `Edit(agents/devsecops-agent/**)` and `Write(agents/devsecops-agent/**)`, mirroring whatever pattern the seven non-blocked agents use.",
+      "tests_required": [
+        "echo '{}' > agents/devsecops-agent/last-findings.json   # must succeed non-interactively",
+        "node agents/scripts/validate-findings-json.js agents/devsecops-agent/last-findings.json # must exit 0 against schema"
+      ],
+      "deployment_risk": "high",
+      "human_review_required": true,
+      "reproducibility_notes": "This run (HEAD 50ff5fc) attempted three persistence paths: (a) Write of the full document, (b) Write after Read prime, (c) Edit of just timestamp_utc + head_sha. All three returned `Claude requested permissions to write … but you haven't granted it yet`. The audit content was generated successfully and is preserved inline in the chat transcript for this turn; it should be copy-pasted into the canonical files once the allowlist is fixed."
+    }
+  ]
+}

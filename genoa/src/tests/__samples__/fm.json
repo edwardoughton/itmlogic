@@ -1,0 +1,20 @@
+{
+  "call": "WTEST-FM",
+  "facility_id": "99999",
+  "service": "FM",
+  "fcc_class": "A",
+  "frequency": 98.7,
+  "erp_kw": 6.0,
+  "haat_m": 100,
+  "lat": 37.0902,
+  "lon": -95.7129,
+  "radial_step_deg": 10,
+  "invariants": {
+    "contour_count": 3,
+    "radial_count": 36,
+    "expected_contour_ids": ["service_60dbu", "city_54dbu", "protected_40dbu"],
+    "must_contain_appendices": ["appendix-c", "appendix-d", "appendix-e"],
+    "page_count_band": { "min": 4, "max": 30 }
+  },
+  "notes": "Canonical FM Class A reference matching FM_CLASS_A in _helpers.js."
+}

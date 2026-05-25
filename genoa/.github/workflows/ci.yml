@@ -1,0 +1,67 @@
+name: genoa-ci
+
+on:
+  push:
+    branches: [ master, "claude/**" ]
+    paths:
+      - 'src/**'
+      - 'data/**'
+      - 'scripts/**'
+      - 'package*.json'
+      - 'Dockerfile'
+      - 'infra/**'
+      - '.github/workflows/**'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'data/**'
+      - 'scripts/**'
+      - 'package*.json'
+      - 'Dockerfile'
+      - 'infra/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./genoa
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --no-audit --no-fund
+      - name: Build React/Tailwind UI
+        run: npm run build:ui
+      - name: Engine + exports + API integration tests
+        run: npm test
+      - name: CLI sample exhibit (synthetic FM Class A)
+        run: node scripts/sample-exhibit.js
+      - name: CLI sample exhibit (KSLX-FM, no coords)
+        run: node scripts/sample-exhibit.js --station kslx
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build genoa-api image
+        run: |
+          docker build \
+            -t genoa-api:ci \
+            --build-arg GIT_COMMIT_SHA=${{ github.sha }} \
+            -f genoa/infra/docker/api.Dockerfile \
+            genoa
+      - name: Build genoa-worker image
+        run: |
+          docker build \
+            -t genoa-worker:ci \
+            --build-arg GIT_COMMIT_SHA=${{ github.sha }} \
+            -f genoa/infra/docker/worker.Dockerfile \
+            genoa
+      - name: Build sidecar images
+        run: |
+          docker build -t genoa-terrain-sidecar:ci     -f genoa/infra/docker/sidecar-terrain.Dockerfile     genoa
+          docker build -t genoa-measurement-sidecar:ci -f genoa/infra/docker/sidecar-measurement.Dockerfile genoa
+          docker build -t genoa-identity-sidecar:ci    -f genoa/infra/docker/sidecar-identity.Dockerfile    genoa

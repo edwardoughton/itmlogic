@@ -1,0 +1,62 @@
+{
+  "_comment": "Compute orchestration policy.  COMPUTE_MODE env var picks the active mode at runtime.  All scaling actions read the production-lock state — if locked or unhealthy, scaling is capped at local_only regardless of mode.",
+  "_default_mode": "parallel_agents",
+  "modes": {
+    "local_only": {
+      "max_workers":               1,
+      "max_parallel_agents":       1,
+      "enable_burst_workers":   false,
+      "enable_heavy_analysis":  false,
+      "intended_use": "single-process, single-agent — debugging or quiet windows"
+    },
+    "parallel_agents": {
+      "max_workers":               4,
+      "max_parallel_agents":       4,
+      "enable_burst_workers":   false,
+      "enable_heavy_analysis":  false,
+      "intended_use": "default; multiple agents run in parallel on the same host"
+    },
+    "burst_compute": {
+      "max_workers":               8,
+      "max_parallel_agents":       6,
+      "enable_burst_workers":    true,
+      "enable_heavy_analysis":  false,
+      "intended_use": "scheduled batch windows (regression matrix, contour sweeps); spawns up to 4 short-lived burst workers"
+    },
+    "heavy_analysis": {
+      "max_workers":              16,
+      "max_parallel_agents":       8,
+      "enable_burst_workers":    true,
+      "enable_heavy_analysis":   true,
+      "intended_use": "weekly deep audit; full repo scan + SDR correlation + multi-market validation"
+    }
+  },
+  "safety_caps": {
+    "max_cpu_percent_per_worker":          80,
+    "max_memory_percent_per_worker":       70,
+    "stop_scaling_if_production_unhealthy": true,
+    "stop_scaling_if_lock_active":          true,
+    "max_monthly_compute_budget_usd_env":   "MAX_MONTHLY_COMPUTE_BUDGET",
+    "token_burn_threshold_per_hour":         300000,
+    "worker_max_runtime_seconds":              3600,
+    "stale_worker_cleanup_after_seconds":      900
+  },
+  "parallelism_rules": {
+    "_comment": "Which agent pairs may run concurrently — agents that touch disjoint subsystems are safe to parallelize; the rest are serialized.",
+    "concurrent_groups": [
+      ["principal-rf-engineer", "gis-terrain-scientist"],
+      ["fcc-attorney", "fcc-auditor"],
+      ["evidence-reporting-agent", "compliance-officer"],
+      ["senior-station-engineer"],
+      ["devsecops-agent"]
+    ],
+    "serialized_after_all": ["technical-pmp", "program-director"]
+  },
+  "adaptive_triggers": {
+    "small_diff_under_n_files":         10,
+    "small_diff_compute_mode":          "local_only",
+    "regulatory_path_touched_compute_mode": "heavy_analysis",
+    "production_unhealthy_compute_mode": "local_only",
+    "production_unhealthy_lock_deploys": true
+  }
+}

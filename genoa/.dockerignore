@@ -1,0 +1,10 @@
+node_modules
+.git
+.github
+docs
+*.log
+.env
+.env.local
+.env.*.local
+/tmp
+.DS_Store

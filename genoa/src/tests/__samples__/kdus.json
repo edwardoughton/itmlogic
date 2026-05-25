@@ -1,0 +1,27 @@
+{
+  "call": "KDUS-AM",
+  "facility_id": "57847",
+  "service": "AM",
+  "frequency": 1060,
+  "erp_kw": 50,
+  "ground_sigma_mS_m": 6,
+  "lat": 33.448,
+  "lon": -112.074,
+  "radial_step_deg": 45,
+  "invariants": {
+    "contour_count": 7,
+    "radial_count": 8,
+    "expected_contour_ids": [
+      "blanket_1000mvm",
+      "service_25mvm",
+      "international_25mvm",
+      "city_5mvm",
+      "primary_2mvm",
+      "secondary_05mvm",
+      "night_intf"
+    ],
+    "must_contain_appendices": ["appendix-c", "appendix-d", "appendix-e"],
+    "page_count_band": { "min": 4, "max": 30 }
+  },
+  "notes": "AM 50 kW in Phoenix, AZ. Contour count baseline raised from 4 to 7 by PR-AM-GOLDEN after RF adjudication — same engine commits + same regulatory justification as wfan.json (§73.24(g) blanket / §73.187 international / AM nighttime interferer).  AM HAAT line is now rendered as 'HAAT (input):    n/a (AM)' (enforced by serviceWordingLeak + sampleArtifactsSmoke)."
+}

@@ -1,0 +1,12 @@
+{
+  "station_inputs": {
+    "call": "WLP-LP", "facility_id": "77777",
+    "service": "LPFM", "fcc_class": "LP100",
+    "frequency": 99.7, "erp_kw": 0.1, "haat_m": 30,
+    "lat": 37.0902, "lon": -95.7129,
+    "radial_step_deg": 30
+  },
+  "expected_polygons": [
+    { "contour_id": "service_60dbu", "mean_radial_km": 5.64 }
+  ]
+}

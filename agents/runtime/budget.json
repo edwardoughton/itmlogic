@@ -1,0 +1,67 @@
+{
+  "_comment": "Token / cost control for the agent runner.  Each mode caps per-agent context, output, iterations, and per-day deploys.  AGENT_TOKEN_MODE env var picks the active mode at runtime.  Override per-agent values via the agent.md frontmatter.",
+  "_default_mode": "balanced",
+  "modes": {
+    "conservative": {
+      "max_context_tokens":      40000,
+      "max_output_tokens":        4000,
+      "max_iterations_per_run":      2,
+      "max_files_inspected":         50,
+      "deep_scan":               false,
+      "stop_when_no_new_findings": true,
+      "intended_use": "tight cost ceilings; daily incremental scan of changed files only"
+    },
+    "balanced": {
+      "max_context_tokens":     120000,
+      "max_output_tokens":        8000,
+      "max_iterations_per_run":      4,
+      "max_files_inspected":        200,
+      "deep_scan":               false,
+      "stop_when_no_new_findings": true,
+      "intended_use": "default; quick scan + deep dive only on high-risk paths"
+    },
+    "deep": {
+      "max_context_tokens":     200000,
+      "max_output_tokens":       16000,
+      "max_iterations_per_run":      8,
+      "max_files_inspected":        500,
+      "deep_scan":                true,
+      "stop_when_no_new_findings": true,
+      "intended_use": "weekly full audit; reads entire affected subsystem"
+    },
+    "max_safe": {
+      "max_context_tokens":     400000,
+      "max_output_tokens":       24000,
+      "max_iterations_per_run":     16,
+      "max_files_inspected":       2000,
+      "deep_scan":                true,
+      "stop_when_no_new_findings": true,
+      "intended_use": "week-long autonomous runs; whole-repo scan permitted but only on a clear-change trigger"
+    }
+  },
+  "progressive_depth": {
+    "quick_scan_first":            true,
+    "deep_only_on_high_risk_files": true,
+    "full_repo_only_daily_or_manual": true,
+    "high_risk_path_globs": [
+      "genoa/src/engine/fm/**",
+      "genoa/src/engine/am/**",
+      "genoa/src/engine/haat/**",
+      "genoa/src/engine/coverage/**",
+      "genoa/src/engine/curves/**",
+      "genoa/src/engine/finding/**",
+      "genoa/src/exports/engineeringReport/**",
+      "genoa/src/api/services/exhibitService.js",
+      "genoa/src/types/warnings.js",
+      "genoa/src/engine/readiness/**"
+    ]
+  },
+  "stop_conditions": {
+    "findings_repeat":               true,
+    "confidence_does_not_improve":   true,
+    "tests_fail_same_way_twice":     true,
+    "no_files_changed_since_last_run": true,
+    "deployment_lock_active":        true,
+    "provider_limit_approaching":    true
+  }
+}

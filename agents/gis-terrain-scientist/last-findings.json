@@ -1,0 +1,59 @@
+{
+  "agent": "gis-terrain-scientist",
+  "timestamp_utc": "2026-05-22T18:57:11Z",
+  "head_sha": "50ff5fcae2dbe1455032b95257d3586e0b80128d",
+  "branch": "genoa-audit-remediation-phase2",
+  "summary": "PR-C (50ff5fc) closed prior GIS-001 (agent.md high_risk_globs path map) and GIS-002 (CROSS_VALIDATE_TOL_M doc drift). Karney geodesic, Sutherland-Hodgman convex clip, multi-source DEM cross-validation, terrain cache quantization, and per-radial ring closure all check out at HEAD 50ff5fc. One new LOW finding (GIS-003): the /static/counties-10m.json endpoint is served by the map sidecar's server.js but is never fetched by render.html.",
+  "deploy_recommendation": "WARN",
+  "readiness_score": null,
+  "findings": [
+    {
+      "finding_id": "GIS-001-CLOSED",
+      "title": "RESOLVED — agent.md high_risk_globs corrected to engine/geometry/** + polygonOverlap.js",
+      "severity": "INFO",
+      "confidence": 1.0,
+      "category": "docs",
+      "affected_files": ["agents/gis-terrain-scientist/agent.md"],
+      "regulatory_scope": [],
+      "recommended_fix": "No action — closure record. PR-C replaced nonexistent paths 'genoa/src/engine/geodesy/**' and 'genoa/src/engine/coverage/polygon_clip.js' with the actual 'genoa/src/engine/geometry/**' and 'genoa/src/engine/geometry/polygonOverlap.js'.",
+      "tests_required": ["grep -F 'engine/geodesy' agents/gis-terrain-scientist/agent.md  # should be empty"],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Verified at HEAD 50ff5fc."
+    },
+    {
+      "finding_id": "GIS-002-CLOSED",
+      "title": "RESOLVED — agent.md aligned to CROSS_VALIDATE_TOL_M (30 m, exported from elevationClient.js)",
+      "severity": "INFO",
+      "confidence": 1.0,
+      "category": "docs",
+      "affected_files": ["agents/gis-terrain-scientist/agent.md"],
+      "regulatory_scope": ["47 CFR §73.313(d)"],
+      "recommended_fix": "No action — closure record. PR-C aligned the checklist text to cite CROSS_VALIDATE_TOL_M as the exported symbol (30 m) rather than restating a divergent number.",
+      "tests_required": [],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Verified at HEAD 50ff5fc."
+    },
+    {
+      "finding_id": "GIS-003",
+      "title": "Map sidecar serves /static/counties-10m.json but render.html never fetches it",
+      "severity": "LOW",
+      "confidence": 1.0,
+      "category": "renderer",
+      "affected_files": [
+        "genoa/src/sidecars/map/server.js",
+        "genoa/src/sidecars/map/render.html"
+      ],
+      "regulatory_scope": [],
+      "recommended_fix": "Either (a) wire counties-10m into render.html alongside states-10m so the agent.md checklist item 6 ('counties-10m render') has actual evidence, or (b) drop the endpoint at server.js:91-94 and remove the counties claim from agent.md so the map-sidecar deliverable matches what's documented. Either fix is <30 LOC and deploy-risk low.",
+      "tests_required": [
+        "grep -F 'counties-10m' genoa/src/sidecars/map/render.html  # must return >=1 line if endpoint stays",
+        "OR grep -nF '/static/counties-10m.json' genoa/src/sidecars/map/server.js  # must return 0 if endpoint dropped"
+      ],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "git log --follow genoa/src/sidecars/map/render.html shows the file has never contained the string 'counties'. server.js:91-94 advertises the endpoint."
+    }
+  ]
+}

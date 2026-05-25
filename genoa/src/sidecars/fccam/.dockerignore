@@ -1,0 +1,7 @@
+__pycache__
+*.pyc
+.venv
+*.o
+fccam
+.fccam_*_sha256
+README.md

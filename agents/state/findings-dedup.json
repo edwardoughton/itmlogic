@@ -1,0 +1,4 @@
+{
+  "_comment": "Dedup hash store for agent findings.  Each finding's stable identity = sha256(severity + affected_files + recommended_fix_title).  Recorded here so subsequent runs of the same agent skip filing duplicate issues / re-reporting unchanged conditions.  Older than 30 days auto-pruned on next run.",
+  "findings": {}
+}
