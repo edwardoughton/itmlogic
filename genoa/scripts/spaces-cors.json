@@ -1,0 +1,11 @@
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": ["https://genoaiq.com", "http://localhost:5173"],
+      "AllowedMethods": ["GET", "HEAD"],
+      "AllowedHeaders": ["range", "if-match"],
+      "ExposeHeaders": ["etag", "accept-ranges", "content-range"],
+      "MaxAgeSeconds": 3000
+    }
+  ]
+}

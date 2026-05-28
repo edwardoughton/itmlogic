@@ -1,0 +1,25 @@
+{
+  "call": "KAZM-FM",
+  "facility_id": "12345",
+  "service": "FM",
+  "fcc_class": "C1",
+  "frequency": 107.1,
+  "erp_kw": 25,
+  "haat_m": 295,
+  "lat": 34.860833,
+  "lon": -111.820278,
+  "radial_step_deg": 30,
+  "invariants": {
+    "contour_count": 3,
+    "radial_count": 12,
+    "expected_contour_ids": ["service_60dbu", "city_54dbu", "protected_40dbu"],
+    "radial_ranges_km": {
+      "service_60dbu":  { "min": 30, "max": 110 },
+      "city_54dbu":     { "min": 40, "max": 130 },
+      "protected_40dbu":{ "min": 60, "max": 190 }
+    },
+    "must_contain_appendices": ["appendix-c", "appendix-d", "appendix-e"],
+    "page_count_band": { "min": 4, "max": 30 }
+  },
+  "notes": "Class C1 omnidirectional FM at Sedona, AZ. Reference invariants for FM contour engine."
+}

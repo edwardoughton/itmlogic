@@ -1,0 +1,67 @@
+{
+  "agent": "fcc-attorney",
+  "timestamp_utc": "2026-05-22T18:59:15Z",
+  "head_sha": "50ff5fcae2dbe1455032b95257d3586e0b80128d",
+  "branch": "genoa-audit-remediation-phase2",
+  "summary": "PR-B (62d4122) verified to have closed all 9 prior attorney findings (F-001..F-009 — purpose.js LPFM/AM titles, form301am.js §73.99/§73.187/PSRA/principal-community, context.js AM_NIGHTTIME, serviceWording.js LPFM cites, executiveSummary tier-3 qualifier, warnings.js LPFM_RULE_VIOLATION title). Four new citation-hygiene findings raised this pass — two MEDIUM, two LOW; none touch engine math; deploy recommendation WARN.",
+  "deploy_recommendation": "WARN",
+  "readiness_score": null,
+  "findings": [
+    {
+      "finding_id": "F-001",
+      "title": "Form 301-FM submission checklist misstates §73.315 principal-community contour as class-dependent (70/60 dBu split)",
+      "severity": "MEDIUM",
+      "confidence": 0.9,
+      "category": "regulatory-citation",
+      "affected_files": ["genoa/src/exports/lmsFiling/form301fm.js"],
+      "regulatory_scope": ["47 CFR §73.211", "47 CFR §73.315"],
+      "recommended_fix": "form301fm.js submission_checklist entry inside FORM_301_FM_META reads 'Community of license inside the predicted 70 dBu (60 dBu Class C-series) contour per §73.315'. §73.315(a) prescribes principal-community field strength by channel band, NOT by class: 70 dB for channels 221-300 (all commercial FM including B/B1/C/C0/C1/C2/C3), 67 dB for Channel 200, 64 dB for Channels 201-220 (NCE reserved band). There is no Class C-series 60 dBu variant; the 60 dBµV/m level is the §73.211 protected service contour, a different rule. Rewrite as 'Community of license inside the predicted 70 dBµV/m (3.16 mV/m) F(50,50) principal-community contour per §73.315(a) — NCE reserved-band stations on channels 201-220 use 64 dBµV/m'.",
+      "tests_required": ["test/exports/lmsFiling/form301fm.test.js — snapshot the submission_checklist entries; assert no string mentions '60 dBu' adjacent to '§73.315'"],
+      "deployment_risk": "low",
+      "human_review_required": true,
+      "reproducibility_notes": "genoa/src/exports/lmsFiling/form301fm.js submission_checklist entry inside FORM_301_FM_META (search for 'Community of license inside the predicted 70 dBu'). Cross-check against current 47 CFR §73.315(a) (eCFR)."
+    },
+    {
+      "finding_id": "F-002",
+      "title": "Form 301-FM population-served field cites a non-existent rule '47 CFR §73.x'",
+      "severity": "LOW",
+      "confidence": 0.95,
+      "category": "regulatory-citation",
+      "affected_files": ["genoa/src/exports/lmsFiling/form301fm.js"],
+      "regulatory_scope": ["47 CFR Part 73 Subpart B"],
+      "recommended_fix": "FORM_301_FM_FIELDS population-served (line ~424) carries cite '47 CFR §73.x informational only' and notes 'FCC §73.x rules are distance/field-strength tests, NOT population.' '§73.x' is a placeholder that reads as a typo on a filing-grade exhibit. Replace cite with 'INFORMATIONAL — no §73 rule prescribes a population threshold' (drop the §73.x token entirely) and rewrite the note to 'FCC §73.207 / §73.215 / §73.333 are distance / field-strength tests, NOT population.' so the rule references are concrete.",
+      "tests_required": ["test/exports/lmsFiling/form301fm.test.js — grep field cites; assert no field's cite or notes match /§73\\.x/"],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "genoa/src/exports/lmsFiling/form301fm.js FORM_301_FM_FIELDS population-served (line ~424). Same pattern appears once."
+    },
+    {
+      "finding_id": "F-003",
+      "title": "facilityParameters AM conductivity row attributes Figure M3 to §73.183 — M3 is a §73.190 figure",
+      "severity": "MEDIUM",
+      "confidence": 0.9,
+      "category": "regulatory-citation",
+      "affected_files": ["genoa/src/exports/engineeringReport/sections/facilityParameters.js"],
+      "regulatory_scope": ["47 CFR §73.183", "47 CFR §73.184", "47 CFR §73.190"],
+      "recommended_fix": "facilityParameters.js line 55 renders the AM ground-conductivity row as '${sigma} mS/m (per 47 CFR §73.183 Figure M3)'. Figure M3 (the conductivity map) is part of §73.190 — Engineering charts and related formulas; §73.183 is 'Groundwave signals' (text-only rule). Update to 'per 47 CFR §73.190 Figure M3' (matches form301am.js line 425 ground-conductivity-zone cite '47 CFR §73.190 Fig. M3, §73.184', which is correct). The §73.183 cross-reference is fine in the 'Allocation basis' row immediately below (line 59).",
+      "tests_required": ["test/exports/engineeringReport/facilityParameters.test.js — assert AM ground-conductivity row text matches /§73\\.190 Figure M3/ and never matches /§73\\.183 Figure M3/"],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "genoa/src/exports/engineeringReport/sections/facilityParameters.js line 55. Build an AM exhibit with ground_sigma_mS_m set and render the parameters section; the conductivity row mislabels Figure M3."
+    },
+    {
+      "finding_id": "F-004",
+      "title": "Engineering Conclusion legacy-review narrative uses placeholder '§73.x' instead of named rule(s)",
+      "severity": "LOW",
+      "confidence": 0.85,
+      "category": "regulatory-citation",
+      "affected_files": ["genoa/src/exports/engineeringReport/sections/conclusion.js"],
+      "regulatory_scope": ["47 CFR §73.207", "47 CFR §73.215"],
+      "recommended_fix": "conclusion.js line 193 (isLegacyReview branch) opens with 'Under current §73.x rules the subject facility does not qualify under ${failedPhrase}...'. The narrative already builds an explicit failedPhrase containing the actual failed rules (§73.207, §73.215, §74.1204, §73.187); the leading '§73.x' is a generic placeholder that reads as a typo. Rewrite the opener as 'Under current Part 73 rules, the subject facility does not qualify under ' + failedPhrase + ' ...' so the rule-set name is plain English and the specific cites still come from failedPhrase. Applies only to the licensed/legacy-review prose path; the non-legacy branch (line 204) already reads correctly.",
+      "tests_required": ["test/exports/engineeringReport/conclusion.test.js — synthesize a licensed-with-legacy-conflicts exhibit and assert the narrative never contains '§73.x'"],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "genoa/src/exports/engineeringReport/sections/conclusion.js line 193 (inside Verdict.NON_COMPLIANT + isLegacyReview branch). Triggered when station has LIC status + §73.207/§73.215 fail + existing_facility_review study intent."
+    }
+  ]
+}

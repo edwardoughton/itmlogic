@@ -1,0 +1,69 @@
+{
+  "agent": "evidence-reporting-agent",
+  "timestamp_utc": "2026-05-22T19:09:25Z",
+  "head_sha": "50ff5fcae2dbe1455032b95257d3586e0b80128d",
+  "branch": "genoa-audit-remediation-phase2",
+  "summary": "PR-C closed EVR-001 (figure numbering wired through renderChartHeader/renderImage + centralized counter in index.js). EVR-002 persists: replay token still truncated to 32 chars in Appendix E and Build Attestation. Two new renderer-surface gaps found: visual-summary section emits a heading + gets a figure_number but renderVisualSummary draws neither on the page, so the TOC entry points at an unmarked page; renderText.js ignores figure_number entirely and chart-type sections render only their heading in TXT (no payload).",
+  "deploy_recommendation": "WARN",
+  "readiness_score": null,
+  "findings": [
+    {
+      "finding_id": "EVR-002",
+      "title": "Replay token truncated to 32 chars in Appendix E + Build Attestation — PDF can't be used as verifier surface without the JSON sidecar",
+      "severity": "LOW",
+      "confidence": 0.9,
+      "category": "renderer",
+      "affected_files": [
+        "genoa/src/exports/engineeringReport/sections/buildAttestation.js",
+        "genoa/src/exports/engineeringReport/sections/appendices.js"
+      ],
+      "regulatory_scope": [],
+      "recommended_fix": "Print the full replay token (or a structured truncation that includes a content-hash suffix) in Appendix E (appendices.js:607) and the Build Attestation row (buildAttestation.js:36) so the PDF surface alone is sufficient to re-derive the exhibit identity. Currently both surfaces apply slice(0, 32) + ellipsis, forcing a JSON-sidecar dependency for replay verification.",
+      "tests_required": [
+        "assert replay-token strings in Appendix E / Build Attestation are either full-length or include a content-hash suffix"
+      ],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Both replay_token.slice(0, 32) hits remain in genoa/src/exports/engineeringReport/sections/appendices.js (line 607) and buildAttestation.js (line 36) after PR-C. PR-C touched index.js, renderPdf.js, certification.js, facilityParameters.js, mapPackage.js only; appendices.js and buildAttestation.js were not modified."
+    },
+    {
+      "finding_id": "EVR-003",
+      "title": "Visual Summary page has no rendered heading or figure number — TOC entry points to an unmarked page",
+      "severity": "MEDIUM",
+      "confidence": 0.95,
+      "category": "renderer",
+      "affected_files": [
+        "genoa/src/exports/engineeringReport/renderPdf.js",
+        "genoa/src/exports/engineeringReport/sections/visualSummary.js"
+      ],
+      "regulatory_scope": [],
+      "recommended_fix": "Either (a) call renderChartHeader(pdf, s) at the top of renderVisualSummary() in renderPdf.js (mirrors renderPolarChart at line 724, renderScatterChart at line 820, renderPolygonOverlay at line 944) so the heading and figure_number prefix render on the page; or (b) remove 'visual-summary' from CHART_TYPES at renderPdf.js:287-288 and let the standard in-flow heading block handle it (but then renderVisualSummary's pdf.y reads need an offset adjustment for the heading's vertical space). Option (a) matches the existing chart pattern.",
+      "tests_required": [
+        "renderEngineeringReportPdf snapshot/parse test asserting the visual-summary page carries the heading text 'COVERAGE & ENVIRONMENT' AND a 'FIGURE N --' prefix",
+        "TOC integrity test: every TOC entry maps to a PDF page whose body contains the entry's heading string"
+      ],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Render any FM exhibit with polygons present. The TOC will list 'COVERAGE & ENVIRONMENT — VISUAL SUMMARY' at page N (pushed in index.js:109 and recorded in renderPdf.js:152-158), but page N's content begins with the warm-cream rectangle (renderPdf.js:1163) — no heading, no FIGURE-N band."
+    },
+    {
+      "finding_id": "EVR-004",
+      "title": "renderText.js drops figure_number prefix and chart bodies — TXT export of any chart section is heading-only",
+      "severity": "LOW",
+      "confidence": 0.9,
+      "category": "renderer",
+      "affected_files": [
+        "genoa/src/exports/engineeringReport/renderText.js"
+      ],
+      "regulatory_scope": [],
+      "recommended_fix": "(1) renderText.js renderSection (line 49-55) should prefix s.heading with 'FIGURE N -- ' when figure_number is set, mirroring renderPdf.js renderChartHeader (line 704). (2) Add explicit cases for 'polar-chart', 'scatter-chart', 'polygon-overlay', 'image', 'visual-summary' in the renderSection switch so the TXT exporter emits a one-line marker instead of falling through to the default branch where rows/paragraphs/table are all absent.",
+      "tests_required": [
+        "renderEngineeringReportText test on an exhibit with at least one polar-chart and one scatter-chart, asserting both sections emit a 'FIGURE N -- ' prefix on their heading line",
+        "renderEngineeringReportText test asserting chart sections render at least one non-heading content line"
+      ],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Run any FM exhibit through renderEngineeringReportText. Chart-type sections render only heading + dashed rule (no content) because renderText.js:56-118 switch has no chart cases."
+    }
+  ]
+}

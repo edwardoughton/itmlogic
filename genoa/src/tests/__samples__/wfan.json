@@ -1,0 +1,27 @@
+{
+  "call": "WFAN-AM",
+  "facility_id": "28617",
+  "service": "AM",
+  "frequency": 660,
+  "erp_kw": 50,
+  "ground_sigma_mS_m": 8,
+  "lat": 40.859833,
+  "lon": -73.785417,
+  "radial_step_deg": 45,
+  "invariants": {
+    "contour_count": 7,
+    "radial_count": 8,
+    "expected_contour_ids": [
+      "blanket_1000mvm",
+      "service_25mvm",
+      "international_25mvm",
+      "city_5mvm",
+      "primary_2mvm",
+      "secondary_05mvm",
+      "night_intf"
+    ],
+    "must_contain_appendices": ["appendix-c", "appendix-d", "appendix-e"],
+    "page_count_band": { "min": 4, "max": 30 }
+  },
+  "notes": "AM groundwave at WFAN site, NYC. Contour count baseline raised from 4 to 7 by PR-AM-GOLDEN after RF adjudication: commits 19f8468 (blanket_1000mvm per §73.24(g), international_25mvm per §73.187) and e97e921 (per-radial M3 conductivity, with night_intf) added three contours to AM_DEFAULT_CONTOURS in src/engine/am/groundwave.js; each new contour is regulatorily justified (§73.24(g) blanket-interference receiver-complaint trigger; §73.187 + US/Mexico, US/Canada international border treaty obligations; AM nighttime interferer at 0.025 mV/m). AM HAAT line is now rendered as 'HAAT (input):    n/a (AM)' across all standard summaries; the old must_not_contain 'HAAT (input):' invariant was removed because the line is intentionally present with a non-metre n/a label (enforced by serviceWordingLeak.test.js and sampleArtifactsSmoke.test.js)."
+}

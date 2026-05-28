@@ -1,0 +1,114 @@
+{
+  "agent": "principal-rf-engineer",
+  "timestamp_utc": "2026-05-22T18:49:37Z",
+  "head_sha": "50ff5fcae2dbe1455032b95257d3586e0b80128d",
+  "branch": "genoa-audit-remediation-phase2",
+  "summary": "No BLOCKERs at HEAD 50ff5fc. PR-A (F-001 §73.215 interfering-field fix + F-002 protected-field dedup) and PR-C renderer regex fix verified clean against §73.215 / §73.211 / §74.1204(c) text and the new section_73_215.test.js asserts. Prior-cycle PRF-001 (validationVerdict regex) RESOLVED. PRF-002 (haat/validate.js:144 flat-fallback suppression gate) STILL PRESENT — same LOW severity, second consecutive occurrence. Golden test execution remains harness-gated this cycle (PRF-004 WARNING carries forward). Deploy recommendation: WARN until golden suite green-lights at this HEAD.",
+  "deploy_recommendation": "WARN",
+  "readiness_score": null,
+  "findings": [
+    {
+      "finding_id": "PRF-001",
+      "title": "RESOLVED — validationVerdict.js absent-record classification regex replaced with /\\bINCOMPLETE pending re-compute\\b/i; previously /no [a-z_]+ record attached/i never matched producer detail strings",
+      "severity": "INFO",
+      "confidence": 0.98,
+      "category": "regulatory-citation",
+      "affected_files": ["genoa/src/exports/engineeringReport/sections/validationVerdict.js"],
+      "regulatory_scope": [],
+      "recommended_fix": "No action — recording the resolution. At HEAD 50ff5fc the FAIL branch of mapLegacyStatusToOntology (validationVerdict.js:667-691) routes to FindingStatus.INCOMPLETE when /\\bINCOMPLETE pending re-compute\\b/i matches the detail. Producer detail strings at lines 78 / 125 / 159 (curve / cross-check / parity) all end with that exact phrase — adjacency and character-class issues of the prior regex are gone.",
+      "tests_required": ["genoa/src/tests/findingOntology.test.js (verify INCOMPLETE classification still asserted)"],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Read genoa/src/exports/engineeringReport/sections/validationVerdict.js:681 against the three producer sites (lines 78, 125, 159); regex now matches all three detail strings."
+    },
+    {
+      "finding_id": "PRF-002",
+      "title": "engine/haat/validate.js:144 flat-fallback suppression still gated on `operatorHaat > 0`; with no operator HAAT and per-radial values present, validator can return PASS with display_suppressed=false",
+      "severity": "LOW",
+      "confidence": 0.85,
+      "category": "haat",
+      "affected_files": ["genoa/src/engine/haat/validate.js"],
+      "regulatory_scope": ["47 CFR §73.313"],
+      "recommended_fix": "Drop the `operatorHaat > 0` clause from the flat-fallback gate, OR add a parallel branch for `basis === 'flat' && (!Number.isFinite(operatorHaat) || operatorHaat <= 0)` that returns FALLBACK_ONLY when haats.length>0. Today: with basis='flat' and operatorHaat absent/<=0, control flow falls through to the generic plausibility checks (validate.js:191-225); if all per-radial values fall inside [HARD_FLOOR_M, HARD_CEILING_M] and no nImpl/nSoftOutlier conditions fire, status='PASS' with display_suppressed=false (lines 227-247). The FALLBACK_ONLY emitter at line 169 never fires without operatorHaat — contradicting the design comment at lines 27-32 ('no terrain basis attached but a per-radial HAAT bundle is being emitted anyway → we suppress the column').",
+      "tests_required": ["genoa/src/tests/haatValidation.test.js — synthesize a flat-basis exhibit with haats.length>0 and operatorHaat=null/0; assert display_suppressed=true and status='FALLBACK_ONLY'"],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Read validate.js:144 gate condition; trace: collected.values non-empty AND haatResolved absent AND collected.source !== 'none' yields basis='flat' (line 115). Without operatorHaat>0 the entire block 144-188 is skipped. Second consecutive cycle reporting this — bump seen_count via dedup."
+    },
+    {
+      "finding_id": "PRF-003",
+      "title": "VERIFIED — F-001 §73.215 computePolygonOverlap fix is correct: F(50,10) interfering polygon now built at (other_protected − D/U gate), not at own protected field",
+      "severity": "INFO",
+      "confidence": 0.97,
+      "category": "rf-math",
+      "affected_files": ["genoa/src/engine/regulatory/section_73_215.js"],
+      "regulatory_scope": ["47 CFR §73.215", "47 CFR §74.1204(c)", "47 CFR §73.211"],
+      "recommended_fix": "No action — recording positive verification. section_73_215.js:217 now passes cls.du_db; computePolygonOverlap (lines 322-340) computes subject_interfering_field_dbu = nearbyFieldDbu − du_threshold_db and nearby_interfering_field_dbu = subjectFieldDbu − du_threshold_db. This matches §74.1204(c): the F(50,10) interfering contour locus is where the undesired station's field equals (D's protected field − required D/U). The call site at line 217 is unreachable for non_restricted offsets (early-continue at 192), so du_threshold_db is always finite when the helper runs. section_73_215.test.js:172-214 pins the new behavior with explicit numeric assertions (54−20=34 dBu, 60−20=40 dBu, 54−6=48 dBu, 60−6=54 dBu) and an explicit notEqual against the pre-fix degenerate-polygon case.",
+      "tests_required": [
+        "genoa/src/tests/section_73_215.test.js (F-001 repro block, three assertions at lines 172-214)"
+      ],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Read engine/regulatory/section_73_215.js:217 and 322-340 against §74.1204(c). Sign convention check: positive D/U gate values (cochannel +20, 1st-adj +6) subtract to lower interfering thresholds and larger polygons; negative -40 dB gates (2nd-adj, 3rd-adj, IF) subtract to higher interfering thresholds and near-zero polygons — physically correct since -40 dB D/U is geographically tiny."
+    },
+    {
+      "finding_id": "PRF-004",
+      "title": "Golden suites (curveReferenceValidation, fccGoldenSuite, fccContours, amNifContour, haatValidation, haatStrictBlocker, section_73_215) did not re-execute this cycle — node --test invocations harness-gated",
+      "severity": "WARNING",
+      "confidence": 1.0,
+      "category": "governance",
+      "affected_files": [
+        "genoa/src/tests/curveReferenceValidation.test.js",
+        "genoa/src/tests/fccGoldenSuite.test.js",
+        "genoa/src/tests/fccContours.test.js",
+        "genoa/src/tests/amNifContour.test.js",
+        "genoa/src/tests/haatValidation.test.js",
+        "genoa/src/tests/haatStrictBlocker.test.js",
+        "genoa/src/tests/section_73_215.test.js"
+      ],
+      "regulatory_scope": [],
+      "recommended_fix": "Run the seven golden / regression suites manually at HEAD 50ff5fc once test execution is permitted. PR-A landed math changes in section_73_215.js (interfering-field threshold). The new section_73_215.test.js asserts the fix algebraically but the wider golden suite (curves, contours, HAAT) was not re-executed to confirm no upstream regression. Hold deploy gate at WARN until tests green-light.",
+      "tests_required": [
+        "node --test genoa/src/tests/curveReferenceValidation.test.js",
+        "node --test genoa/src/tests/fccGoldenSuite.test.js",
+        "node --test genoa/src/tests/haatStrictBlocker.test.js",
+        "node --test genoa/src/tests/section_73_215.test.js"
+      ],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Static review found no BLOCKER conditions; only live test-execution evidence missing this cycle. AskUserQuestion to lift the gate was declined."
+    },
+    {
+      "finding_id": "PRF-005",
+      "title": "VERIFIED — F-002 protected-field-by-class table deduplicated; FM_PROTECTED_FIELD_DBU_BY_CLASS in section_73_215.js is the single source of truth, re-exported from translator.js and consumed by translators/contour.js",
+      "severity": "INFO",
+      "confidence": 0.96,
+      "category": "rf-math",
+      "affected_files": [
+        "genoa/src/engine/regulatory/section_73_215.js",
+        "genoa/src/engine/regulatory/translator.js",
+        "genoa/src/engine/translators/contour.js"
+      ],
+      "regulatory_scope": ["47 CFR §73.211", "47 CFR §74.1204"],
+      "recommended_fix": "No action — recording positive verification. translator.js:84-88 re-exports TRANSLATOR_DEFAULT_PROTECTED_FIELD_DBU_BY_CLASS = FM_PROTECTED_FIELD_DBU_BY_CLASS; translators/contour.js:109 assigns protected_field_thresholds_dbu = FM_PROTECTED_FIELD_DBU_BY_CLASS. Three previously divergent literal tables are now one Object.freeze in section_73_215.js (A:60, B/B1/C/C0/C1/C2/C3:54, LP100/LP10/D/FX:60). §73.211 (FM full-service) and §74.1204 (translators) reference the same class→protected-contour map, so a single source is regulation-accurate.",
+      "tests_required": ["genoa/src/tests/section_73_215.test.js:49-54 asserts the canonical thresholds"],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Read translator.js:84 + translators/contour.js:108-109; both import FM_PROTECTED_FIELD_DBU_BY_CLASS from section_73_215.js."
+    },
+    {
+      "finding_id": "PRF-006",
+      "title": "VERIFIED — validationVerdict.js tier-3 fallback cap (lines 510-521) still downgrades VERIFIED→PARTIAL on tier-3 external fallback at HEAD 50ff5fc; interpretation block does not surface the 'fully verified against the FCC engine' string under tier-3",
+      "severity": "INFO",
+      "confidence": 0.97,
+      "category": "regulatory-citation",
+      "affected_files": ["genoa/src/exports/engineeringReport/sections/validationVerdict.js"],
+      "regulatory_scope": ["47 CFR §73.311"],
+      "recommended_fix": "No action — recording the passing state. The externalIsTier3Fallback test (lines 510-517) inspects both 'FCC parity (live geo.fcc.gov/api/contours/distance.json)' and 'FCC contour cross-check (ZTR _fcc_contour vs engine)' for FALLBACK status and forces status='PARTIAL' / confidence MEDIUM. Interpretation chain at lines 526-555 selects PARTIAL wording, never the 'fully verified against the FCC engine' VERIFIED sentence, when the cap fires. Constraint from agent.md ('NEVER claim verified against FCC engine when the parity is tier-2/tier-3 fallback') upheld.",
+      "tests_required": [],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Cap location preserved at lines 510-521 through PR-C renderer changes; file is 692 lines at HEAD 50ff5fc."
+    }
+  ]
+}

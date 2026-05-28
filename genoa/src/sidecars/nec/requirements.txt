@@ -1,0 +1,22 @@
+# Genoa NEC sidecar — Python dependencies.
+#
+# License boundary: NEC2++ / PyNEC are GPL v2.  These dependencies are
+# only used inside this sidecar process — no Genoa code outside of
+# sidecars/nec/* may import them.
+#
+# WARNING: PyNEC CANNOT be installed directly from PyPI.  The sdist on
+# pypi.org ships without the necpp_src/ submodule the build needs,
+# producing a stub .so that fails to import.  Build from source:
+#
+#   git clone --recurse-submodules \
+#     https://github.com/tmolteno/python-necpp.git
+#   cd python-necpp/necpp_src
+#   make -f Makefile.git && ./configure --without-lapack && make && make install
+#   cd ../PyNEC && ln -s ../necpp_src . && swig -Wall -c++ -python PyNEC.i
+#   pip3 install --no-build-isolation .
+#
+# Or use the Dockerfile in this directory (multi-stage build, does the
+# above automatically).  See README.md.
+
+# Runtime-only dependency; PyNEC is built from source per the recipe above.
+numpy>=1.26.0

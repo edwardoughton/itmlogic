@@ -1,0 +1,7 @@
+{
+  "_comment": "Job queue.  Priority-ordered, retry-aware.  queue-manager.sh dequeues; workers register via spawn-worker.sh and heartbeat via worker-heartbeat.sh.  Statuses: pending | running | done | failed | abandoned (no heartbeat).",
+  "next_job_id":   1,
+  "jobs":          [],
+  "workers":       [],
+  "last_swept_at": null
+}

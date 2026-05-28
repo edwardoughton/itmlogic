@@ -1,0 +1,20 @@
+{
+  "call": "WBOB-FM",
+  "facility_id": "53588",
+  "service": "FM",
+  "fcc_class": "A",
+  "frequency": 98.7,
+  "erp_kw": 6,
+  "haat_m": 100,
+  "lat": 35.5,
+  "lon": -82.5,
+  "radial_step_deg": 30,
+  "invariants": {
+    "contour_count": 3,
+    "radial_count": 12,
+    "expected_contour_ids": ["service_60dbu", "city_54dbu", "protected_40dbu"],
+    "must_contain_appendices": ["appendix-c", "appendix-d", "appendix-e"],
+    "page_count_band": { "min": 4, "max": 30 }
+  },
+  "notes": "Class A reference station. Smoke test for FM contour engine + PDF render."
+}

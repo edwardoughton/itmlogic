@@ -1,0 +1,14 @@
+{
+  "_comment": "Append-only deploy history.  safe-deploy-digitalocean.sh appends after a successful post-deploy smoke; rollback-digitalocean.sh appends on rollback.  last_good_sha is the SHA we'd roll back TO if the current deploy fails its smoke test.  When no real deploy has ever succeeded, pre_first_deploy.acknowledged distinguishes 'never deployed yet' from 'file is missing/corrupt'.",
+  "schema_version": 2,
+  "pre_first_deploy": {
+    "acknowledged": true,
+    "acknowledged_by": "operator (chuck@mellowmountainradio.com)",
+    "acknowledged_at": "2026-05-23T18:10:55Z",
+    "reason": "Genoa has not yet had a production deploy via safe-deploy-digitalocean.sh.  This is a deliberate pre-launch governance state, not a missing file or a stale record.  Auditors must NOT treat this as evidence of a smoke-pass; deploys remain BLOCKED until the first safe-deploy run populates last_good_sha + last_good_deploy_id + a non-empty deploys[] entry.",
+    "rescind_when": "First successful run of safe-deploy-digitalocean.sh writes deploys[0] and sets last_good_sha — this block should then be removed in the same commit."
+  },
+  "last_good_sha":    null,
+  "last_good_deploy_id": null,
+  "deploys": []
+}

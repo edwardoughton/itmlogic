@@ -1,0 +1,128 @@
+{
+  "agent": "technical-pmp",
+  "timestamp_utc": "2026-05-22T19:33:34Z",
+  "head_sha": "50ff5fcae2dbe1455032b95257d3586e0b80128d",
+  "branch": "genoa-audit-remediation-phase2",
+  "summary": "Sprint at HEAD 50ff5fc: prior cross-agent BLOCKER chain (orphan-section A-001, tier-3 AM A-002, §73.215 polygon F-001, protected-field dedup F-002) RESOLVED by PR-A/B/C; compliance-officer flips APPROVE, fcc-auditor closes A-001+A-002. New cross-agent MEDIUM cluster (renderer surface): fcc-auditor A-004 (6 verdict gates lack appendix rows) + evidence-reporting EVR-003 (visual-summary heading not rendered) — co-confirmed renderer-completeness gap. Pipeline persistence is the recurring process BLOCKER (4th cycle): 8/8 peer agents could NOT persist last-findings.json this cycle — every peer printed inline JSON in last-report.md because Write to agents/<agent>/** is still gated per-call; on-disk last-findings.json for all peers is stale (head_sha=28f7942 or older). PMP-001 dedup hash matches prior cycle → bump seen_count, do NOT re-file. Raw count ~31 findings; ~28 unique after cross-agent dedup. Deploy posture: BLOCK on process (persistence) + operational (empty deploy-history, A-003); code-side posture is WARN (no fresh code BLOCKERs).",
+  "deploy_recommendation": "BLOCK",
+  "readiness_score": null,
+  "findings": [
+    {
+      "finding_id": "PMP-001",
+      "title": "Pipeline persistence broken 4th cycle — 8/8 peer agents could NOT persist last-findings.json this cycle; on-disk artifacts STALE (head_sha=28f7942); dedup store cannot be trusted as authoritative for HEAD 50ff5fc",
+      "severity": "BLOCKER",
+      "confidence": 1.0,
+      "category": "governance",
+      "affected_files": [
+        "agents/settings.json",
+        "agents/scripts/run-agent.sh",
+        "agents/compliance-officer/last-findings.json",
+        "agents/devsecops-agent/last-findings.json",
+        "agents/evidence-reporting-agent/last-findings.json",
+        "agents/fcc-attorney/last-findings.json",
+        "agents/fcc-auditor/last-findings.json",
+        "agents/gis-terrain-scientist/last-findings.json",
+        "agents/principal-rf-engineer/last-findings.json",
+        "agents/senior-station-engineer/last-findings.json"
+      ],
+      "regulatory_scope": [],
+      "recommended_fix": "Same two-part fix specified by prior-cycle PMP-001 + PD-003: (a) Add persistent Write allowlist to agents/settings.json (and/or .claude/settings.local.json) covering Write(/opt/itmlogic/agents/**), Write(/opt/itmlogic/agents/state/**), Write(/opt/itmlogic/agents/reports/**) plus Edit equivalents. (b) Add fail-loud post-condition to agents/scripts/run-agent.sh that exits non-zero when agents/<agent>/last-findings.json is missing OR has stale head_sha at end of run. Cycle-chain: 2026-05-22T01:06Z → 07:35Z → 13:47Z → 19:33Z (4 consecutive). Per agent.md stop conditions, findings_repeat >= 3 is agent-loop-stalled — already exceeded. Dedup key matches prior PMP-001 hash 9b5e73bc...; bump seen_count, do NOT re-file the GitHub issue.",
+      "tests_required": [
+        "ls agents/*/last-findings.json after a full run-all-agents.sh cycle — all 10 must exist",
+        "for f in agents/*/last-findings.json; do node agents/scripts/validate-findings-json.js \"$f\"; done (all must exit 0)",
+        "jq -r '.head_sha' agents/*/last-findings.json | sort -u (must yield exactly one SHA equal to git rev-parse HEAD)",
+        "bash agents/scripts/run-agent.sh devsecops-agent — must exit non-zero when last-findings.json missing"
+      ],
+      "deployment_risk": "low",
+      "human_review_required": true,
+      "reproducibility_notes": "ls -la agents/*/last-findings.json at 2026-05-22T19:33Z: every peer file dated 16:20–16:25 (prior cycle), every peer last-report.md dated 18:57–19:33 (current cycle). Every peer last-report.md opens with a variant of 'Write tool was blocked' and contains inline JSON for the run that did not persist. Dedup hash for this finding = 9b5e73bc33ed6d669f37588a5603701bce0a357fd257afc071de663e826a58cb (same as 2026-05-22T07:35Z PMP-001). DSO-005 from devsecops-agent is the per-agent surface of the same root cause — collapses into this PMP finding."
+    },
+    {
+      "finding_id": "PMP-002",
+      "title": "VERIFIED — prior cross-agent BLOCKER chain CLEARED at HEAD 50ff5fc: orphan-section (A-001/F-001/F-002/EVR-001), tier-3 AM (A-002), §73.215 polygon (F-001), protected-field dedup (F-002) all resolved by PR-A/PR-B/PR-C",
+      "severity": "INFO",
+      "confidence": 0.98,
+      "category": "governance",
+      "affected_files": [
+        "genoa/src/exports/engineeringReport/index.js",
+        "genoa/src/exports/engineeringReport/sections/validationVerdict.js",
+        "genoa/src/engine/regulatory/section_73_215.js",
+        "genoa/src/engine/regulatory/translator.js",
+        "genoa/src/engine/translators/contour.js",
+        "genoa/src/exports/engineeringReport/sections/buildAttestation.js",
+        "genoa/src/exports/engineeringReport/sections/rfExposure.js",
+        "genoa/src/exports/engineeringReport/sections/towerStudy.js"
+      ],
+      "regulatory_scope": [
+        "47 CFR §1.1310",
+        "47 CFR §17.4",
+        "47 CFR §73.183",
+        "47 CFR §73.211",
+        "47 CFR §73.215",
+        "47 CFR §74.1204",
+        "OET Bulletin 65"
+      ],
+      "recommended_fix": "No action — recording cross-agent closure. PR-C (50ff5fc): engineeringReport/index.js:16-18 imports buildBuildAttestationSection + buildRfExposureSection + buildTowerStudySection; called at lines 127/132/140. PR-B (62d4122): validationVerdict.js:551-556 service-branches the tier-3 interpretation (AM gets engine-canonical wording; FM/LPFM keeps live-parity guidance). PR-A (6ce89f7): section_73_215.js:217 + 322-340 builds F(50,10) interfering polygon at (other_protected − D/U gate); FM_PROTECTED_FIELD_DBU_BY_CLASS is the single source of truth in section_73_215.js. fcc-auditor A-005 + principal-rf-engineer PRF-003/PRF-005/PRF-006 + compliance-officer 6/6 PASS + evidence-reporting EVR-001 closed all confirm. Dedup hashes to MARK RESOLVED: 2601421a (A-001), 2d4b2d00 (A-002), 032de5eb (PRF F-001 mirror), 70e6d2eb (PD-002 plan), a23db472 (EVR-001).",
+      "tests_required": [
+        "grep -F 'buildBuildAttestationSection' genoa/src/exports/engineeringReport/index.js",
+        "grep -F 'buildRfExposureSection' genoa/src/exports/engineeringReport/index.js",
+        "grep -F 'buildTowerStudySection' genoa/src/exports/engineeringReport/index.js",
+        "grep -n 'service === ' genoa/src/exports/engineeringReport/sections/validationVerdict.js",
+        "grep -n 'cls.du_db' genoa/src/engine/regulatory/section_73_215.js"
+      ],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Cross-confirmed by 4 peer agents this cycle. Three-cycle agent-loop-stalled chain on orphan-section pattern (01:06Z → 07:35Z → 13:47Z) terminated by PR-C land."
+    },
+    {
+      "finding_id": "PMP-003",
+      "title": "Cross-agent MEDIUM cluster — renderer-surface completeness gap: fcc-auditor A-004 (6 of 13 verdict gates lack dedicated appendix evidence rows: gates 5/7/8/9/10/11) + evidence-reporting EVR-003 (Visual Summary TOC entry points at unmarked page; heading + FIGURE-N band never drawn)",
+      "severity": "MEDIUM",
+      "confidence": 0.9,
+      "category": "renderer",
+      "affected_files": [
+        "genoa/src/exports/engineeringReport/sections/appendices.js",
+        "genoa/src/exports/engineeringReport/sections/validationVerdict.js",
+        "genoa/src/exports/engineeringReport/renderPdf.js",
+        "genoa/src/exports/engineeringReport/sections/visualSummary.js"
+      ],
+      "regulatory_scope": ["47 CFR §73.24", "47 CFR §73.150", "47 CFR §73.313"],
+      "recommended_fix": "Bundle as PR-RENDER-2 (renderer-surface follow-up to PR-C). (1) appendices.js: add evidence rows for §73.150 AM DA, §73.24(g) blanket, International AM treaty, §73.24(j) principal-community, Engineering Confidence, Radial parity. (2) renderPdf.js: call renderChartHeader(pdf, s) at the top of renderVisualSummary() (line ~1131) mirroring renderPolarChart (724) / renderScatterChart (820) / renderPolygonOverlay (944) so heading + figure_number prefix render. Co-sign: fcc-auditor + evidence-reporting-agent.",
+      "tests_required": [
+        "test/exports/engineeringReport/appendices.test.js — for each component in buildValidationVerdictSection.components, assert >=1 appendix row mentions the gate id or section-cite prefix",
+        "test/exports/engineeringReport/renderPdf.test.js — TOC integrity: every entry maps to a page body containing the entry's heading string",
+        "renderEngineeringReportPdf snapshot on FM exhibit w/ polygons — Visual Summary page carries 'FIGURE N --' prefix"
+      ],
+      "deployment_risk": "low",
+      "human_review_required": true,
+      "reproducibility_notes": "fcc-auditor A-004 enumerates 13 components vs. appendix C/B/D/F coverage. evidence-reporting EVR-003 traces visualSummary.js:160 → renderPdf.js:287-303 (CHART_TYPES skips in-flow heading) → renderPdf.js:1131 (renderVisualSummary starts at background plate, never calls renderChartHeader). EVR-002 + EVR-004 are sibling LOWs in same cluster."
+    },
+    {
+      "finding_id": "PMP-004",
+      "title": "Sprint rollup — 31 raw peer findings (~28 unique after cross-agent dedup) at HEAD 50ff5fc; 0 fresh code BLOCKERs; 1 recurring process BLOCKER (PMP-001 persistence, 4th cycle); 5 PR clusters proposed; engine triplet (engine/fm, engine/am, engine/haat, engine/curves, engine/coverage) untouched this cycle",
+      "severity": "INFO",
+      "confidence": 0.9,
+      "category": "governance",
+      "affected_files": [
+        "agents/compliance-officer/last-report.md",
+        "agents/devsecops-agent/last-report.md",
+        "agents/evidence-reporting-agent/last-report.md",
+        "agents/fcc-attorney/last-report.md",
+        "agents/fcc-auditor/last-report.md",
+        "agents/gis-terrain-scientist/last-report.md",
+        "agents/principal-rf-engineer/last-report.md",
+        "agents/senior-station-engineer/last-report.md"
+      ],
+      "regulatory_scope": [
+        "47 CFR §73.24", "47 CFR §73.150", "47 CFR §73.183", "47 CFR §73.184",
+        "47 CFR §73.190", "47 CFR §73.211", "47 CFR §73.215", "47 CFR §73.313",
+        "47 CFR §73.315", "47 CFR §74.1232", "OET Bulletin 65"
+      ],
+      "recommended_fix": "5-PR cluster plan for program-director PD readiness re-score: (1) PR-META = PMP-001 persistence fix (settings.json allowlist + run-agent.sh fail-loud) — BLOCKER, lands first. (2) PR-D = fcc-attorney F-001..F-004 (Form 301-FM §73.315, M3↔§73.183, placeholder §73.x ×2; 2 MED + 2 LOW). (3) PR-RENDER-2 = fcc-auditor A-004 + evidence-reporting EVR-002/EVR-003/EVR-004 (1 MED + 3 LOW). (4) PR-DEVSEC = devsecops DSO-002 (migrations missing rollback) + DSO-003 (DO app.yaml dockerfile_path mismatch); DSO-004 UNVERIFIABLE checks move into .github/workflows/agent-safe-prod-write.yml. (5) PR-DOC = PRF-002 (haat/validate.js:144, 2nd consecutive cycle) + GIS-003 (counties-10m.json dead endpoint) + senior-station-engineer SSE-005..008 (4 SOFT). PRF-004 (golden suites not executed, WARNING) — request live test run next cycle. Engine triplet not binding this cycle.",
+      "tests_required": [],
+      "deployment_risk": "low",
+      "human_review_required": false,
+      "reproducibility_notes": "Raw count by agent: principal-rf 6 (WARN), fcc-attorney 4 new (WARN; prior F-001..F-009 closed by PR-B), fcc-auditor 3 (BLOCK on operational A-003 only), devsecops 4 (BLOCK on DSO-005 persistence), compliance-officer 6 INFO (APPROVE; all 6 checklist PASS), gis 1 LOW (WARN; GIS-001/002 closed by PR-C), evidence-reporting 3 (WARN; EVR-001 closed), senior-station 4 SOFT (WARN). Total raw 31. Cross-agent dedup: A-004 ∩ EVR-003 → PMP-003; DSO-005 ∩ PMP-001 → PMP-001. Net unique ~28."
+    }
+  ]
+}

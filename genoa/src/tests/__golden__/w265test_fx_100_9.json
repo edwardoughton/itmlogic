@@ -1,0 +1,16 @@
+{
+  "station_inputs": {
+    "call": "W265TEST", "facility_id": "88888",
+    "service": "FX",
+    "frequency": 100.9, "erp_kw": 0.25, "haat_m": 30,
+    "lat": 37.0902, "lon": -95.7129,
+    "radial_step_deg": 30
+  },
+  "expected_polygons": [
+    { "contour_id": "service_60dbu",     "mean_radial_km": 7.09 },
+    { "contour_id": "interfering_40dbu", "mean_radial_km": 23.76 },
+    { "contour_id": "interfering_34dbu", "mean_radial_km": 35.59 },
+    { "contour_id": "interfering_54dbu", "mean_radial_km": 10.15 },
+    { "contour_id": "interfering_48dbu", "mean_radial_km": 14.15 }
+  ]
+}
